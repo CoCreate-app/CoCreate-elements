@@ -41,11 +41,11 @@ const CoCreateElements = {
 		elements.forEach((el) => {
 			const { collection, document_id, name, isRead, isUpdate, isCrdt } = crud.getAttr(el);
 			if (el.hasAttribute('actions')) return;
-			if (isRead == "false" || isUpdate == "false") return;
+			if (isRead == "false" || isUpdate == "false" || isCrdt == "true") return;
 			// let isEditable = el.getAttribute('contenteditable');
 			// if (isEditable)
 			// 	console.log('ed')
-			if (data['collection'] == collection && data['document_id'] == document_id && isCrdt != true) {
+			if (data['collection'] == collection && data['document_id'] == document_id) {
 				const value = encodeData[name]
 				if (value === null || value === undefined) return;
 				
