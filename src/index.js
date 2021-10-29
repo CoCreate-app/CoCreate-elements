@@ -41,11 +41,9 @@ const CoCreateElements = {
 		elements.forEach((el) => {
 			const { collection, document_id, name, isRead, isUpdate, isCrdt } = crud.getAttr(el);
 			if (el.hasAttribute('actions')) return;
-			if (isRead == "false" || isUpdate == "false" || isCrdt == "true") return;
-			// let isEditable = el.getAttribute('contenteditable');
-			// if (isEditable)
-			// 	console.log('ed')
-			if (data['collection'] == collection && data['document_id'] == document_id) {
+			if (isRead == "false" || isUpdate == "false") return;
+			let isEditable = el.hasAttribute('contenteditable');
+			if (data['collection'] == collection && data['document_id'] == document_id && !isEditable) {
 				const value = encodeData[name]
 				if (value === null || value === undefined) return;
 				
@@ -372,7 +370,9 @@ observer.init({
 	attributeName: ['collection', 'document_id', 'name'],
 	target: CoCreateElements.selector,
 	callback: function(mutation) {
-		CoCreateElements.initElements([mutation.target])
+		let {collection, document_id, name} = crud.getAttr(mutation.target)
+		if(collection && document_id && name)
+			CoCreateElements.initElements([mutation.target])
 	}
 });
 
