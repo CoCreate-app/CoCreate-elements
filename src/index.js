@@ -56,15 +56,9 @@ const CoCreateElements = {
 				
 				else if (el.tagName === 'IFRAME') {
 					el.srcdoc = value;
-					let iframe = el;
-					console.log('dnd loaded trigger event')
 					el.onload = function(e) {
-						iframe.removeAttribute('srcdoc');
-							let event = new CustomEvent('CoCreateElements-rendered', {
-							detail: {window: iframe.contentWindow}
-						})
-						window.parent.dispatchEvent(event);
-					}
+						el.removeAttribute('srcdoc');
+					};
 				}
 				
 				else if (el.tagName === 'DIV') {
@@ -93,7 +87,7 @@ const CoCreateElements = {
 				}
 				
 				else if (el.tagName === 'SCRIPT'){
-					this.setScript(el, value)
+					this.setScript(el, value);
 				}
 				else {
 					el.innerHTML = value;
@@ -113,10 +107,10 @@ const CoCreateElements = {
 					}
 				}
 
-				isRendered = true
-				el.value = value;
+				isRendered = true;
+				el.getValue = value;
 			}
-		})
+		});
 
 		if (isRendered) {
 			// ToDo: Replace with custom event
@@ -125,9 +119,9 @@ const CoCreateElements = {
 				detail: {
 					data: data
 				}
-			})
+			});
 
-			document.dispatchEvent(event)
+			document.dispatchEvent(event);
 		}
 	},
 	
@@ -145,21 +139,15 @@ const CoCreateElements = {
 	},
 	
 	setValue: function(input, value) {
-		const {name, isCrdt} = crud.getAttr(input);
+		const {isCrdt} = crud.getAttr(input);
 		if (isCrdt == "true" || input.type === 'file') return;
 
 		if (input.type == 'checkbox') {
-			if (Array.isArray(value)) {
-				let checkboxs = document.querySelectorAll(`input[type=checkbox][name='${name}']`);
-				checkboxs.forEach(el => {
-					if (value.includes(el.value)) {
-						el.checked = true;
-					}
-				});
-				return;
+			if (value.includes(input.value)) {
+				input.checked = true;
 			}
 			else {
-				input.checked = true;
+				input.checked = false;
 			}
 		}
 		else if (input.type === 'radio') {
@@ -168,8 +156,17 @@ const CoCreateElements = {
 		else if (input.type === 'password') {
 			value = this.__decryptPassword(value);
 		}
-
-		input.value = value;
+		else if (input.tagName == "SELECT" && input.hasAttribute('multiple') && Array.isArray(value)) {
+			let options = input.options;
+			for (let i = 0; i < options.length; i++) {
+				if (value.includes(options[i].value)) {
+					options[i].selected = "selected";
+				}
+			}
+		}
+		else
+			input.value = value;
+		input.getValue = value;
 
 		let inputEvent = new CustomEvent('input', {
 			bubbles: true,
@@ -195,29 +192,20 @@ const CoCreateElements = {
 		});
 		input.dispatchEvent(changeEvent);
 
-		if (input.tagName == "SELECT" && input.hasAttribute('multiple') && Array.isArray(value)) {
-			let options = input.options;
-			for (let i = 0; i < options.length; i++) {
-				if (value.includes(options[i].value)) {
-					options[i].selected = "selected";
-				}
-			}
-		}
-
 		// ToDo: replace with custom event system
 		input.dispatchEvent(new CustomEvent('CoCreateInput-setvalue', {
 			eventType: 'rendered'
 		}));
 	},
 	
-	getValue: function(input) {
-		let value = input.value;
+	getValue: function(element) {
+		let value = element.value;
+		let isFlat = false;
+		let prefix = element.getAttribute('value-prefix') || "";
+		let suffix = element.getAttribute('value-suffix') || "";
 
-		let prefix = input.getAttribute('value-prefix') || "";
-		let suffix = input.getAttribute('value-suffix') || "";
-
-		if (input.type === "checkbox") {
-			let el_name = input.getAttribute('name');
+		if (element.type === "checkbox") {
+			let el_name = element.getAttribute('name');
 			let checkboxs = document.querySelectorAll(`input[type=checkbox][name='${el_name}']`);
 			if (checkboxs.length > 1) {
 				value = [];
@@ -226,80 +214,70 @@ const CoCreateElements = {
 				});
 			}
 			else {
-				value = input.checked;
+				value = element.checked;
 			}
+			isFlat = true;
 		}
-		else if (input.type === "number") {
+		else if (element.type === "number") {
 			value = Number(value);
 		}
-		else if (input.type === "password") {
+		else if (element.type === "password") {
 			value = this.__encryptPassword(value);
 		}
-
-		if (typeof value == "string") {
-			value = prefix + value + suffix;
-		}
-
-		if (input.tagName == "SELECT" && input.hasAttribute('multiple')) {
-			let options = input.selectedOptions;
+		else if (element.tagName == "SELECT" && element.hasAttribute('multiple')) {
+			let options = element.selectedOptions;
 			value = [];
 			for (let i = 0; i < options.length; i++) {
 				value.push(options[i].value);
 			}
+			isFlat = true;
 		}
-
-		return value;
-	},
-	
-	// Gets all Collection and document_id to group and create fewer requests
-	__getReqeust: function(elements) {
-
-		let requests = new Map();
-
-		elements.forEach((el) => {
-			// if rendered in server side skip 
-			if (el.hasAttribute('rendered')) {
-				el.removeAttribute('rendered')
-				return;
-			}
-			
-			if (el.closest('.template')) return;
-
-			const { collection, document_id, name, isRead } = crud.getAttr(el)
-			if (!collection || !document_id|| !name || isRead == "false") return;
-			if (!crud.checkAttrValue(collection) || !crud.checkAttrValue(document_id) || !crud.checkAttrValue(name)) return;
-			 
-			requests.set(`${collection}${document_id}`, {collection, document_id})
-		})
-		return requests;
-	},
-	
-	save: async function(element) {
-		// if (!element.classList.contains('domEditor')) {
-		// 	return;
-		// }
-		
-		let value;
-		let isFlat;
-		if (element.tagName == 'INPUT' || element.tagName == 'TEXTAREA' || element.tagName == 'SELECT') {
-			isFlat = !this.__checkMultiple(element);
-			value = this.getValue(element)
+		else if (element.tagName == 'INPUT' || element.tagName == 'TEXTAREA' || element.tagName == 'SELECT') {
+			value = element.value;
 		}
 		else if (element.tagName === 'IFRAME') {
 			value = element.srcdoc;
 		}
 		else {
 			value = element.innerHTML;
-			element.value = value;
 		}
-		await crud.save(element, value, isFlat)
+		value = prefix + value + suffix;
+		element.getValue = value;
+		
+		return {value, isFlat};
+	},
+	
+	save: async function(element) {
+		let	{value, isFlat} = this.getValue(element);
+		await crud.save(element, value, isFlat);
+	},
+
+	// Gets all Collection and document_id to group and create fewer requests
+	__getReqeust: function(elements) {
+		let requests = new Map();
+		elements.forEach((el) => {
+			// if rendered in server side skip 
+			if (el.hasAttribute('rendered')) {
+				el.removeAttribute('rendered');
+				return;
+			}
+			
+			if (el.closest('.template')) return;
+
+			const { collection, document_id, name, isRead } = crud.getAttr(el);
+			if (!collection || !document_id|| !name || isRead == "false") return;
+			if (!crud.checkAttrValue(collection) || !crud.checkAttrValue(document_id) || !crud.checkAttrValue(name)) return;
+			 
+			requests.set(`${collection}${document_id}`, {collection, document_id});
+		});
+		return requests;
 	},
 	
 	__initSocket: function() {
 		const self = this;
 		crud.listen('updateDocument', function(data) {
 			self.setData(null, data);
-		})
+		});
 	},
 	
 	__initEvents: function(elements) {
@@ -310,7 +288,10 @@ const CoCreateElements = {
 	
 				el.addEventListener('input', function(e) {
 					const {document_id, isRealtime, isCrdt} = crud.getAttr(el);
-					if (isCrdt == "true" && document_id || isRealtime == "false") return;
+					if (isCrdt == "true" && document_id || isRealtime == "false"){
+						self.getValue(el);
+						return;
+					} 
 					if (e.detail.skip === true) return;
 					self.save(this);
 				});
@@ -318,7 +299,10 @@ const CoCreateElements = {
 				el.addEventListener('change', function(e) {
 					if (this.tagName == 'SELECT') {
 						const {isRealtime, isSave, isUpdate} = crud.getAttr(el);
-						if (isRealtime == "false" || isSave == "false" || isUpdate == "false") return;
+						if (isRealtime == "false" || isSave == "false" || isUpdate == "false"){
+							self.getValue(el);
+							return;
+						} 
 						self.save(this);
 					}
 				});
@@ -327,28 +311,14 @@ const CoCreateElements = {
 
 	},
 	
-	__checkMultiple: function(el) {
-		if (el.tagName == 'INPUT' && el.getAttribute('type') == 'checkbox') {
-			return true;
-		}
-
-		if (el.tagName == "SELECT" && el.hasAttribute('multiple')) {
-			return true;
-		}
-		return false;
-	},
-
 	__encryptPassword: function(str) {
-		var encodedString = btoa(str);
+		let encodedString = btoa(str);
 		return encodedString;
 	},
 
 	__decryptPassword: function(str) {
-		if (!str) {
-			return "";
-		}
-
-		var decode_str = atob(str);
+		if (!str) return "";
+		let decode_str = atob(str);
 		return decode_str;
 	},
 }
@@ -360,9 +330,9 @@ observer.init({
 	observe: ['childList'],
 	target: CoCreateElements.selector,
 	callback: function(mutation) {
-		CoCreateElements.initElements(mutation.addedNodes)
+		CoCreateElements.initElements(mutation.addedNodes);
 	}
-})
+});
 
 observer.init({
 	name: 'CoCreateElementsAttributes',
@@ -370,9 +340,9 @@ observer.init({
 	attributeName: ['collection', 'document_id', 'name'],
 	target: CoCreateElements.selector,
 	callback: function(mutation) {
-		let {collection, document_id, name} = crud.getAttr(mutation.target)
+		let {collection, document_id, name} = crud.getAttr(mutation.target);
 		if(collection && document_id && name)
-			CoCreateElements.initElements([mutation.target])
+			CoCreateElements.initElements([mutation.target]);
 	}
 });
 
@@ -380,8 +350,8 @@ action.init({
 	action: "saveHtml",
 	endEvent: "changed-element",
 	callback: (btn, data) => {
-		let form = btn.closet('form')
-		CoCreateElements.save(form)
+		let form = btn.closet('form');
+		CoCreateElements.save(form);
 	},
 });
 

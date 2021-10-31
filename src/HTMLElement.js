@@ -1,8 +1,9 @@
-			let v = el.getValue()
+	let v = el.getValue()
 
 	HTMLElement.prototype.getValue = function() {
     	this.style.display = 'none';
 	};
+	
 	HTMLInputElement.prototype.getValue = function() {
 		let value = this.value;
 
@@ -43,6 +44,7 @@
 
 		return value;
 	};
+	
 	HTMLHeadingElement.prototype.getValue = function() {
     	this.style.display = 'none';
 	};
