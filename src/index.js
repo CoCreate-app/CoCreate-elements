@@ -45,67 +45,68 @@ const CoCreateElements = {
 			let isEditable = el.hasAttribute('contenteditable');
 			if (data['collection'] == collection && data['document_id'] == document_id && !isEditable) {
 				const value = encodeData[name]
-				if (value === null || value === undefined) return;
+				setValue(el, value)
+				// if (value === null || value === undefined) return;
 				
-				if (el.tagName == 'INPUT' || el.tagName == 'TEXTAREA' || el.tagName == 'SELECT') {
-					this.setValue(el, value); 
-					return;
-				}
-				if (el.tagName === 'IMG' || el.tagName === 'SOURCE')
-					el.src = value;
+				// if (el.tagName == 'INPUT' || el.tagName == 'TEXTAREA' || el.tagName == 'SELECT') {
+				// 	this.setValue(el, value); 
+				// 	return;
+				// }
+				// if (el.tagName === 'IMG' || el.tagName === 'SOURCE')
+				// 	el.src = value;
 				
-				else if (el.tagName === 'IFRAME') {
-					el.srcdoc = value;
-					el.onload = function(e) {
-						el.removeAttribute('srcdoc');
-					};
-				}
+				// else if (el.tagName === 'IFRAME') {
+				// 	el.srcdoc = value;
+				// 	el.onload = function(e) {
+				// 		el.removeAttribute('srcdoc');
+				// 	};
+				// }
 				
-				else if (el.tagName === 'DIV') {
-					if (el.hasAttribute("value")) {
-						el.setAttribute("value", value);
-					}
+				// else if (el.tagName === 'DIV') {
+				// 	if (el.hasAttribute("value")) {
+				// 		el.setAttribute("value", value);
+				// 	}
 
-					if (el.classList.contains('domEditor')) {
-						if (el.getAttribute('data-domEditor') == "replace") {
-							let newElement = document.createElement("div");
-							newElement.innerHTML = value;
-							let parentNode = el.parentNode;
-							if (parentNode) {
-								if (newElement.children[0]) {
-									parentNode.replaceChild(newElement.children[0], el);
-								}
-								else {
-									parentNode.replaceChild(newElement, el);
-								}
-							}
-						}
-						else {
-							el.innerHTML = value;
-						}
-					}
-				}
+				// 	if (el.classList.contains('domEditor')) {
+				// 		if (el.getAttribute('data-domEditor') == "replace") {
+				// 			let newElement = document.createElement("div");
+				// 			newElement.innerHTML = value;
+				// 			let parentNode = el.parentNode;
+				// 			if (parentNode) {
+				// 				if (newElement.children[0]) {
+				// 					parentNode.replaceChild(newElement.children[0], el);
+				// 				}
+				// 				else {
+				// 					parentNode.replaceChild(newElement, el);
+				// 				}
+				// 			}
+				// 		}
+				// 		else {
+				// 			el.innerHTML = value;
+				// 		}
+				// 	}
+				// }
 				
-				else if (el.tagName === 'SCRIPT'){
-					this.setScript(el, value);
-				}
-				else {
-					el.innerHTML = value;
-					if (el.hasAttribute("value")) {
-						el.setAttribute("value", value);
-					}
-				}
+				// else if (el.tagName === 'SCRIPT'){
+				// 	this.setScript(el, value);
+				// }
+				// else {
+				// 	el.innerHTML = value;
+				// 	if (el.hasAttribute("value")) {
+				// 		el.setAttribute("value", value);
+				// 	}
+				// }
 
-				if (el.tagName == 'HEAD' || el.tagName == 'BODY') {
-					el.removeAttribute('collection');
-					el.removeAttribute('document_id');
-					el.removeAttribute('pass_id');
+				// if (el.tagName == 'HEAD' || el.tagName == 'BODY') {
+				// 	el.removeAttribute('collection');
+				// 	el.removeAttribute('document_id');
+				// 	el.removeAttribute('pass_id');
 
-					let scripts = el.querySelectorAll('script');
-					for (let script of scripts) {
-						this.setScript(script)
-					}
-				}
+				// 	let scripts = el.querySelectorAll('script');
+				// 	for (let script of scripts) {
+				// 		this.setScript(script)
+				// 	}
+				// }
 
 				isRendered = true;
 			}
@@ -214,9 +215,10 @@ const CoCreateElements = {
 		let requests = new Map();
 		elements.forEach((el) => {
 			
-			if (el.tagName != 'DIV' || el.classList.contains('domEditor') || el.hasAttribute('contenteditable'))
-			el.getValue = getValue; 
-			
+			if (el.tagName != 'DIV' || el.classList.contains('domEditor') || el.hasAttribute('contenteditable')){
+				el.getValue = getValue; 
+				el.setValue = setValue; 
+			}
 			// if rendered in server side skip 
 			if (el.hasAttribute('rendered')) {
 				el.removeAttribute('rendered');
@@ -278,50 +280,169 @@ const CoCreateElements = {
 	},
 };
 
-var getValue = (element) => {
-		let value = element.value;
-		let prefix = element.getAttribute('value-prefix') || "";
-		let suffix = element.getAttribute('value-suffix') || "";
+var setValue = (el, value) => {
+	// const value = encodeData[name]
+	if (value === null || value === undefined) return;
+	
+	if (el.tagName == 'INPUT' || el.tagName == 'TEXTAREA' || el.tagName == 'SELECT') {
+		const {isCrdt} = crud.getAttr(el);
+		if (isCrdt == "true" || el.type === 'file') return;
 
-		if (element.type === "checkbox") {
-			let el_name = element.getAttribute('name');
-			let checkboxs = document.querySelectorAll(`input[type=checkbox][name='${el_name}']`);
-			if (checkboxs.length > 1) {
-				value = [];
-				checkboxs.forEach(el => {
-					if (el.checked) value.push(el.value);
-				});
+		if (el.type == 'checkbox') {
+			if (value.includes(el.value)) {
+				el.checked = true;
 			}
 			else {
-				value = element.checked;
+				el.checked = false;
 			}
 		}
-		else if (element.type === "number") {
-			value = Number(value);
+		else if (el.type === 'radio') {
+			el.value == value ? el.checked = true : el.checked = false;
 		}
-		else if (element.type === "password") {
-			value = this.__encryptPassword(value);
+		else if (el.type === 'password') {
+			value = this.__decryptPassword(value);
 		}
-		else if (element.tagName == "SELECT" && element.hasAttribute('multiple')) {
-			let options = element.selectedOptions;
-			value = [];
+		else if (el.tagName == "SELECT" && el.hasAttribute('multiple') && Array.isArray(value)) {
+			let options = el.options;
 			for (let i = 0; i < options.length; i++) {
-				value.push(options[i].value);
+				if (value.includes(options[i].value)) {
+					options[i].selected = "selected";
+				}
 			}
 		}
-		else if (element.tagName == 'INPUT' || element.tagName == 'TEXTAREA' || element.tagName == 'SELECT') {
-			value = element.value;
+		else
+			el.value = value;
+
+		let inputEvent = new CustomEvent('input', {
+			bubbles: true,
+			detail: {
+				skip: true
+			},
+		});
+		Object.defineProperty(inputEvent, 'target', {
+			writable: false,
+			value: el
+		});
+		el.dispatchEvent(inputEvent);
+		
+		let changeEvent = new CustomEvent('change', {
+			bubbles: true,
+			detail: {
+				skip: true
+			},
+		});
+		Object.defineProperty(changeEvent, 'target', {
+			writable: false,
+			value: el
+		});
+		el.dispatchEvent(changeEvent);
+
+		// ToDo: replace with custom event system
+		el.dispatchEvent(new CustomEvent('CoCreateInput-setvalue', {
+			eventType: 'rendered'
+		}));
+	}
+	else if (el.tagName === 'IMG' || el.tagName === 'SOURCE')
+		el.src = value;
+	
+	else if (el.tagName === 'IFRAME') {
+		el.srcdoc = value;
+		el.onload = function(e) {
+			el.removeAttribute('srcdoc');
+		};
+	}
+	
+	else if (el.tagName === 'DIV') {
+		if (el.hasAttribute("value")) {
+			el.setAttribute("value", value);
 		}
-		else if (element.tagName === 'IFRAME') {
-			value = element.srcdoc;
+
+		if (el.classList.contains('domEditor')) {
+			if (el.getAttribute('data-domEditor') == "replace") {
+				let newElement = document.createElement("div");
+				newElement.innerHTML = value;
+				let parentNode = el.parentNode;
+				if (parentNode) {
+					if (newElement.children[0]) {
+						parentNode.replaceChild(newElement.children[0], el);
+					}
+					else {
+						parentNode.replaceChild(newElement, el);
+					}
+				}
+			}
+			else {
+				el.innerHTML = value;
+			}
+		}
+	}
+	
+	else if (el.tagName === 'SCRIPT'){
+		this.setScript(el, value);
+	}
+	else {
+		el.innerHTML = value;
+		if (el.hasAttribute("value")) {
+			el.setAttribute("value", value);
+		}
+	}
+
+	if (el.tagName == 'HEAD' || el.tagName == 'BODY') {
+		el.removeAttribute('collection');
+		el.removeAttribute('document_id');
+		el.removeAttribute('pass_id');
+
+		let scripts = el.querySelectorAll('script');
+		for (let script of scripts) {
+			this.setScript(script)
+		}
+	}
+};
+		
+var getValue = (element) => {
+	let value = element.value;
+	let prefix = element.getAttribute('value-prefix') || "";
+	let suffix = element.getAttribute('value-suffix') || "";
+
+	if (element.type === "checkbox") {
+		let el_name = element.getAttribute('name');
+		let checkboxs = document.querySelectorAll(`input[type=checkbox][name='${el_name}']`);
+		if (checkboxs.length > 1) {
+			value = [];
+			checkboxs.forEach(el => {
+				if (el.checked) value.push(el.value);
+			});
 		}
 		else {
-			value = element.innerHTML;
+			value = element.checked;
 		}
-		value = prefix + value + suffix;
+	}
+	else if (element.type === "number") {
+		value = Number(value);
+	}
+	else if (element.type === "password") {
+		value = this.__encryptPassword(value);
+	}
+	else if (element.tagName == "SELECT" && element.hasAttribute('multiple')) {
+		let options = element.selectedOptions;
+		value = [];
+		for (let i = 0; i < options.length; i++) {
+			value.push(options[i].value);
+		}
+	}
+	else if (element.tagName == 'INPUT' || element.tagName == 'TEXTAREA' || element.tagName == 'SELECT') {
+		value = element.value;
+	}
+	else if (element.tagName === 'IFRAME') {
+		value = element.srcdoc;
+	}
+	else {
+		value = element.innerHTML;
+	}
+	value = prefix + value + suffix;
 
-		return value;
-}
+	return value;
+};
 
 CoCreateElements.init();
 
