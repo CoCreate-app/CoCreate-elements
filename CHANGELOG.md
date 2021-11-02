@@ -1,3 +1,12 @@
+# [1.2.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.1.0...v1.2.0) (2021-11-02)
+
+
+### Features
+
+* added setValue function to dom element ([b77998d](https://github.com/CoCreate-app/CoCreate-elements/commit/b77998d0cb8100b96a27436f9e00ca4c470a5b28))
+* getValue function attched to the dom element to quickly get the elements value ([9a96a3e](https://github.com/CoCreate-app/CoCreate-elements/commit/9a96a3e4785ee9c96b6ea9e3e958a7dd53edcd85))
+* setValue and getValue attached to the element ([cc20428](https://github.com/CoCreate-app/CoCreate-elements/commit/cc20428cac5edc9f38881360d6ab9282a04c7c22))
+
 # [1.1.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.0.1...v1.1.0) (2021-11-01)
 
 
