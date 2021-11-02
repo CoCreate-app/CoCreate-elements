@@ -108,7 +108,6 @@ const CoCreateElements = {
 				}
 
 				isRendered = true;
-				el.getValue = value;
 			}
 		});
 
@@ -166,7 +165,6 @@ const CoCreateElements = {
 		}
 		else
 			input.value = value;
-		input.getValue = value;
 
 		let inputEvent = new CustomEvent('input', {
 			bubbles: true,
@@ -199,51 +197,10 @@ const CoCreateElements = {
 	},
 	
 	getValue: function(element) {
-		let value = element.value;
+		let value = getValue(element)
 		let isFlat = false;
-		let prefix = element.getAttribute('value-prefix') || "";
-		let suffix = element.getAttribute('value-suffix') || "";
-
-		if (element.type === "checkbox") {
-			let el_name = element.getAttribute('name');
-			let checkboxs = document.querySelectorAll(`input[type=checkbox][name='${el_name}']`);
-			if (checkboxs.length > 1) {
-				value = [];
-				checkboxs.forEach(el => {
-					if (el.checked) value.push(el.value);
-				});
-			}
-			else {
-				value = element.checked;
-			}
-			isFlat = true;
-		}
-		else if (element.type === "number") {
-			value = Number(value);
-		}
-		else if (element.type === "password") {
-			value = this.__encryptPassword(value);
-		}
-		else if (element.tagName == "SELECT" && element.hasAttribute('multiple')) {
-			let options = element.selectedOptions;
-			value = [];
-			for (let i = 0; i < options.length; i++) {
-				value.push(options[i].value);
-			}
-			isFlat = true;
-		}
-		else if (element.tagName == 'INPUT' || element.tagName == 'TEXTAREA' || element.tagName == 'SELECT') {
-			value = element.value;
-		}
-		else if (element.tagName === 'IFRAME') {
-			value = element.srcdoc;
-		}
-		else {
-			value = element.innerHTML;
-		}
-		value = prefix + value + suffix;
-		element.getValue = value;
-		
+		if (element.tagName == "INPUT" && element.type === "checkbox" || element.tagName == "SELECT" && element.hasAttribute('multiple'))
+			isFlat = true
 		return {value, isFlat};
 	},
 	
@@ -256,6 +213,10 @@ const CoCreateElements = {
 	__getReqeust: function(elements) {
 		let requests = new Map();
 		elements.forEach((el) => {
+			
+			if (el.tagName != 'DIV' || el.classList.contains('domEditor') || el.hasAttribute('contenteditable'))
+			el.getValue = getValue; 
+			
 			// if rendered in server side skip 
 			if (el.hasAttribute('rendered')) {
 				el.removeAttribute('rendered');
@@ -288,10 +249,7 @@ const CoCreateElements = {
 	
 				el.addEventListener('input', function(e) {
 					const {document_id, isRealtime, isCrdt} = crud.getAttr(el);
-					if (isCrdt == "true" && document_id || isRealtime == "false"){
-						self.getValue(el);
-						return;
-					} 
+					if (isCrdt == "true" && document_id || isRealtime == "false") return;
 					if (e.detail.skip === true) return;
 					self.save(this);
 				});
@@ -299,10 +257,7 @@ const CoCreateElements = {
 				el.addEventListener('change', function(e) {
 					if (this.tagName == 'SELECT') {
 						const {isRealtime, isSave, isUpdate} = crud.getAttr(el);
-						if (isRealtime == "false" || isSave == "false" || isUpdate == "false"){
-							self.getValue(el);
-							return;
-						} 
+						if (isRealtime == "false" || isSave == "false" || isUpdate == "false")	return;
 						self.save(this);
 					}
 				});
@@ -321,6 +276,51 @@ const CoCreateElements = {
 		let decode_str = atob(str);
 		return decode_str;
 	},
+};
+
+var getValue = (element) => {
+		let value = element.value;
+		let prefix = element.getAttribute('value-prefix') || "";
+		let suffix = element.getAttribute('value-suffix') || "";
+
+		if (element.type === "checkbox") {
+			let el_name = element.getAttribute('name');
+			let checkboxs = document.querySelectorAll(`input[type=checkbox][name='${el_name}']`);
+			if (checkboxs.length > 1) {
+				value = [];
+				checkboxs.forEach(el => {
+					if (el.checked) value.push(el.value);
+				});
+			}
+			else {
+				value = element.checked;
+			}
+		}
+		else if (element.type === "number") {
+			value = Number(value);
+		}
+		else if (element.type === "password") {
+			value = this.__encryptPassword(value);
+		}
+		else if (element.tagName == "SELECT" && element.hasAttribute('multiple')) {
+			let options = element.selectedOptions;
+			value = [];
+			for (let i = 0; i < options.length; i++) {
+				value.push(options[i].value);
+			}
+		}
+		else if (element.tagName == 'INPUT' || element.tagName == 'TEXTAREA' || element.tagName == 'SELECT') {
+			value = element.value;
+		}
+		else if (element.tagName === 'IFRAME') {
+			value = element.srcdoc;
+		}
+		else {
+			value = element.innerHTML;
+		}
+		value = prefix + value + suffix;
+
+		return value;
 }
 
 CoCreateElements.init();
