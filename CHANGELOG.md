@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.2.0...v1.3.0) (2021-11-02)
+
+
+### Features
+
+* updated to functional programing and reduced the amount of for loops ([200d496](https://github.com/CoCreate-app/CoCreate-elements/commit/200d496ef0e3de53563098628e88143141ba437e))
+
 # [1.2.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.1.0...v1.2.0) (2021-11-02)
 
 
