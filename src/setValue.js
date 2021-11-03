@@ -31,35 +31,7 @@ var setValue = (el, value) => {
 		}
 		else
 			el.value = value;
-
-		let inputEvent = new CustomEvent('input', {
-			bubbles: true,
-			detail: {
-				skip: true
-			},
-		});
-		Object.defineProperty(inputEvent, 'target', {
-			writable: false,
-			value: el
-		});
-		el.dispatchEvent(inputEvent);
-		
-		let changeEvent = new CustomEvent('change', {
-			bubbles: true,
-			detail: {
-				skip: true
-			},
-		});
-		Object.defineProperty(changeEvent, 'target', {
-			writable: false,
-			value: el
-		});
-		el.dispatchEvent(changeEvent);
-
-		// ToDo: replace with custom event system
-		el.dispatchEvent(new CustomEvent('CoCreateInput-setvalue', {
-			eventType: 'rendered'
-		}));
+		dispatchEvents(el)
 	}
 	else if (el.tagName === 'IMG' || el.tagName === 'SOURCE')
 		el.src = value;
@@ -100,12 +72,16 @@ var setValue = (el, value) => {
 		setScript(el, value);
 	}
 	else {
+		if (el.hasAttribute('contenteditable') && el == document.activeElement) return;
+		
 		el.innerHTML = value;
 		if (el.hasAttribute("value")) {
 			el.setAttribute("value", value);
 		}
 	}
-
+	if (el.getAttribute('contenteditable'))
+		dispatchEvents(el);
+		
 	if (el.tagName == 'HEAD' || el.tagName == 'BODY') {
 		el.removeAttribute('collection');
 		el.removeAttribute('document_id');
@@ -135,6 +111,32 @@ function __decryptPassword(str) {
 	if (!str) return "";
 	let decode_str = atob(str);
 	return decode_str;
+}
+
+function dispatchEvents(el) {
+	let inputEvent = new CustomEvent('input', {
+		bubbles: true,
+		detail: {
+			skip: true
+		},
+	});
+	Object.defineProperty(inputEvent, 'target', {
+		writable: false,
+		value: el
+	});
+	el.dispatchEvent(inputEvent);
+	
+	let changeEvent = new CustomEvent('change', {
+		bubbles: true,
+		detail: {
+			skip: true
+		},
+	});
+	Object.defineProperty(changeEvent, 'target', {
+		writable: false,
+		value: el
+	});
+	el.dispatchEvent(changeEvent);
 }
 
 export {setValue};
