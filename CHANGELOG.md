@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.3.0...v1.3.1) (2021-11-03)
+
+
+### Bug Fixes
+
+* contenteditable elements will use cocreate-text to apply value... maybe same should be done for input ([423fd39](https://github.com/CoCreate-app/CoCreate-elements/commit/423fd3992b4fa215b3ede3c1672a142dc0c1eab9))
+
 # [1.3.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.2.0...v1.3.0) (2021-11-02)
 
 
