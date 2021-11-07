@@ -132,8 +132,6 @@ function __initEvents(el) {
 	}
 }
 
-init();
-
 observer.init({
 	name: 'CoCreateElementsChildList',
 	observe: ['childList'],
@@ -163,5 +161,7 @@ action.init({
 		save(form);
 	},
 });
+
+init();
 
 export default {initElements, initElement, save};
