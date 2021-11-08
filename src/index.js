@@ -39,8 +39,8 @@ function initElement(el) {
 	if (el.closest('.template')) return;
 
 	const { collection, document_id, name, isRead } = crud.getAttr(el);
-	if (!collection || !document_id|| !name || isRead == "false") return;
-	if (!crud.checkAttrValue(collection) || !crud.checkAttrValue(document_id) || !crud.checkAttrValue(name)) return;
+	if (!collection || !name) return;
+	if (!crud.checkAttrValue(collection) || !crud.checkAttrValue(name)) return;
 	 
 	__initEvents(el);
 	return {collection, document_id};
@@ -118,7 +118,7 @@ function __initEvents(el) {
 		el.addEventListener('input', function(e) {
 			const {document_id, isRealtime, isCrdt} = crud.getAttr(el);
 			if (isCrdt == "true" && document_id || isRealtime == "false") return;
-			if (e.detail.skip === true) return;
+			if (e.detail && e.detail.skip === true) return;
 			save(el);
 		});
 
@@ -164,4 +164,4 @@ action.init({
 
 init();
 
-export default {initElements, initElement, save};
+export default {initElements, initElement, save, getValue, setValue};
