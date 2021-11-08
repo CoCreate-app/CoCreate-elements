@@ -1,3 +1,10 @@
+## [1.3.6](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.3.5...v1.3.6) (2021-11-08)
+
+
+### Bug Fixes
+
+* input event was not bing added for elements with no document_id input event is needed to create new document_id ([470f798](https://github.com/CoCreate-app/CoCreate-elements/commit/470f7986fe23394161ce1ee75fe4772f4869f2fd))
+
 ## [1.3.5](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.3.4...v1.3.5) (2021-11-07)
 
 
