@@ -1,3 +1,10 @@
+## [1.3.7](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.3.6...v1.3.7) (2021-11-09)
+
+
+### Bug Fixes
+
+* select changeEvent loop ([bc18922](https://github.com/CoCreate-app/CoCreate-elements/commit/bc189227b35e87c14e494d6fc91e39a65b683ea2))
+
 ## [1.3.6](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.3.5...v1.3.6) (2021-11-08)
 
 
