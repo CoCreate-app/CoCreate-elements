@@ -126,6 +126,7 @@ function __initEvents(el) {
 			if (el.tagName == 'SELECT') {
 				const {isRealtime, isSave, isUpdate} = crud.getAttr(el);
 				if (isRealtime == "false" || isSave == "false" || isUpdate == "false")	return;
+				if (e.detail && e.detail.skip === true) return;
 				save(el);
 			}
 		});
