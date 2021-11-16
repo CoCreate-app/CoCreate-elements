@@ -1,3 +1,10 @@
+## [1.3.10](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.3.9...v1.3.10) (2021-11-16)
+
+
+### Bug Fixes
+
+* if isRead is false return ([5bf8338](https://github.com/CoCreate-app/CoCreate-elements/commit/5bf83389e45ca73cdc6fdeb2804bbb69690c735e))
+
 ## [1.3.9](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.3.8...v1.3.9) (2021-11-15)
 
 
