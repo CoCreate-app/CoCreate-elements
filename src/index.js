@@ -43,6 +43,7 @@ function initElement(el) {
 	if (!crud.checkAttrValue(collection) || !crud.checkAttrValue(name)) return;
 	 
 	__initEvents(el);
+	if (isRead == 'false') return;
 	return {collection, document_id};
 }
 	
