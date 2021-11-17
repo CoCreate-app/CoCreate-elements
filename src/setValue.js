@@ -19,7 +19,7 @@ var setValue = (el, value) => {
 			el.value == value ? el.checked = true : el.checked = false;
 		}
 		else if (el.type === 'password') {
-			value = __decryptPassword(value);
+			el.value = __decryptPassword(value);
 		}
 		else if (el.tagName == "SELECT" && el.hasAttribute('multiple') && Array.isArray(value)) {
 			let options = el.options;

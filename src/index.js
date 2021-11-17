@@ -119,7 +119,7 @@ function __initEvents(el) {
 		el.addEventListener('input', function(e) {
 			const {document_id, isRealtime, isCrdt} = crud.getAttr(el);
 			if (isCrdt == "true" && document_id || isRealtime == "false") return;
-			if (e.detail && e.detail.skip === true) return;
+			if (e.detail && e.detail.skip == true) return;
 			save(el);
 		});
 
@@ -127,7 +127,7 @@ function __initEvents(el) {
 			if (el.tagName == 'SELECT') {
 				const {isRealtime, isSave, isUpdate} = crud.getAttr(el);
 				if (isRealtime == "false" || isSave == "false" || isUpdate == "false")	return;
-				if (e.detail && e.detail.skip === true) return;
+				if (e.detail && e.detail.skip == true) return;
 				save(el);
 			}
 		});

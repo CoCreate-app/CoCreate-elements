@@ -38,7 +38,8 @@ var getValue = (element) => {
 	else {
 		value = element.innerHTML;
 	}
-	value = prefix + value + suffix;
+	if (prefix || suffix)
+		value = prefix + value + suffix;
 
 	return value;
 };
