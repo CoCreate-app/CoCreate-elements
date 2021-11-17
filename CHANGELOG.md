@@ -1,3 +1,10 @@
+## [1.3.12](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.3.11...v1.3.12) (2021-11-17)
+
+
+### Bug Fixes
+
+* getValue return value as number if input.type == number ([0c027bf](https://github.com/CoCreate-app/CoCreate-elements/commit/0c027bf28a0d6d2ed610bd379c47d9dc918a4006))
+
 ## [1.3.11](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.3.10...v1.3.11) (2021-11-16)
 
 
