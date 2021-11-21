@@ -1,3 +1,48 @@
+import observer from '@cocreate/observer';
+import {setValue} from './setValue';
+
+function initGetValues() {
+	var elements = document.querySelectorAll('[get-value]');
+	initElements(elements)
+}
+
+function initElements(elements) {
+	for (let element of elements)
+		initElement(element)
+}
+
+function initElement(element) {
+    let id = element.getAttribute('get-value')
+	let valueEl = document.getElementById(id);
+	if(!valueEl) return;
+	let value = getValue(valueEl)
+	setValue(element, value)
+	
+	if (['INPUT', 'TEXTAREA', 'SELECT'].includes(valueEl.tagName)  || valueEl.contentEditable)
+	
+	valueEl.addEventListener('input', (e) => {
+		setValueByFind(e.target)
+	})
+	
+	valueEl.addEventListener('updated_by_fetch', (e) => {
+		setValueByFind(e.target)
+	})
+
+	element.dispatchEvent(new Event("input", {
+		"bubbles": true
+	}));
+
+}
+
+function setValueByFind(valueEl){
+	let value = getValue(valueEl)
+    let id = valueEl.getAttribute('id')
+    if(!id) return;
+	var elements = document.querySelectorAll('[get-value="' + id + '"]');
+	for(let element of elements)
+		setValue(element, value)
+}
+
 var getValue = (element) => {
 	let value = element.value;
 	let prefix = element.getAttribute('value-prefix') || "";
@@ -49,4 +94,14 @@ function __encryptPassword(str) {
 	return encodedString;
 }
 
+observer.init({
+	name: 'CoCreateLogic',
+	observe: ['addedNodes'],
+	target: '[get-value]',
+	callback: function(mutation) {
+		CoCreateLogic.getValues.initElement(mutation.target);
+	}
+});
+
+initGetValues();
 export {getValue};
