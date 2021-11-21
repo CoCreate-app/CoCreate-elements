@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.3.18...v1.4.0) (2021-11-21)
+
+
+### Features
+
+* added attribute get-value to get a value from a target element ([d24b60c](https://github.com/CoCreate-app/CoCreate-elements/commit/d24b60cc7a00d3899311be4bf7ea2fc2c798c4a7))
+
 ## [1.3.18](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.3.17...v1.3.18) (2021-11-20)
 
 
