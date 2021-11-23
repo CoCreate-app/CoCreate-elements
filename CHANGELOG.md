@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.4.0...v1.4.1) (2021-11-23)
+
+
+### Bug Fixes
+
+* impoved the way checkbox and multiple select is handled. Commented change eventListener ([99b7160](https://github.com/CoCreate-app/CoCreate-elements/commit/99b71600a644eed41461b910e96bb6b053069dfe))
+
 # [1.4.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.3.18...v1.4.0) (2021-11-21)
 
 
