@@ -102,8 +102,8 @@ function setData(elements, data) {
 async function save(element) {
 	let value = getValue(element);
 	let isFlat = false;
-	if (element.tagName == "INPUT" && element.type === "checkbox" || element.tagName == "SELECT" && element.hasAttribute('multiple'))
-		isFlat = true;
+	// if (element.tagName == "INPUT" && element.type === "checkbox" || element.tagName == "SELECT" && element.hasAttribute('multiple'))
+		// isFlat = true;
 	await crud.save(element, value, isFlat);
 }
 
@@ -115,7 +115,6 @@ function __initSocket() {
 	
 function __initEvents(el) {
 	if (el.tagName == 'INPUT' || el.tagName == 'TEXTAREA' || el.tagName == 'SELECT' || el.hasAttribute('contenteditable')) {
-
 		el.addEventListener('input', function(e) {
 			const {document_id, isRealtime, isCrdt} = crud.getAttr(el);
 			if (isCrdt == "true" && document_id || isRealtime == "false") return;
@@ -123,14 +122,14 @@ function __initEvents(el) {
 			save(el);
 		});
 
-		el.addEventListener('change', function(e) {
-			if (el.tagName == 'SELECT') {
-				const {isRealtime, isSave, isUpdate} = crud.getAttr(el);
-				if (isRealtime == "false" || isSave == "false" || isUpdate == "false")	return;
-				if (e.detail && e.detail.skip == true) return;
-				save(el);
-			}
-		});
+		// el.addEventListener('change', function(e) {
+		// 	if (el.tagName == 'SELECT') {
+		// 		const {isRealtime, isSave, isUpdate} = crud.getAttr(el);
+		// 		if (isRealtime == "false" || isSave == "false" || isUpdate == "false")	return;
+		// 		if (e.detail && e.detail.skip == true) return;
+		// 		save(el);
+		// 	}
+		// });
 	}
 }
 
