@@ -1,3 +1,11 @@
+## [1.4.4](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.4.3...v1.4.4) (2021-11-26)
+
+
+### Bug Fixes
+
+* docs sidenav width ([1938007](https://github.com/CoCreate-app/CoCreate-elements/commit/1938007bc5f4a1a9c5660155b8e758a2196aaa84))
+* updated action dependency to actions ([94b5ce1](https://github.com/CoCreate-app/CoCreate-elements/commit/94b5ce10cc61c8e2ee44cd4def1054332bbca668))
+
 ## [1.4.3](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.4.2...v1.4.3) (2021-11-26)
 
 
