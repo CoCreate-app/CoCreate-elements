@@ -1,3 +1,11 @@
+## [1.4.7](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.4.6...v1.4.7) (2021-11-27)
+
+
+### Bug Fixes
+
+* actions import typo ([b9bd832](https://github.com/CoCreate-app/CoCreate-elements/commit/b9bd832c5bef3b5c53b7ef701f36d4c8529da857))
+* update dependencies ([401df52](https://github.com/CoCreate-app/CoCreate-elements/commit/401df52d255d9f96e9f62da56cd4003ce54ca32b))
+
 ## [1.4.6](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.4.5...v1.4.6) (2021-11-27)
 
 
