@@ -1,5 +1,5 @@
 import observer from '@cocreate/observer';
-import action from '@cocreate/action';
+import action from '@cocreate/actions';
 import crud from '@cocreate/crud-client';
 import {setValue} from './setValue';
 import {getValue} from './getValue';
