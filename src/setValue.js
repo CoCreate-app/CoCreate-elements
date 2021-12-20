@@ -38,6 +38,11 @@ var setValue = (el, value) => {
 	
 	else if (el.tagName === 'IFRAME') {
 		el.srcdoc = value;
+		// el.contentDocument.documentElement.innerHTML = value;
+		if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1){
+		     // Do Firefox-related activities
+		}
+		else
 		el.onload = function(e) {
 			el.removeAttribute('srcdoc');
 		};
