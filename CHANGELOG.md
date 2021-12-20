@@ -1,3 +1,10 @@
+## [1.4.10](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.4.9...v1.4.10) (2021-12-20)
+
+
+### Bug Fixes
+
+* firefox setValue content is removed if iframe.srcDoc is removed ([68da8ec](https://github.com/CoCreate-app/CoCreate-elements/commit/68da8ec1736997af6e814e50c737b8761013a5b7))
+
 ## [1.4.9](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.4.8...v1.4.9) (2021-12-15)
 
 
