@@ -1,3 +1,10 @@
+## [1.4.11](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.4.10...v1.4.11) (2021-12-23)
+
+
+### Bug Fixes
+
+* renamed filter-value_type to filter-value-type ([5ec9280](https://github.com/CoCreate-app/CoCreate-elements/commit/5ec928076ba52fe83f526208091778eb00a81a03))
+
 ## [1.4.10](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.4.9...v1.4.10) (2021-12-20)
 
 
