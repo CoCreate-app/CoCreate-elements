@@ -1,3 +1,10 @@
+## [1.4.12](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.4.11...v1.4.12) (2021-12-24)
+
+
+### Bug Fixes
+
+* get-value observer typo ([1ab5e84](https://github.com/CoCreate-app/CoCreate-elements/commit/1ab5e84428a680bd0e4a1c62091fd55edf22f69d))
+
 ## [1.4.11](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.4.10...v1.4.11) (2021-12-23)
 
 
