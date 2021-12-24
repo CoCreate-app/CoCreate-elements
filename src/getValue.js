@@ -112,11 +112,11 @@ function __encryptPassword(str) {
 }
 
 observer.init({
-	name: 'CoCreateLogic',
+	name: 'get-value',
 	observe: ['addedNodes'],
 	target: '[get-value]',
 	callback: function(mutation) {
-		CoCreateLogic.getValues.initElement(mutation.target);
+		initElement(mutation.target);
 	}
 });
 
