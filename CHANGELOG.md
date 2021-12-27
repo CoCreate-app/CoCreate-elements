@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.4.12...v1.5.0) (2021-12-27)
+
+
+### Features
+
+* set-value and set-value-key attribute to add placeholders that can be replaced by value onChange ([266cf5f](https://github.com/CoCreate-app/CoCreate-elements/commit/266cf5f7f72869a9a390889d24ddab2fed038c26))
+
 ## [1.4.12](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.4.11...v1.4.12) (2021-12-24)
 
 
