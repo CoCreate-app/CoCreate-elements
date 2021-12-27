@@ -16,6 +16,7 @@ function initElement(element) {
 	let valueEl = document.getElementById(id);
 	if(!valueEl) return;
 	let value = getValue(valueEl)
+	if (value)
 	setValue(element, value)
 	
 	// if (['INPUT', 'TEXTAREA', 'SELECT'].includes(valueEl.tagName)  || valueEl.contentEditable)

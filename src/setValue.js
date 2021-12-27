@@ -1,4 +1,72 @@
+import observer from '@cocreate/observer';
 import crud from '@cocreate/crud-client';
+import {getValue} from './getValue';
+
+function initSetValues() {
+	var elements = document.querySelectorAll('[set-value]');
+	initElements(elements);
+}
+
+function initElements(elements) {
+	for (let element of elements)
+		initElement(element);
+}
+
+function initElement(element) {
+	initEvents(element);
+}
+
+function initEvents(element){
+	if (['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName)  || element.contentEditable)
+		element.addEventListener('input', (e) => {
+			setValueByFind(e.target);
+		});
+	
+	element.addEventListener('updated_by_fetch', (e) => {
+		setValueByFind(e.target);
+	});
+}
+
+function setValueByFind(element){
+	let key = element.getAttribute('set-value-key');
+	if (key)
+		key = `{{${key}}}`;
+	let value = getValue(element);
+	if (!value) return;
+    let selector = element.getAttribute('set-value');
+    if(!selector) return;
+	let elements = document.querySelectorAll(selector);
+	
+	for(let element of elements){
+		if (key){
+			const regex = new RegExp(key, "g");
+			for (let attribute of element.attributes){
+				let attrName = attribute.name;
+				let attrValue = attribute.value;
+				let setAttr = false;
+				if (attrValue.includes(key)){
+					attrValue = attrValue.replace(regex, value);
+					setAttr = true;
+				}
+				if (attrName.includes(key)){
+					element.removeAttribute(key);
+					attrName = attrName.replace(regex, value);
+					setAttr = true;
+				}
+				if(setAttr)
+					element.setAttribute(attrName, attrValue);
+			}
+			let html = element.innerHTML;
+			if (html.indexOf(key) !== -1){
+				html.replace(regex, value);
+				element.innerHTML = html;
+			}
+		}
+		else
+			setValue(element, value);
+	}
+		
+}
 
 var setValue = (el, value) => {
 	if (value === null || value === undefined) return;
@@ -143,5 +211,17 @@ function dispatchEvents(el) {
 	});
 	el.dispatchEvent(changeEvent);
 }
+
+observer.init({
+	name: 'set-value',
+	observe: ['addedNodes'],
+	target: '[set-value]',
+	callback: function(mutation) {
+		initElement(mutation.target);
+	}
+});
+
+
+initSetValues();
 
 export {setValue};
