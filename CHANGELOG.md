@@ -1,3 +1,16 @@
+# [1.6.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.5.0...v1.6.0) (2022-01-01)
+
+
+### Bug Fixes
+
+* ability to use key as innerHTML ([ca76c3c](https://github.com/CoCreate-app/CoCreate-elements/commit/ca76c3ce1f4f28fc86ec47f808a1f21546159bb3))
+* get-value attribute value now supports a selector added # to all values currently in get-value attributes ([dd4c9e3](https://github.com/CoCreate-app/CoCreate-elements/commit/dd4c9e327029d5bd7774695541c8c46cb05e88fe))
+
+
+### Features
+
+* getValue now has support for get-value-key ([951e027](https://github.com/CoCreate-app/CoCreate-elements/commit/951e02725b5a50852e9e3838a2f16e4cf230ebec))
+
 # [1.5.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.4.12...v1.5.0) (2021-12-27)
 
 
