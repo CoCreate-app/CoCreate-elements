@@ -1,8 +1,8 @@
 import observer from '@cocreate/observer';
 import action from '@cocreate/actions';
 import crud from '@cocreate/crud-client';
-import {setValue} from './setValue';
-import {getValue} from './getValue';
+import { initSetValues, setValue } from './setValue';
+import { initGetValues, getValue } from './getValue';
 
 const selector = "[collection][document_id][name]:not(cocreate-select, link), input, textarea, select, [contenteditable]";
 
@@ -164,5 +164,8 @@ action.init({
 });
 
 init();
+initGetValues();
+initSetValues();
+
 
 export default {initElements, initElement, save, getValue, setValue};

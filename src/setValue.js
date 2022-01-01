@@ -58,7 +58,7 @@ function setValueByFind(element){
 			}
 			let html = element.innerHTML;
 			if (html.indexOf(key) !== -1){
-				html.replace(regex, value);
+				html = html.replace(regex, value);
 				element.innerHTML = html;
 			}
 		}
@@ -221,7 +221,4 @@ observer.init({
 	}
 });
 
-
-initSetValues();
-
-export { setValue };
+export { initSetValues, setValue };

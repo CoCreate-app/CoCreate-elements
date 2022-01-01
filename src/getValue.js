@@ -1,6 +1,8 @@
 import observer from '@cocreate/observer';
 import { setValue } from './setValue';
 
+const valueEls = new Map();
+
 function initGetValues() {
 	var elements = document.querySelectorAll('[get-value]');
 	initElements(elements);
@@ -9,6 +11,8 @@ function initGetValues() {
 function initElements(elements) {
 	for (let element of elements)
 		initElement(element);
+	for(let valueEl of valueEls.keys())
+		setValueByFind(valueEl);
 }
 
 function initElement(element) {
@@ -18,9 +22,9 @@ function initElement(element) {
 	let valueEl = document.querySelector(selector);
 	if(!valueEl) return;
 	
-	let value = getValue(valueEl);
-	if (value)
-		setValue(element, value);
+	// let value = getValue(valueEl);
+	// if (value)
+	// 	setValue(element, value);
 	
 	initEvents(valueEl, element);
 
@@ -30,7 +34,6 @@ function initElement(element) {
 
 }
 
-const valueEls = new Map();
 function initEvents(valueEl, element){
 	if (!valueEls.has(valueEl)) 
 		valueEls.set(valueEl, [element]);
@@ -75,7 +78,7 @@ function setValueByFind(valueEl) {
 			}
 			let html = element.innerHTML;
 			if (html.indexOf(key) !== -1){
-				html.replace(regex, value);
+				html = html.replace(regex, value);
 				element.innerHTML = html;
 			}
 		}
@@ -144,5 +147,5 @@ observer.init({
 	}
 });
 
-initGetValues();
-export { getValue };
+// initGetValues();
+export { initGetValues, getValue };
