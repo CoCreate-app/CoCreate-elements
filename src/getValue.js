@@ -1,35 +1,28 @@
 import observer from '@cocreate/observer';
-import {setValue} from './setValue';
+import { setValue } from './setValue';
 
 function initGetValues() {
 	var elements = document.querySelectorAll('[get-value]');
-	initElements(elements)
+	initElements(elements);
 }
 
 function initElements(elements) {
 	for (let element of elements)
-		initElement(element)
+		initElement(element);
 }
 
 function initElement(element) {
-    let id = element.getAttribute('get-value')
-	let valueEl = document.getElementById(id);
+    let selector = element.getAttribute('get-value');
+    if(!selector) return;
+	
+	let valueEl = document.querySelector(selector);
 	if(!valueEl) return;
-	let value = getValue(valueEl)
+	
+	let value = getValue(valueEl);
 	if (value)
-	setValue(element, value)
+		setValue(element, value);
 	
-	// if (['INPUT', 'TEXTAREA', 'SELECT'].includes(valueEl.tagName)  || valueEl.contentEditable)
-	
-	// valueEl.addEventListener('input', (e) => {
-	// 	setValueByFind(e.target)
-	// })
-	
-	// valueEl.addEventListener('updated_by_fetch', (e) => {
-	// 	setValueByFind(e.target)
-	// })
-	
-	initEvents(valueEl);
+	initEvents(valueEl, element);
 
 	element.dispatchEvent(new Event("input", {
 		"bubbles": true
@@ -38,27 +31,57 @@ function initElement(element) {
 }
 
 const valueEls = new Map();
-function initEvents(valueEl){
-	if (!valueEls.has(valueEl)) {
-		valueEls.set(valueEl);
+function initEvents(valueEl, element){
+	if (!valueEls.has(valueEl)) 
+		valueEls.set(valueEl, [element]);
+	else {
+		valueEls.get(valueEl).push(element);
 		if (['INPUT', 'TEXTAREA', 'SELECT'].includes(valueEl.tagName)  || valueEl.contentEditable)
 			valueEl.addEventListener('input', (e) => {
-				setValueByFind(e.target)
-			})
+				setValueByFind(e.target);
+			});
 		
 		valueEl.addEventListener('updated_by_fetch', (e) => {
-			setValueByFind(e.target)
-		})
+			setValueByFind(e.target);
+		});
 	}
 }
 
-function setValueByFind(valueEl){
-	let value = getValue(valueEl)
-    let id = valueEl.getAttribute('id')
-    if(!id) return;
-	var elements = document.querySelectorAll('[get-value="' + id + '"]');
-	for(let element of elements)
-		setValue(element, value)
+function setValueByFind(valueEl) {
+	let value = getValue(valueEl);
+	if (!value) return;
+	let elements = valueEls.get(valueEl);
+	
+	for(let element of elements){
+		let key = element.getAttribute('get-value-key');
+		if (key){
+			key = `{{${key}}}`;
+			const regex = new RegExp(key, "g");
+			for (let attribute of element.attributes){
+				let attrName = attribute.name;
+				let attrValue = attribute.value;
+				let setAttr = false;
+				if (attrValue.includes(key)){
+					attrValue = attrValue.replace(regex, value);
+					setAttr = true;
+				}
+				if (attrName.includes(key)){
+					element.removeAttribute(key);
+					attrName = attrName.replace(regex, value);
+					setAttr = true;
+				}
+				if(setAttr)
+					element.setAttribute(attrName, attrValue);
+			}
+			let html = element.innerHTML;
+			if (html.indexOf(key) !== -1){
+				html.replace(regex, value);
+				element.innerHTML = html;
+			}
+		}
+		else
+			setValue(element, value);
+	}
 }
 
 var getValue = (element) => {
@@ -122,4 +145,4 @@ observer.init({
 });
 
 initGetValues();
-export {getValue};
+export { getValue };

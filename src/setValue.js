@@ -1,6 +1,6 @@
 import observer from '@cocreate/observer';
 import crud from '@cocreate/crud-client';
-import {getValue} from './getValue';
+import { getValue } from './getValue';
 
 function initSetValues() {
 	var elements = document.querySelectorAll('[set-value]');
@@ -224,4 +224,4 @@ observer.init({
 
 initSetValues();
 
-export {setValue};
+export { setValue };
