@@ -1,3 +1,11 @@
+## [1.6.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.6.0...v1.6.1) (2022-01-02)
+
+
+### Bug Fixes
+
+* add input event listener to valueEl ([ea77493](https://github.com/CoCreate-app/CoCreate-elements/commit/ea77493fed7401b2ccd3d825b73198daf03f836c))
+* check if document_id is a valid id if not return ([220151f](https://github.com/CoCreate-app/CoCreate-elements/commit/220151f9ee0b2c9ff8e4afc06cc24ad5b891b161))
+
 # [1.6.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.5.0...v1.6.0) (2022-01-01)
 
 
