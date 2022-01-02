@@ -18,14 +18,11 @@ function initElements(elements) {
 function initElement(element) {
     let selector = element.getAttribute('get-value');
     if(!selector) return;
+	if(/{{\s*([\w\W]+)\s*}}/g.test(selector)) return;
 	
 	let valueEl = document.querySelector(selector);
 	if(!valueEl) return;
-	
-	// let value = getValue(valueEl);
-	// if (value)
-	// 	setValue(element, value);
-	
+
 	initEvents(valueEl, element);
 
 	element.dispatchEvent(new Event("input", {
@@ -35,10 +32,8 @@ function initElement(element) {
 }
 
 function initEvents(valueEl, element){
-	if (!valueEls.has(valueEl)) 
+	if (!valueEls.has(valueEl)) {
 		valueEls.set(valueEl, [element]);
-	else {
-		valueEls.get(valueEl).push(element);
 		if (['INPUT', 'TEXTAREA', 'SELECT'].includes(valueEl.tagName)  || valueEl.contentEditable)
 			valueEl.addEventListener('input', (e) => {
 				setValueByFind(e.target);
@@ -46,8 +41,10 @@ function initEvents(valueEl, element){
 		
 		valueEl.addEventListener('updated_by_fetch', (e) => {
 			setValueByFind(e.target);
-		});
+		});	
 	}
+	else 
+		valueEls.get(valueEl).push(element);
 }
 
 function setValueByFind(valueEl) {
@@ -147,5 +144,4 @@ observer.init({
 	}
 });
 
-// initGetValues();
 export { initGetValues, getValue };
