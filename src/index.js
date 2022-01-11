@@ -39,11 +39,11 @@ function initElement(el) {
 	if (el.closest('.template')) return;
 
 	const { collection, document_id, name, isRead } = crud.getAttr(el);
+	__initEvents(el);
 	if (!collection || !name) return;
 	if (!document_id.match(/^[0-9a-fA-F]{24}$/)) return; 
 	if (!crud.checkAttrValue(collection) || !crud.checkAttrValue(name)) return;
 	 
-	__initEvents(el);
 	if (isRead == 'false') return;
 	return {collection, document_id};
 }
@@ -119,7 +119,7 @@ function __initEvents(el) {
 		el.addEventListener('input', function(e) {
 			const {document_id, isRealtime, isCrdt} = crud.getAttr(el);
 			if (isCrdt == "true" && document_id || isRealtime == "false") return;
-			if (e.detail && e.detail.skip == true) return;
+			if (document_id && e.detail && e.detail.skip == true) return;
 			save(el);
 		});
 
