@@ -1,3 +1,10 @@
+## [1.6.2](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.6.1...v1.6.2) (2022-01-11)
+
+
+### Bug Fixes
+
+* if crdt = true but document_id is empty save ([cd69a43](https://github.com/CoCreate-app/CoCreate-elements/commit/cd69a434ec33ac7f32ded29f715154f22a1bd4e8))
+
 ## [1.6.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.6.0...v1.6.1) (2022-01-02)
 
 
