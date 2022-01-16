@@ -1,3 +1,10 @@
+## [1.6.3](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.6.2...v1.6.3) (2022-01-16)
+
+
+### Bug Fixes
+
+* update class overflow:overlay to overflow:auto ([111577e](https://github.com/CoCreate-app/CoCreate-elements/commit/111577e6c6642a85af1e33b67f0267e6471da4fb))
+
 ## [1.6.2](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.6.1...v1.6.2) (2022-01-11)
 
 
