@@ -1,3 +1,10 @@
+## [1.6.4](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.6.3...v1.6.4) (2022-01-16)
+
+
+### Bug Fixes
+
+* updated saveDocument to save and createDocument replaced with save, reset ([749a02f](https://github.com/CoCreate-app/CoCreate-elements/commit/749a02f28f156eb36344863b9e77120eba8e08c1))
+
 ## [1.6.3](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.6.2...v1.6.3) (2022-01-16)
 
 
