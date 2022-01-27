@@ -1,3 +1,10 @@
+## [1.6.5](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.6.4...v1.6.5) (2022-01-27)
+
+
+### Bug Fixes
+
+* getValue from element ([44fd22d](https://github.com/CoCreate-app/CoCreate-elements/commit/44fd22df7f5159a6f94e0bedfd381526d7b42a94))
+
 ## [1.6.4](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.6.3...v1.6.4) (2022-01-16)
 
 
