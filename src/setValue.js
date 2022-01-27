@@ -27,11 +27,12 @@ function initEvents(element){
 	});
 }
 
+const setValueMap = new Map();
 function setValueByFind(element){
 	let key = element.getAttribute('set-value-key');
 	if (key)
 		key = `{{${key}}}`;
-	let value = getValue(element);
+	let value = element.getValue(element);
 	if (!value) return;
     let selector = element.getAttribute('set-value');
     if(!selector) return;
@@ -39,6 +40,8 @@ function setValueByFind(element){
 	
 	for(let element of elements){
 		if (key){
+			if (setValueMap.has(element))
+				key = setValueMap.get(element);
 			const regex = new RegExp(key, "g");
 			for (let attribute of element.attributes){
 				let attrName = attribute.name;
@@ -61,6 +64,7 @@ function setValueByFind(element){
 				html = html.replace(regex, value);
 				element.innerHTML = html;
 			}
+			setValueMap.set(element, value)
 		}
 		else
 			setValue(element, value);

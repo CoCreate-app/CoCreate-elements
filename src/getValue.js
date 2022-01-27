@@ -48,7 +48,7 @@ function initEvents(valueEl, element){
 }
 
 function setValueByFind(valueEl) {
-	let value = getValue(valueEl);
+	let value = valueEl.getValue(valueEl);
 	if (!value) return;
 	let elements = valueEls.get(valueEl);
 	
