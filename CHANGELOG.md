@@ -1,3 +1,10 @@
+## [1.6.8](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.6.7...v1.6.8) (2022-02-06)
+
+
+### Bug Fixes
+
+* removed tagName if condition for getValue and setValue events ([f0c6996](https://github.com/CoCreate-app/CoCreate-elements/commit/f0c699635cff3462415a06cf0ac138dc5802333a))
+
 ## [1.6.7](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.6.6...v1.6.7) (2022-02-03)
 
 
