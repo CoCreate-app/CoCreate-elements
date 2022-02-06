@@ -17,11 +17,10 @@ function initElement(element) {
 }
 
 function initEvents(element){
-	if (['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName)  || element.contentEditable)
-		element.addEventListener('input', (e) => {
-			setValueByFind(e.target);
-		});
-	
+	element.addEventListener('input', (e) => {
+		setValueByFind(e.target);
+	});
+		
 	element.addEventListener('updated_by_fetch', (e) => {
 		setValueByFind(e.target);
 	});

@@ -34,10 +34,10 @@ function initElement(element) {
 function initEvents(valueEl, element){
 	if (!valueEls.has(valueEl)) {
 		valueEls.set(valueEl, [element]);
-		if (['INPUT', 'TEXTAREA', 'SELECT'].includes(valueEl.tagName)  || valueEl.contentEditable)
-			valueEl.addEventListener('input', (e) => {
-				setValueByFind(e.target);
-			});
+
+		valueEl.addEventListener('input', (e) => {
+			setValueByFind(e.target);
+		});
 		
 		valueEl.addEventListener('updated_by_fetch', (e) => {
 			setValueByFind(e.target);
