@@ -1,3 +1,10 @@
+## [1.6.10](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.6.9...v1.6.10) (2022-02-10)
+
+
+### Bug Fixes
+
+* bump dependencies ([ee29079](https://github.com/CoCreate-app/CoCreate-elements/commit/ee29079afaa85b0e5ebe15a9bba88a3d65b09441))
+
 ## [1.6.9](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.6.8...v1.6.9) (2022-02-07)
 
 
