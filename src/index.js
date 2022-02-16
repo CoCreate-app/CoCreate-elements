@@ -156,7 +156,7 @@ observer.init({
 });
 
 action.init({
-	action: "saveHtml",
+	name: "saveHtml",
 	endEvent: "changed-element",
 	callback: (btn, data) => {
 		let form = btn.closet('form');
