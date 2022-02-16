@@ -1,3 +1,10 @@
+## [1.6.11](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.6.10...v1.6.11) (2022-02-16)
+
+
+### Bug Fixes
+
+* update action param to name ([ab78a1c](https://github.com/CoCreate-app/CoCreate-elements/commit/ab78a1cb8651aff214ba71c0bada412f4aa2a12d))
+
 ## [1.6.10](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.6.9...v1.6.10) (2022-02-10)
 
 
