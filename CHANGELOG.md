@@ -1,3 +1,10 @@
+## [1.6.14](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.6.13...v1.6.14) (2022-03-06)
+
+
+### Bug Fixes
+
+* if no document_id return ([e7647da](https://github.com/CoCreate-app/CoCreate-elements/commit/e7647da6379bae6dfdcc955f8a9e6f37f116b6c3))
+
 ## [1.6.13](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.6.12...v1.6.13) (2022-02-24)
 
 
