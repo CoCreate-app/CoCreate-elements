@@ -40,7 +40,7 @@ function initElement(el) {
 
 	const { collection, document_id, name, isRead } = crud.getAttr(el);
 	__initEvents(el);
-	if (!collection || !name) return;
+	if (!collection || !document_id || !name) return;
 	if (!document_id.match(/^[0-9a-fA-F]{24}$/)) return; 
 	if (!crud.checkAttrValue(collection) || !crud.checkAttrValue(name)) return;
 	 
