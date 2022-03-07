@@ -113,24 +113,28 @@ function __initSocket() {
 		setData(null, data);
 	});
 }
-	
-function __initEvents(el) {
-	if (el.tagName == 'INPUT' || el.tagName == 'TEXTAREA' || el.tagName == 'SELECT' || el.hasAttribute('contenteditable')) {
-		el.addEventListener('input', function(e) {
-			const {document_id, isRealtime, isCrdt} = crud.getAttr(el);
-			if (isCrdt == "true" && document_id || isRealtime == "false") return;
-			if (document_id && e.detail && e.detail.skip == true) return;
-			save(el);
-		});
 
-		// el.addEventListener('change', function(e) {
-		// 	if (el.tagName == 'SELECT') {
-		// 		const {isRealtime, isSave, isUpdate} = crud.getAttr(el);
-		// 		if (isRealtime == "false" || isSave == "false" || isUpdate == "false")	return;
-		// 		if (e.detail && e.detail.skip == true) return;
-		// 		save(el);
-		// 	}
-		// });
+const elementEvents = new Map();
+function __initEvents(el) {
+	if (!elementEvents.has(el)) {
+		if (el.tagName == 'INPUT' || el.tagName == 'TEXTAREA' || el.tagName == 'SELECT' || el.hasAttribute('contenteditable')) {
+			el.addEventListener('input', function(e) {
+				const {document_id, isRealtime, isCrdt} = crud.getAttr(el);
+				if (isCrdt == "true" && document_id || isRealtime == "false") return;
+				if (document_id && e.detail && e.detail.skip == true) return;
+				save(el);
+			});
+
+			// el.addEventListener('change', function(e) {
+			// 	if (el.tagName == 'SELECT') {
+			// 		const {isRealtime, isSave, isUpdate} = crud.getAttr(el);
+			// 		if (isRealtime == "false" || isSave == "false" || isUpdate == "false")	return;
+			// 		if (e.detail && e.detail.skip == true) return;
+			// 		save(el);
+			// 	}
+			// });
+			elementEvents.set(el, true)
+		}
 	}
 }
 
