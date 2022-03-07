@@ -1,3 +1,10 @@
+## [1.6.15](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.6.14...v1.6.15) (2022-03-07)
+
+
+### Bug Fixes
+
+* check if element already has input event before adding ([923adc6](https://github.com/CoCreate-app/CoCreate-elements/commit/923adc677b3379fb5948b4aa0553731cba393036))
+
 ## [1.6.14](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.6.13...v1.6.14) (2022-03-06)
 
 
