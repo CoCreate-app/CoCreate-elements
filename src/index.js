@@ -63,7 +63,7 @@ async function read(documents, elements) {
 	
 function setData(elements, data) {
 	let isRendered = false;
-	if (!data) return;
+	if (!data.data) return;
 	if (!elements) {
 		let collection = data.collection;
 		let document_id = data.document_id;
