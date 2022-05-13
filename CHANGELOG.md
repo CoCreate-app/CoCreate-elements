@@ -1,3 +1,10 @@
+## [1.6.17](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.6.16...v1.6.17) (2022-05-13)
+
+
+### Bug Fixes
+
+* setData return if !data.data ([eb19294](https://github.com/CoCreate-app/CoCreate-elements/commit/eb19294599399f39bc000d45f98ff943c26dac60))
+
 ## [1.6.16](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.6.15...v1.6.16) (2022-05-06)
 
 
