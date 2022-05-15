@@ -1,3 +1,10 @@
+## [1.7.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.7.0...v1.7.1) (2022-05-15)
+
+
+### Bug Fixes
+
+* if srcdoc is removed iframe is refreshed losing its content. removed code that removed srcdoc. ([6fdd25b](https://github.com/CoCreate-app/CoCreate-elements/commit/6fdd25b07d378b5dec971e9f07d42062365e29f7))
+
 # [1.7.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.6.17...v1.7.0) (2022-05-14)
 
 
