@@ -107,17 +107,8 @@ var setValue = (el, value) => {
 	else if (el.tagName === 'IMG' || el.tagName === 'SOURCE')
 		el.src = value;
 	
-	else if (el.tagName === 'IFRAME') {
+	else if (el.tagName === 'IFRAME')
 		el.srcdoc = value;
-		// el.contentDocument.documentElement.innerHTML = value;
-		if(navigator.userAgent.toLowerCase().indexOf('firefox') > -1){
-		     // Do Firefox-related activities
-		}
-		else
-		el.onload = function(e) {
-			el.removeAttribute('srcdoc');
-		};
-	}
 	
 	else if (el.tagName === 'DIV') {
 		if (el.hasAttribute("value")) {
