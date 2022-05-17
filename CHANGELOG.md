@@ -1,3 +1,10 @@
+## [1.7.2](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.7.1...v1.7.2) (2022-05-17)
+
+
+### Bug Fixes
+
+* update document_id on link index.css ([91b336e](https://github.com/CoCreate-app/CoCreate-elements/commit/91b336e9fc52842175be0a910a50dce4206a0729))
+
 ## [1.7.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.7.0...v1.7.1) (2022-05-15)
 
 
