@@ -1,3 +1,10 @@
+## [1.7.5](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.7.4...v1.7.5) (2022-06-02)
+
+
+### Bug Fixes
+
+* add element to map to reduce repetitive reads. ([8d4e2e9](https://github.com/CoCreate-app/CoCreate-elements/commit/8d4e2e9d1c2a544e2eef8b72fbfe97a62bd7452f))
+
 ## [1.7.4](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.7.3...v1.7.4) (2022-05-23)
 
 
