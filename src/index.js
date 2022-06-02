@@ -5,6 +5,7 @@ import { initSetValues, setValue } from './setValue';
 import { initGetValues, getValue } from './getValue';
 
 const selector = "[collection][document_id][name]:not(cocreate-select, link), input, textarea, select, [contenteditable]";
+const initializing = new Map();
 
 function init() {
 	let elements = document.querySelectorAll(selector);
@@ -19,9 +20,14 @@ function initElements(elements) {
 		if (doc) {
 			let collection = doc.collection;
 			let document_id = doc.document_id;
-			documents.set(`${collection}${document_id}`, {collection, document_id});
+			let initialize = initializing.get(element)
+			if (!initialize || initialize.collection != collection && initialize.document_id != document_id){
+				initializing.set(element, {collection, document_id});
+				documents.set(`${collection}${document_id}`, {collection, document_id});
+			}
 		}
 	}
+	
 	read(documents, elements);
 }
 	
@@ -85,6 +91,8 @@ function setData(elements, data) {
 
 			isRendered = true;
 		}
+		initializing.delete(el)
+
 	});
 
 	if (isRendered) {
