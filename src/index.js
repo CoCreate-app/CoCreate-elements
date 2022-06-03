@@ -3,6 +3,7 @@ import action from '@cocreate/actions';
 import crud from '@cocreate/crud-client';
 import { initSetValues, setValue } from './setValue';
 import { initGetValues, getValue } from './getValue';
+import './fetchSrc';
 
 const selector = "[collection][document_id][name]:not(cocreate-select, link), input, textarea, select, [contenteditable]";
 const initializing = new Map();
