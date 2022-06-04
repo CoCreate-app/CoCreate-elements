@@ -1,3 +1,10 @@
+# [1.8.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.7.5...v1.8.0) (2022-06-04)
+
+
+### Features
+
+* supports adding src attribute to any element to fetch the file and render the results in the element ([0507159](https://github.com/CoCreate-app/CoCreate-elements/commit/0507159aa0a9311a2bbc7fd89e17b20d39d7622c))
+
 ## [1.7.5](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.7.4...v1.7.5) (2022-06-02)
 
 
