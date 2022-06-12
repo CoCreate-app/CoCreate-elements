@@ -1,3 +1,11 @@
+## [1.8.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.8.0...v1.8.1) (2022-06-12)
+
+
+### Bug Fixes
+
+* update dependencies ([0424726](https://github.com/CoCreate-app/CoCreate-elements/commit/04247260f353cabc2e2e8b2049bd5194a7730397))
+* update docs css document_id ([7565dff](https://github.com/CoCreate-app/CoCreate-elements/commit/7565dffe43ea3b78714f5ebcec1fbd4aa33d1a81))
+
 # [1.8.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.7.5...v1.8.0) (2022-06-04)
 
 
