@@ -37,6 +37,9 @@ function initElement(el) {
 		el.getValue = getValue; 
 		el.setValue = setValue; 
 	}
+
+	__initEvents(el);
+
 	// if rendered in server side skip 
 	if (el.hasAttribute('rendered')) {
 		el.removeAttribute('rendered');
@@ -46,7 +49,6 @@ function initElement(el) {
 	if (el.closest('.template')) return;
 
 	const { collection, document_id, name, isRead } = crud.getAttr(el);
-	__initEvents(el);
 	if (!collection || !document_id || !name) return;
 	if (!document_id.match(/^[0-9a-fA-F]{24}$/)) return; 
 	if (!crud.checkAttrValue(collection) || !crud.checkAttrValue(name)) return;
