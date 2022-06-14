@@ -1,3 +1,10 @@
+## [1.8.2](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.8.1...v1.8.2) (2022-06-14)
+
+
+### Bug Fixes
+
+* if element has attribute render initEvents before returning ([3730429](https://github.com/CoCreate-app/CoCreate-elements/commit/3730429037c71796936fd6affcda3031f71c65e5))
+
 ## [1.8.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.8.0...v1.8.1) (2022-06-12)
 
 
