@@ -1,3 +1,10 @@
+## [1.8.3](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.8.2...v1.8.3) (2022-06-16)
+
+
+### Bug Fixes
+
+* if .template return before removing attribute rendered ([e490caf](https://github.com/CoCreate-app/CoCreate-elements/commit/e490cafc37aaaf752537a0627940389039a5600a))
+
 ## [1.8.2](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.8.1...v1.8.2) (2022-06-14)
 
 
