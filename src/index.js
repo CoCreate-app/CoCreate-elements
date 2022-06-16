@@ -40,14 +40,14 @@ function initElement(el) {
 
 	__initEvents(el);
 
+	if (el.closest('.template')) return;
+
 	// if rendered in server side skip 
 	if (el.hasAttribute('rendered')) {
 		el.removeAttribute('rendered');
 		return;
 	}
 	
-	if (el.closest('.template')) return;
-
 	const { collection, document_id, name, isRead } = crud.getAttr(el);
 	if (!collection || !document_id || !name) return;
 	if (!document_id.match(/^[0-9a-fA-F]{24}$/)) return; 
