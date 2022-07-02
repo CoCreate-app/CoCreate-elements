@@ -1,6 +1,6 @@
 import observer from '@cocreate/observer';
 import crud from '@cocreate/crud-client';
-import { getValue } from './getValue';
+import { queryDocumentSelectorAll } from '@cocreate/utils';
 
 function initSetValues() {
 	var elements = document.querySelectorAll('[set-value]');
@@ -35,7 +35,7 @@ function setValueByFind(element){
 	if (!value) return;
     let selector = element.getAttribute('set-value');
     if(!selector) return;
-	let elements = document.querySelectorAll(selector);
+	let elements = document.queryDocumentSelectorAll(selector);
 	
 	for(let element of elements){
 		if (key){
