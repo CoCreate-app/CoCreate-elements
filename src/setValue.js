@@ -35,7 +35,7 @@ function setValueByFind(element){
 	if (!value) return;
     let selector = element.getAttribute('set-value');
     if(!selector) return;
-	let elements = document.queryDocumentSelectorAll(selector);
+	let elements = queryDocumentSelectorAll(selector);
 	
 	for(let element of elements){
 		if (key){
