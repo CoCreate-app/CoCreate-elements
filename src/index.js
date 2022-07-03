@@ -89,7 +89,16 @@ function setData(elements, data) {
 		
 		// if (data['collection'] == collection && data['document_id'] == document_id && !isEditable) {
 		if (data['collection'] == collection && data['document_id'] == document_id) {
-			const value = encodeData[name];
+			let value;
+			let valueType = el.getAttribute('value-type');
+            if(valueType == 'object' || valueType == 'json'){
+				// if (name == 'data')
+				// 	value = JSON.stringify(data[name])
+				// else
+					value = JSON.stringify(data.data[name])
+				value = decodeURIComponent(value)
+            } else
+				value = encodeData[name];
 			setValue(el, value);
 
 			isRendered = true;
