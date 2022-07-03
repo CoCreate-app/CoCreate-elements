@@ -1,3 +1,11 @@
+# [1.9.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.8.4...v1.9.0) (2022-07-03)
+
+
+### Features
+
+* setValue can target element in iframe or parent of iframe using @cocreate/utils queryDocumentSelectorAll ([1447236](https://github.com/CoCreate-app/CoCreate-elements/commit/1447236b86507336a9c3db6452f0760790cabd59))
+* value-type attribute to define if value is an object ([9649b6a](https://github.com/CoCreate-app/CoCreate-elements/commit/9649b6acdbe5e97f5418df5244025a359433891c))
+
 ## [1.8.4](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.8.3...v1.8.4) (2022-06-18)
 
 
