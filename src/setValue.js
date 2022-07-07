@@ -73,7 +73,8 @@ function setValueByFind(element){
 
 var setValue = (el, value) => {
 	if (value === null || value === undefined) return;
-	
+	let valueType = el.getAttribute('value-type');
+
 	if (el.tagName == 'INPUT' || el.tagName == 'TEXTAREA' || el.tagName == 'SELECT') {
 		const {isCrdt} = crud.getAttr(el);
 		if (isCrdt == "true" || el.type === 'file') return;
@@ -130,7 +131,10 @@ var setValue = (el, value) => {
 				}
 			}
 			else {
-				el.innerHTML = value;
+				if (valueType == 'string' || valueType == 'text')
+					el.textContent = value;
+				else
+					el.innerHTML = value;
 			}
 		}
 	}
@@ -140,8 +144,10 @@ var setValue = (el, value) => {
 	}
 	else {
 		if (el.hasAttribute('contenteditable') && el == document.activeElement) return;
-		
-		el.innerHTML = value;
+		if (valueType == 'string' || valueType == 'text')
+			el.textContent = value;
+		else
+			el.innerHTML = value;
 		if (el.hasAttribute("value")) {
 			el.setAttribute("value", value);
 		}

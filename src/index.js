@@ -95,7 +95,7 @@ function setData(elements, data) {
 				// if (name == 'data')
 				// 	value = JSON.stringify(data[name])
 				// else
-					value = JSON.stringify(data.data[name])
+				value = JSON.stringify(data.data[name])
 				value = decodeURIComponent(value)
             } else
 				value = encodeData[name];
@@ -139,8 +139,8 @@ function __initEvents(el) {
 	if (!elementEvents.has(el)) {
 		if (el.tagName == 'INPUT' || el.tagName == 'TEXTAREA' || el.tagName == 'SELECT' || el.hasAttribute('contenteditable')) {
 			el.addEventListener('input', function(e) {
-				const {document_id, isRealtime, isCrdt} = crud.getAttr(el);
-				if (isCrdt == "true" && document_id || isRealtime == "false") return;
+				const {document_id, name, isRealtime, isCrdt} = crud.getAttr(el);
+				if (isCrdt == "true" && document_id || isRealtime == "false" || name == "_id") return;
 				if (document_id && e.detail && e.detail.skip == true) return;
 				save(el);
 			});
