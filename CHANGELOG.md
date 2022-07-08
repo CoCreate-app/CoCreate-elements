@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.9.0...v1.10.0) (2022-07-08)
+
+
+### Features
+
+* value-type support and if element name attribute  = _id do not save ([164d12f](https://github.com/CoCreate-app/CoCreate-elements/commit/164d12f40a84d85d4114df3b8efe51b9cf6a4e11))
+
 # [1.9.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.8.4...v1.9.0) (2022-07-03)
 
 
