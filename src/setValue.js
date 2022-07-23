@@ -3,7 +3,7 @@ import crud from '@cocreate/crud-client';
 import { queryDocumentSelectorAll } from '@cocreate/utils';
 
 function initSetValues() {
-	var elements = document.querySelectorAll('[set-value]');
+	var elements = document.querySelectorAll('[set-value], [set-value-closest]');
 	initElements(elements);
 }
 
@@ -24,6 +24,8 @@ function initEvents(element){
 	element.addEventListener('updated_by_fetch', (e) => {
 		setValueByFind(e.target);
 	});
+
+	setValueByFind(element);
 }
 
 const setValueMap = new Map();
@@ -31,12 +33,20 @@ function setValueByFind(element){
 	let key = element.getAttribute('set-value-key');
 	if (key)
 		key = `{{${key}}}`;
-	let value = element.getValue(element);
+	
+	let value
+	if(element.getValue)
+		value = element.getValue(element);
 	if (!value) return;
+
     let selector = element.getAttribute('set-value');
     if(!selector) return;
-	let elements = queryDocumentSelectorAll(selector);
-	
+	let elements;
+	if (element.hasAttribute('set-value-closest'))
+		elements = [element.closest(selector)];
+	else
+		elements = queryDocumentSelectorAll(selector);
+
 	for(let element of elements){
 		if (key){
 			if (setValueMap.has(element))
@@ -116,7 +126,7 @@ var setValue = (el, value) => {
 			el.setAttribute("value", value);
 		}
 
-		if (el.classList.contains('domEditor')) {
+		if (el.classList.contains('domEditor') || el.hasAttribute('get-value') || el.hasAttribute('get-value-closest')) {
 			if (el.getAttribute('data-domEditor') == "replace") {
 				let newElement = document.createElement("div");
 				newElement.innerHTML = value;
@@ -215,7 +225,7 @@ function dispatchEvents(el) {
 observer.init({
 	name: 'set-value',
 	observe: ['addedNodes'],
-	target: '[set-value]',
+	target: '[get-value], [get-value-closest]',
 	callback: function(mutation) {
 		initElement(mutation.target);
 	}

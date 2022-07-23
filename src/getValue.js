@@ -4,7 +4,7 @@ import { setValue } from './setValue';
 const valueEls = new Map();
 
 function initGetValues() {
-	var elements = document.querySelectorAll('[get-value]');
+	var elements = document.querySelectorAll('[get-value], [get-value-closest]');
 	initElements(elements);
 }
 
@@ -16,11 +16,15 @@ function initElements(elements) {
 }
 
 function initElement(element) {
-    let selector = element.getAttribute('get-value');
+    let selector = element.getAttribute('get-value') || element.getAttribute('get-value-closest');
     if(!selector) return;
 	if(/{{\s*([\w\W]+)\s*}}/g.test(selector)) return;
 	
-	let valueEl = document.querySelector(selector);
+	let valueEl
+	if (element.hasAttribute('get-value-closest'))
+		valueEl = element.closest(selector);
+	else
+		valueEl = document.querySelector(selector);
 	if(!valueEl) return;
 
 	initEvents(valueEl, element);
@@ -41,17 +45,28 @@ function initEvents(valueEl, element){
 		
 		valueEl.addEventListener('updated_by_fetch', (e) => {
 			setValueByFind(e.target);
-		});	
+		});
 	}
 	else 
 		valueEls.get(valueEl).push(element);
+
+	// ToDo: check to see if creates any loops or un wanted save by input event
+		setValueByFind(valueEl)
 }
 
 function setValueByFind(valueEl) {
-	let value = valueEl.getValue(valueEl);
+	let value;
+	// todo can be removed if all elements have getValue using prototype
+	if (valueEl.hasAttribute('value'))
+		value = valueEl.getAttribute('value');
+	else if(valueEl.getValue)
+		value = valueEl.getValue(valueEl);
+	else
+		value = getValue(valueEl);
 	if (!value) return;
 	let elements = valueEls.get(valueEl);
 	
+	if (elements)
 	for(let element of elements){
 		let key = element.getAttribute('get-value-key');
 		if (key){
@@ -121,6 +136,9 @@ var getValue = (element) => {
 	else if (element.tagName === 'IFRAME') {
 		value = element.srcdoc;
 	}
+	else if (element.hasAttribute('value')){
+		value = element.getAttribute('value');
+	}
 	else {
 		value = element.innerHTML;
 	}
@@ -138,7 +156,7 @@ function __encryptPassword(str) {
 observer.init({
 	name: 'get-value',
 	observe: ['addedNodes'],
-	target: '[get-value]',
+	target: '[get-value], [get-value-closest]',
 	callback: function(mutation) {
 		initElement(mutation.target);
 	}
