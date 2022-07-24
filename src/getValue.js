@@ -15,7 +15,7 @@ function initElements(elements) {
 		setValueByFind(valueEl);
 }
 
-function initElement(element) {
+function initElement(element, mutation) {
     let selector = element.getAttribute('get-value') || element.getAttribute('get-value-closest');
     if(!selector) return;
 	if(/{{\s*([\w\W]+)\s*}}/g.test(selector)) return;
@@ -27,7 +27,7 @@ function initElement(element) {
 		valueEl = document.querySelector(selector);
 	if(!valueEl) return;
 
-	initEvents(valueEl, element);
+	initEvents(valueEl, element, mutation);
 
 	element.dispatchEvent(new Event("input", {
 		"bubbles": true
@@ -35,7 +35,7 @@ function initElement(element) {
 
 }
 
-function initEvents(valueEl, element){
+function initEvents(valueEl, element, mutation){
 	if (!valueEls.has(valueEl)) {
 		valueEls.set(valueEl, [element]);
 
@@ -51,10 +51,12 @@ function initEvents(valueEl, element){
 		valueEls.get(valueEl).push(element);
 
 	// ToDo: check to see if creates any loops or un wanted save by input event
-		setValueByFind(valueEl)
+	if (mutation)
+		mutation = [element]
+	setValueByFind(valueEl, mutation)
 }
 
-function setValueByFind(valueEl) {
+function setValueByFind(valueEl, mutation) {
 	let value;
 	// todo can be removed if all elements have getValue using prototype
 	if (valueEl.hasAttribute('value'))
@@ -64,7 +66,7 @@ function setValueByFind(valueEl) {
 	else
 		value = getValue(valueEl);
 	if (!value) return;
-	let elements = valueEls.get(valueEl);
+	let elements = mutation || valueEls.get(valueEl);
 	
 	if (elements)
 	for(let element of elements){
@@ -158,7 +160,7 @@ observer.init({
 	observe: ['addedNodes'],
 	target: '[get-value], [get-value-closest]',
 	callback: function(mutation) {
-		initElement(mutation.target);
+		initElement(mutation.target, true);
 	}
 });
 
