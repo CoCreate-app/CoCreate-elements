@@ -79,15 +79,12 @@ function setData(elements, data) {
 		let selector = `[collection='${collection}'][document_id='${document_id}']:not(cocreate-select, link)`;
 		elements = document.querySelectorAll(selector);
 	}
-	let encodeData = crud.encodeObject(data.data);
 
 	elements.forEach((el) => {
 		const { collection, document_id, name, isRead, isUpdate, isCrdt } = crud.getAttr(el);
 		if (el.hasAttribute('actions')) return;
 		if (isRead == "false" || isUpdate == "false" || isCrdt == "true") return;
-		// let isEditable = el.getAttribute('contenteditable');
 		
-		// if (data['collection'] == collection && data['document_id'] == document_id && !isEditable) {
 		if (data['collection'] == collection && data['document_id'] == document_id) {
 			let value;
 			let valueType = el.getAttribute('value-type');
@@ -98,8 +95,9 @@ function setData(elements, data) {
 				value = JSON.stringify(data.data[name])
 				value = decodeURIComponent(value)
             } else
-				value = encodeData[name];
-			setValue(el, value);
+				value = crud.getObjectValueByPath(data.data, name);
+
+				setValue(el, value);
 
 			isRendered = true;
 		}
@@ -145,14 +143,6 @@ function __initEvents(el) {
 				save(el);
 			});
 
-			// el.addEventListener('change', function(e) {
-			// 	if (el.tagName == 'SELECT') {
-			// 		const {isRealtime, isSave, isUpdate} = crud.getAttr(el);
-			// 		if (isRealtime == "false" || isSave == "false" || isUpdate == "false")	return;
-			// 		if (e.detail && e.detail.skip == true) return;
-			// 		save(el);
-			// 	}
-			// });
 			elementEvents.set(el, true)
 		}
 	}
