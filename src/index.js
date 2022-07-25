@@ -120,10 +120,7 @@ function setData(elements, data) {
 
 async function save(element) {
 	let value = getValue(element);
-	let isFlat = false;
-	// if (element.tagName == "INPUT" && element.type === "checkbox" || element.tagName == "SELECT" && element.hasAttribute('multiple'))
-		// isFlat = true;
-	await crud.save(element, value, isFlat);
+	await crud.save(element, value);
 }
 
 function __initSocket() {
