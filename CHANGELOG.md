@@ -1,3 +1,17 @@
+# [1.11.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.10.0...v1.11.0) (2022-07-25)
+
+
+### Bug Fixes
+
+* if mutation detected only get value for mutated element ([f0681e3](https://github.com/CoCreate-app/CoCreate-elements/commit/f0681e380f59870f0f8ad34eea9ee5b1c3fbde8c))
+* remved isFlat ([d85e120](https://github.com/CoCreate-app/CoCreate-elements/commit/d85e1204647b41efbe2755fd1bf1ade9926d670f))
+* supports getting a value from any element ([2ec2f51](https://github.com/CoCreate-app/CoCreate-elements/commit/2ec2f5156d7bcb15a091ea424c0ab7bb5de200eb))
+
+
+### Features
+
+* crud.getObjectValueByPath to return value using name containing a dotNotation string ([d158084](https://github.com/CoCreate-app/CoCreate-elements/commit/d15808445001609db85100a1389784739e6d891f))
+
 # [1.10.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.9.0...v1.10.0) (2022-07-08)
 
 
