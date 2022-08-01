@@ -1,3 +1,10 @@
+## [1.11.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.11.0...v1.11.1) (2022-08-01)
+
+
+### Bug Fixes
+
+* fetchSrc - ignores link tags ([e266a95](https://github.com/CoCreate-app/CoCreate-elements/commit/e266a954ab15783e5feeff0f32045ff7b6c8ea91))
+
 # [1.11.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.10.0...v1.11.0) (2022-07-25)
 
 
