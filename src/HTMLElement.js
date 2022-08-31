@@ -1,51 +1,30 @@
-	let v = el.getValue()
+import { setValue } from './setValue';
+import { getValue } from './getValue';
 
-	HTMLElement.prototype.getValue = function() {
-    	this.style.display = 'none';
-	};
-	
-	HTMLInputElement.prototype.getValue = function() {
-		let value = this.value;
+HTMLElement.prototype.getValue = function() {
+	let value = getValue(this)
+	return value;
+};
 
-		let prefix = this.getAttribute('value-prefix') || "";
-		let suffix = this.getAttribute('value-suffix') || "";
+HTMLElement.prototype.setValue = function(value) {
+	setValue(this, value)
+};
 
-		if (this.type === "checkbox") {
-			let el_name = this.getAttribute('name');
-			let checkboxs = document.querySelectorAll(`input[type=checkbox][name='${el_name}']`);
-			if (checkboxs.length > 1) {
-				value = [];
-				checkboxs.forEach(el => {
-					if (el.checked) value.push(el.value);
-				});
-			}
-			else {
-				value = this.checked;
-			}
-		}
-		else if (this.type === "number") {
-			value = Number(value);
-		}
-		else if (this.type === "password") {
-			value = this.__encryptPassword(value);
-		}
+HTMLInputElement.prototype.getValue = function() {
+	let value = getValue(this)
+	return value;
+};
 
-		if (typeof value == "string") {
-			value = prefix + value + suffix;
-		}
+HTMLInputElement.prototype.setValue = function(value) {
+	setValue(this, value)
+};
 
-		if (this.tagName == "SELECT" && this.hasAttribute('multiple')) {
-			let options = this.selectedOptions;
-			value = [];
-			for (let i = 0; i < options.length; i++) {
-				value.push(options[i].value);
-			}
-		}
+HTMLHeadingElement.prototype.getValue = function() {
+	let value = getValue(this)
+	return value;
+};
 
-		return value;
-	};
-	
-	HTMLHeadingElement.prototype.getValue = function() {
-    	this.style.display = 'none';
-	};
-	
+HTMLHeadingElement.prototype.setValue = function(value) {
+	setValue(this, value)
+};
+

@@ -36,7 +36,7 @@ function setValueByFind(element){
 	
 	let value
 	if(element.getValue)
-		value = element.getValue(element);
+		value = element.getValue();
 	if (!value) return;
 
     let selector = element.getAttribute('set-value');

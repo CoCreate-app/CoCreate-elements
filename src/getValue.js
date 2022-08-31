@@ -62,7 +62,7 @@ function setValueByFind(valueEl, mutation) {
 	if (valueEl.hasAttribute('value'))
 		value = valueEl.getAttribute('value');
 	else if(valueEl.getValue)
-		value = valueEl.getValue(valueEl);
+		value = valueEl.getValue();
 	else
 		value = getValue(valueEl);
 	if (!value) return;

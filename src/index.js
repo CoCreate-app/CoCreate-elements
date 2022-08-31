@@ -4,6 +4,7 @@ import crud from '@cocreate/crud-client';
 import { initSetValues, setValue } from './setValue';
 import { initGetValues, getValue } from './getValue';
 import './fetchSrc';
+import './HTMLElement';
 
 const selector = "[collection][document_id][name]:not(cocreate-select, link), input, textarea, select, [contenteditable]";
 const initializing = new Map();
@@ -33,11 +34,6 @@ function initElements(elements) {
 }
 	
 function initElement(el) {
-	if (el.tagName != 'DIV' || el.classList.contains('domEditor') || el.hasAttribute('contenteditable')){
-		el.getValue = getValue; 
-		el.setValue = setValue; 
-	}
-
 	__initEvents(el);
 
 	if (el.closest('.template')) return;
@@ -97,7 +93,7 @@ function setData(elements, data) {
             } else
 				value = crud.getObjectValueByPath(data.data, name);
 
-				setValue(el, value);
+				el.setValue(value);
 
 			isRendered = true;
 		}
