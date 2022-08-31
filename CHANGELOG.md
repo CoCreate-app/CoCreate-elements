@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.11.1...v1.12.0) (2022-08-31)
+
+
+### Features
+
+* add getValue() and setValue() to HTMLElement.prototype ([1fde509](https://github.com/CoCreate-app/CoCreate-elements/commit/1fde50918b279bb49103bf7bea1f24861615a0a9))
+
 ## [1.11.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.11.0...v1.11.1) (2022-08-01)
 
 
