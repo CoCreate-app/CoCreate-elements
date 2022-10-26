@@ -1,6 +1,12 @@
 import observer from '@cocreate/observer';
-import crud from '@cocreate/crud-client';
+import CRUD from '@cocreate/crud-client';
 import { queryDocumentSelectorAll } from '@cocreate/utils';
+
+let crud
+if(CRUD && CRUD.default)
+	crud = CRUD.default
+else
+	crud = CRUD
 
 function initSetValues() {
 	var elements = document.querySelectorAll('[set-value], [set-value-closest]');

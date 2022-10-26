@@ -1,13 +1,22 @@
 import observer from '@cocreate/observer';
 import action from '@cocreate/actions';
-import crud from '@cocreate/crud-client';
+import CRUD from '@cocreate/crud-client';
+import ccfilter from '@cocreate/filter';
 import { initSetValues, setValue } from './setValue';
 import { initGetValues, getValue } from './getValue';
 import './fetchSrc';
 import './HTMLElement';
 
-const selector = "[collection][document_id][name]:not(cocreate-select, link), input, textarea, select, [contenteditable]";
+let crud
+if(CRUD && CRUD.default)
+	crud = CRUD.default
+else
+	crud = CRUD
+
+
+const selector = "[collection][name]:not(cocreate-select, link), input, textarea, select, [contenteditable]";
 const initializing = new Map();
+const filters = new Map();
 
 function init() {
 	let elements = document.querySelectorAll(selector);
@@ -17,20 +26,30 @@ function init() {
 
 function initElements(elements) {
 	let documents = new Map();
+	let els = []
 	for (let element of elements){
-		let doc = initElement(element);
-		if (doc) {
-			let collection = doc.collection;
-			let document_id = doc.document_id;
-			let initialize = initializing.get(element)
-			if (!initialize || initialize.collection != collection && initialize.document_id != document_id){
-				initializing.set(element, {collection, document_id});
-				documents.set(`${collection}${document_id}`, {collection, document_id});
+			let doc = initElement(element);
+			if (doc) {
+				let collection = doc.collection;
+				let document_id = doc.document_id;
+				let filter = doc.filter;
+				let initialize = initializing.get(element)
+				if (!initialize){
+					initializing.set(element, doc);
+					documents.set(JSON.stringify(doc), doc);
+					els.push(element)
+				} else {
+					if (document_id && initialize.document_id != document_id || filter && JSON.stringify(initialize.filter) != JSON.stringify(filter)){
+						initializing.set(element, doc);
+						documents.set(JSON.stringify(doc), doc);
+						els.push(element)
+					}
+				}
 			}
-		}
+
 	}
 	
-	read(documents, elements);
+	read(documents, els);
 }
 	
 function initElement(el) {
@@ -45,21 +64,33 @@ function initElement(el) {
 	}
 	
 	const { collection, document_id, name, isRead } = crud.getAttr(el);
-	if (!collection || !document_id || !name) return;
-	if (!document_id.match(/^[0-9a-fA-F]{24}$/)) return; 
+	if (!collection || !name) return;
+
+	if (document_id)
+		if (!document_id.match(/^[0-9a-fA-F]{24}$/)) return; 
+	
+	let filter
+	if (el.hasAttribute('filter_id') || el.hasAttribute('filter-name' ) || el.hasAttribute('filter-sort-name')) {	
+		filter = ccfilter.setFilter(el, "filter_id");
+	}
+
 	if (!crud.checkAttrValue(collection) || !crud.checkAttrValue(name)) return;
 	 
 	if (isRead == 'false') return;
-	return {collection, document_id};
+	return {collection, document_id, filter};
 }
 	
 async function read(documents, elements) {
 	if (documents && documents.size > 0) {
-		for (let [key, {collection, document_id}] of documents) {
+		for (let [key, {collection, document_id, filter}] of documents) {
 			documents.delete(key);
 			var responseData = await crud.readDocument({
 				collection: collection,
-				document_id: document_id,
+				data: {
+                    _id: document_id
+                },
+
+				filter
 			});
 			setData(elements, responseData);
 		}
@@ -70,6 +101,7 @@ function setData(elements, data) {
 	let isRendered = false;
 	if (!data.data) return;
 	if (!elements) {
+		// ToDo: handle db and database 
 		let collection = data.collection;
 		let document_id = data.document_id;
 		let selector = `[collection='${collection}'][document_id='${document_id}']:not(cocreate-select, link)`;
@@ -81,22 +113,22 @@ function setData(elements, data) {
 		if (el.hasAttribute('actions')) return;
 		if (isRead == "false" || isUpdate == "false" || isCrdt == "true") return;
 		
-		if (data['collection'] == collection && data['document_id'] == document_id) {
+		// if (data.data[0]['collection'] == collection && data.data[0]['document_id'] == document_id) {
 			let value;
 			let valueType = el.getAttribute('value-type');
             if(valueType == 'object' || valueType == 'json'){
 				// if (name == 'data')
 				// 	value = JSON.stringify(data[name])
 				// else
-				value = JSON.stringify(data.data[name])
+				value = JSON.stringify(data.data[0][name])
 				value = decodeURIComponent(value)
             } else
-				value = crud.getObjectValueByPath(data.data, name);
+				value = crud.getObjectValueByPath(data.data[0], name);
 
 				el.setValue(value);
 
 			isRendered = true;
-		}
+		// }
 		initializing.delete(el)
 
 	});
