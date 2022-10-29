@@ -2,10 +2,10 @@ import observer from '@cocreate/observer';
 import action from '@cocreate/actions';
 import CRUD from '@cocreate/crud-client';
 import ccfilter from '@cocreate/filter';
-import { initSetValues, setValue } from './setValue';
-import { initGetValues, getValue } from './getValue';
+import '@cocreate/element-prototype';
+import { initSetValues} from './setValue';
+import { initGetValues} from './getValue';
 import './fetchSrc';
-import './HTMLElement';
 
 let crud
 if(CRUD && CRUD.default)
@@ -86,7 +86,7 @@ async function read(documents, elements) {
 			documents.delete(key);
 			var responseData = await crud.readDocument({
 				collection: collection,
-				data: {
+				document: {
                     _id: document_id
                 },
 
@@ -99,7 +99,7 @@ async function read(documents, elements) {
 	
 function setData(elements, data) {
 	let isRendered = false;
-	if (!data.data) return;
+	if (!data.document) return;
 	if (!elements) {
 		// ToDo: handle db and database 
 		let collection = data.collection;
@@ -113,17 +113,17 @@ function setData(elements, data) {
 		if (el.hasAttribute('actions')) return;
 		if (isRead == "false" || isUpdate == "false" || isCrdt == "true") return;
 		
-		// if (data.data[0]['collection'] == collection && data.data[0]['document_id'] == document_id) {
+		// if (data.document[0]['collection'] == collection && data.document[0]['document_id'] == document_id) {
 			let value;
 			let valueType = el.getAttribute('value-type');
             if(valueType == 'object' || valueType == 'json'){
 				// if (name == 'data')
 				// 	value = JSON.stringify(data[name])
 				// else
-				value = JSON.stringify(data.data[0][name])
+				value = JSON.stringify(data.document[0][name])
 				value = decodeURIComponent(value)
             } else
-				value = crud.getObjectValueByPath(data.data[0], name);
+				value = crud.getObjectValueByPath(data.document[0], name);
 
 				el.setValue(value);
 
@@ -147,7 +147,7 @@ function setData(elements, data) {
 }
 
 async function save(element) {
-	let value = getValue(element);
+	let value = element.getValue();
 	await crud.save(element, value);
 }
 
@@ -208,4 +208,4 @@ initGetValues();
 initSetValues();
 
 
-export default {initElements, initElement, save, getValue, setValue};
+export default {initElements, initElement, save};

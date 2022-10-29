@@ -1,5 +1,5 @@
 import observer from '@cocreate/observer';
-import { setValue } from './setValue';
+import '@cocreate/element-prototype';
 
 const valueEls = new Map();
 
@@ -63,8 +63,8 @@ function setValueByFind(valueEl, mutation) {
 		value = valueEl.getAttribute('value');
 	else if(valueEl.getValue)
 		value = valueEl.getValue();
-	else
-		value = getValue(valueEl);
+	// else
+	// 	value = getValue(valueEl);
 	if (!value) return;
 	let elements = mutation || valueEls.get(valueEl);
 	
@@ -97,62 +97,8 @@ function setValueByFind(valueEl, mutation) {
 			}
 		}
 		else
-			setValue(element, value);
+			element.setValue(value);
 	}
-}
-
-var getValue = (element) => {
-	let value = element.value;
-	let prefix = element.getAttribute('value-prefix') || "";
-	let suffix = element.getAttribute('value-suffix') || "";
-
-	if (element.type === "checkbox") {
-		let el_name = element.getAttribute('name');
-		let checkboxs = document.querySelectorAll(`input[type=checkbox][name='${el_name}']`);
-		if (checkboxs.length > 1) {
-			value = [];
-			checkboxs.forEach(el => {
-				if (el.checked) value.push(el.value);
-			});
-		}
-		else {
-			value = element.checked;
-		}
-	}
-	else if (element.type === "number") {
-		value = Number(value);
-	}
-	else if (element.type === "password") {
-		value = __encryptPassword(value);
-	}
-	else if (element.tagName == "SELECT" && element.hasAttribute('multiple')) {
-		let options = element.selectedOptions;
-		value = [];
-		for (let i = 0; i < options.length; i++) {
-			value.push(options[i].value);
-		}
-	}
-	else if (element.tagName == 'INPUT' || element.tagName == 'TEXTAREA' || element.tagName == 'SELECT') {
-		value = element.value;
-	}
-	else if (element.tagName === 'IFRAME') {
-		value = element.srcdoc;
-	}
-	else if (element.hasAttribute('value')){
-		value = element.getAttribute('value');
-	}
-	else {
-		value = element.innerHTML;
-	}
-	if (prefix || suffix)
-		value = prefix + value + suffix;
-
-	return value;
-};
-
-function __encryptPassword(str) {
-	let encodedString = btoa(str);
-	return encodedString;
 }
 
 observer.init({
@@ -164,4 +110,4 @@ observer.init({
 	}
 });
 
-export { initGetValues, getValue };
+export { initGetValues };
