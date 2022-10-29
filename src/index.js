@@ -100,10 +100,11 @@ async function read(documents, elements) {
 function setData(elements, data) {
 	let isRendered = false;
 	if (!data.document) return;
+
 	if (!elements) {
 		// ToDo: handle db and database 
-		let collection = data.collection;
-		let document_id = data.document_id;
+		let collection = data.document[0].collection;
+		let document_id = data.document[0]._id;
 		let selector = `[collection='${collection}'][document_id='${document_id}']:not(cocreate-select, link)`;
 		elements = document.querySelectorAll(selector);
 	}
@@ -138,7 +139,7 @@ function setData(elements, data) {
 		const event = new CustomEvent('CoCreateElements-rendered', {
 			eventType: 'rendered',
 			detail: {
-				data: data
+				data
 			}
 		});
 
