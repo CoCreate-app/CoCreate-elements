@@ -77,6 +77,8 @@ function initElement(el) {
 	if (!crud.checkAttrValue(collection) || !crud.checkAttrValue(name)) return;
 	 
 	if (isRead == 'false') return;
+	if (!document_id && !filter) return;
+
 	return {collection, document_id, filter};
 }
 	
@@ -84,15 +86,14 @@ async function read(documents, elements) {
 	if (documents && documents.size > 0) {
 		for (let [key, {collection, document_id, filter}] of documents) {
 			documents.delete(key);
-			var responseData = await crud.readDocument({
-				collection: collection,
-				document: {
-                    _id: document_id
-                },
-
-				filter
-			});
-			setData(elements, responseData);
+			let data = {collection}
+			if (document_id)
+				data.document = {_id: document_id}
+			if (filter)
+				data.filter = filter
+			
+			let response = await crud.readDocument(data);
+			setData(elements, response);
 		}
 	}
 }
