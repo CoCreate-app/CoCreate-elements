@@ -150,7 +150,7 @@ function setData(elements, data) {
 
 async function save(element) {
 	let value = element.getValue();
-	await crud.save(element, value);
+	crud.save(element, value);
 }
 
 function __initSocket() {
