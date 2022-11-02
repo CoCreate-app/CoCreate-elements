@@ -71,7 +71,7 @@ function initElement(el) {
 	
 	let filter
 	if (el.hasAttribute('filter_id') || el.hasAttribute('filter-name' ) || el.hasAttribute('filter-sort-name')) {	
-		filter = ccfilter.setFilter(el, "filter_id");
+		filter = ccfilter.init(el, "filter_id");
 	}
 
 	if (!crud.checkAttrValue(collection) || !crud.checkAttrValue(name)) return;
