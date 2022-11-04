@@ -14,17 +14,17 @@
   <!--<ul id="a123"> hello </ul>-->
   
   <cocreate-select class="floating-label" id="collection" placeholder="collection:" set-value="#document_id" set-value-key="setcollection" active>
-    <ul fetch-collections template_id="collection" class="options z-index:7 margin-top:5px">
-      <cc-option class="option template" template_id="collection" value="{{data.name}}">
-        <span>{{data.name}}</span>
+    <ul fetch-collection template_id="collection" class="options z-index:7 margin-top:5px">
+      <cc-option class="option template" template_id="collection" value="{{collection.name}}">
+        <span>{{collection.name}}</span>
       </cc-option>
     </ul>
   </cocreate-select>
 
   <cocreate-select class="floating-label" id="document_id" placeholder="document_id:" active>
     <ul fetch-collection="{{setcollection}}" template_id="document_id" class="options z-index:7 margin-top:5px">
-			<cc-option class="option template" template_id="document_id" value="{{data._id}}">
-			    <span>{{data._id}}</span>
+			<cc-option class="option template" template_id="document_id" value="{{document._id}}">
+			    <span>{{document._id}}</span>
 			</cc-option>
     </ul>
   </cocreate-select>

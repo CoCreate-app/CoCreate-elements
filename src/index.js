@@ -16,7 +16,7 @@ else
 
 const selector = "[collection][name]:not(cocreate-select, link), input, textarea, select, [contenteditable]";
 const initializing = new Map();
-const filters = new Map();
+const els = new Map();
 
 function init() {
 	let elements = document.querySelectorAll(selector);
@@ -26,30 +26,39 @@ function init() {
 
 function initElements(elements) {
 	let documents = new Map();
-	let els = []
+	// let els = []
 	for (let element of elements){
-			let doc = initElement(element);
-			if (doc) {
-				let collection = doc.collection;
-				let document_id = doc.document_id;
-				let filter = doc.filter;
-				let initialize = initializing.get(element)
-				if (!initialize){
-					initializing.set(element, doc);
-					documents.set(JSON.stringify(doc), doc);
-					els.push(element)
-				} else {
-					if (document_id && initialize.document_id != document_id || filter && JSON.stringify(initialize.filter) != JSON.stringify(filter)){
-						initializing.set(element, doc);
-						documents.set(JSON.stringify(doc), doc);
-						els.push(element)
-					}
+		let doc = initElement(element);
+		if (doc) {
+			let key = JSON.stringify(doc)
+			let item = documents.get(key);
+			if (item)
+				doc.elements = [...item.elements, element]
+			else
+				doc.elements = [element]
+
+			// let collection = doc.collection;
+			// let document_id = doc.document_id;
+			// let filter = doc.filter;
+			let initialize = initializing.get(element)
+			if (!initialize){
+				initializing.set(element, key);
+				documents.set(key, doc);
+				// els.set(key, doc);
+				// els.push(element)
+			} else {
+				// if (document_id && initialize.document_id != document_id || filter && JSON.stringify(initialize.filter) != JSON.stringify(filter)){
+				if (initialize != key){
+					initializing.set(element, key);
+					documents.set(key, doc);
+					// els.set(key, doc);
+					// els.push(element)
 				}
 			}
-
+		}
 	}
 	
-	read(documents, els);
+	read(documents);
 }
 	
 function initElement(el) {
@@ -82,10 +91,11 @@ function initElement(el) {
 	return {collection, document_id, filter};
 }
 	
-async function read(documents, elements) {
+async function read(documents) {
 	if (documents && documents.size > 0) {
-		for (let [key, {collection, document_id, filter}] of documents) {
+		for (let [key, {collection, document_id, filter, elements}] of documents) {
 			documents.delete(key);
+
 			let data = {collection}
 			if (document_id)
 				data.document = {_id: document_id}
@@ -100,14 +110,22 @@ async function read(documents, elements) {
 	
 function setData(elements, data) {
 	let isRendered = false;
-	if (!data.document) return;
+	if (!data.document || data.document[0]) return;
+	let key = getKey(data)
 
 	if (!elements) {
-		// ToDo: handle db and database 
-		let collection = data.document[0].collection;
-		let document_id = data.document[0]._id;
-		let selector = `[collection='${collection}'][document_id='${document_id}']:not(cocreate-select, link)`;
-		elements = document.querySelectorAll(selector);
+		// ToDo: handle db and database, create key and get elements by key		
+		elements = els.get(key)
+		// let collection = data.document[0].collection;
+		// let document_id = data.document[0]._id;
+		// let selector = `[collection='${collection}'][document_id='${document_id}']:not(cocreate-select, link)`;
+		// elements = document.querySelectorAll(selector);
+	} else {
+		let eles = els.get(key)
+		if (eles && eles.length)
+			els.set(key, [...eles, ...elements])
+		else
+			els.set(key, elements)
 	}
 
 	elements.forEach((el) => {
@@ -115,7 +133,7 @@ function setData(elements, data) {
 		if (el.hasAttribute('actions')) return;
 		if (isRead == "false" || isUpdate == "false" || isCrdt == "true") return;
 		
-		// if (data.document[0]['collection'] == collection && data.document[0]['document_id'] == document_id) {
+		// if (data.document[0]['collection'] == collection && data.document[0]['_id'] == document_id) {
 			let value;
 			let valueType = el.getAttribute('value-type');
             if(valueType == 'object' || valueType == 'json'){
@@ -135,6 +153,7 @@ function setData(elements, data) {
 
 	});
 
+
 	if (isRendered) {
 		// ToDo: Replace with custom event
 		const event = new CustomEvent('CoCreateElements-rendered', {
@@ -146,6 +165,21 @@ function setData(elements, data) {
 
 		document.dispatchEvent(event);
 	}
+}
+
+function getKey(data) {
+	let key = {};
+	let attributes = ["db", "database", "collection", "index", "document"]
+
+	for (let attribute of attributes) {
+		let value = data[attribute]
+		if (value) {
+			if (attribute == 'document')
+			key[attribute] = value
+		} 
+	}
+	key.document = data.document[0]._id
+	return JSON.stringify(key)
 }
 
 async function save(element) {

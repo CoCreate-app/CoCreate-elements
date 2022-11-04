@@ -17,9 +17,9 @@
 		<div class="display:flex flex-wrap:wrap" fetch-collection="contacts" template_id="grid">
 
 			<div template_id="grid" class="template card margin:10px padding:20px background:gainsboro:hover">
-				<a pass_to="form-fields" pass-document_id="{{data._id}}">
-					<h4 collection="contacts" document_id="{{data._id}}" name="fullname">Name</h4>
-					<h4>{{data._id}}</h4>
+				<a pass_to="form-fields" pass-document_id="{{document._id}}">
+					<h4 collection="contacts" document_id="{{document._id}}" name="fullname">Name</h4>
+					<h4>{{document._id}}</h4>
 				</a>
 			</div>
 
