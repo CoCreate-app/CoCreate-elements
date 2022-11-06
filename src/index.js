@@ -199,7 +199,7 @@ function __initEvents(el) {
 		if (el.tagName == 'INPUT' || el.tagName == 'TEXTAREA' || el.tagName == 'SELECT' || el.hasAttribute('contenteditable')) {
 			el.addEventListener('input', function(e) {
 				const {document_id, name, isRealtime, isCrdt} = crud.getAttr(el);
-				if (isCrdt == "true" && document_id || isRealtime == "false" || name == "_id") return;
+				if (isCrdt == "true" && document_id && document_id != 'pending' || isRealtime == "false" || name == "_id") return;
 				if (document_id && e.detail && e.detail.skip == true) return;
 				save(el);
 			});
