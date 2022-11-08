@@ -110,7 +110,7 @@ async function read(documents) {
 	
 function setData(elements, data) {
 	let isRendered = false;
-	if (!data.document || data.document[0]) return;
+	if (!data.document || !data.document[0]) return;
 	let key = getKey(data)
 
 	if (!elements) {
@@ -127,7 +127,9 @@ function setData(elements, data) {
 		else
 			els.set(key, elements)
 	}
-
+	if (!elements || elements.length == 0)
+		return
+		
 	elements.forEach((el) => {
 		const { collection, document_id, name, isRead, isUpdate, isCrdt } = crud.getAttr(el);
 		if (el.hasAttribute('actions')) return;
