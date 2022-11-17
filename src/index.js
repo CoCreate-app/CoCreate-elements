@@ -223,7 +223,7 @@ observer.init({
 observer.init({
 	name: 'CoCreateElementsAttributes',
 	observe: ['attributes'],
-	attributeName: ['collection', 'document_id', 'name'],
+	attributeName: crud.getAttributeNames(['collection', 'document_id', 'name']),
 	target: selector,
 	callback: function(mutation) {
 		let {collection, document_id, name} = crud.getAttributes(mutation.target);
