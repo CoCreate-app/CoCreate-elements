@@ -83,7 +83,7 @@ function initElement(el) {
 		filter = ccfilter.init(el, "filter_id");
 	}
 
-	if (!crud.checkAttrValue(collection) || !crud.checkAttrValue(name)) return;
+	if (!crud.checkValue(collection) || !crud.checkValue(name)) return;
 	 
 	if (isRead == 'false') return;
 	if (!document_id && !filter) return;
