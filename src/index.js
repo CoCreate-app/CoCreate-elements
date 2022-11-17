@@ -72,7 +72,7 @@ function initElement(el) {
 		return;
 	}
 	
-	const { collection, document_id, name, isRead } = crud.getAttr(el);
+	const { collection, document_id, name, isRead } = crud.getAttributes(el);
 	if (!collection || !name) return;
 
 	if (document_id)
@@ -131,7 +131,7 @@ function setData(elements, data) {
 		return
 		
 	elements.forEach((el) => {
-		const { collection, document_id, name, isRead, isUpdate, isCrdt } = crud.getAttr(el);
+		const { collection, document_id, name, isRead, isUpdate, isCrdt } = crud.getAttributes(el);
 		if (el.hasAttribute('actions')) return;
 		if (isRead == "false" || isUpdate == "false" || isCrdt == "true") return;
 		
@@ -200,7 +200,7 @@ function __initEvents(el) {
 	if (!elementEvents.has(el)) {
 		if (el.tagName == 'INPUT' || el.tagName == 'TEXTAREA' || el.tagName == 'SELECT' || el.hasAttribute('contenteditable')) {
 			el.addEventListener('input', function(e) {
-				const {document_id, name, isRealtime, isCrdt} = crud.getAttr(el);
+				const {document_id, name, isRealtime, isCrdt} = crud.getAttributes(el);
 				if (isCrdt == "true" && document_id && document_id != 'pending' || isRealtime == "false" || name == "_id") return;
 				if (document_id && e.detail && e.detail.skip == true) return;
 				save(el);
@@ -226,7 +226,7 @@ observer.init({
 	attributeName: ['collection', 'document_id', 'name'],
 	target: selector,
 	callback: function(mutation) {
-		let {collection, document_id, name} = crud.getAttr(mutation.target);
+		let {collection, document_id, name} = crud.getAttributes(mutation.target);
 		if(collection && document_id && name)
 			initElements([mutation.target]);
 	}
