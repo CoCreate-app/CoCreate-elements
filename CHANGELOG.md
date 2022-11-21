@@ -1,3 +1,26 @@
+# [1.13.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.12.12...v1.13.0) (2022-11-21)
+
+
+### Bug Fixes
+
+* crud.getAttr renamed to crud.getAttributes ([2aad3ae](https://github.com/CoCreate-app/CoCreate-elements/commit/2aad3ae39f92448e1832c87c23fa5327732c43bc))
+* data.document[0] ([f5929a7](https://github.com/CoCreate-app/CoCreate-elements/commit/f5929a7f17745fa3713077bd3735d0ca736b1fd9))
+* if document_id pending return ([e2ab044](https://github.com/CoCreate-app/CoCreate-elements/commit/e2ab044de1d871b061677fff497fca20f48cdd27))
+* if no document_id or filter return ([7edbd6c](https://github.com/CoCreate-app/CoCreate-elements/commit/7edbd6c1b92cc883d3e6a701470755bbecdd8225))
+* removed await from crud.save ([14229f1](https://github.com/CoCreate-app/CoCreate-elements/commit/14229f15a861d4dc156c2ceff7147646f0526494))
+* renamed crud.checkAttrValue to crud.checkValue ([3e159fa](https://github.com/CoCreate-app/CoCreate-elements/commit/3e159fab0e7176c186545f828838bf5de29ca1f1))
+* renamed data.data to data.document, relocated prototype setValue and getValue to @cocreate/element-prototype ([bf863e8](https://github.com/CoCreate-app/CoCreate-elements/commit/bf863e8b413e0841c9b9f8894b0243c03cb0ff49))
+* renamed fiter.setFilter to filter.init ([0a56f60](https://github.com/CoCreate-app/CoCreate-elements/commit/0a56f60d1681f76ea3463f00d044992c9200d81d))
+* typo ([24ad3fe](https://github.com/CoCreate-app/CoCreate-elements/commit/24ad3fedefee09bab03c98a49fe59c5d3382019d))
+
+
+### Features
+
+* Ability to use filter attribute to crud data. bump crud@cocreate/crud--client ([0206cb2](https://github.com/CoCreate-app/CoCreate-elements/commit/0206cb2fb27dbf8a28c0fc8b82daf1c5730192f8))
+* Add @cocreate/element-prototype ([1628ffa](https://github.com/CoCreate-app/CoCreate-elements/commit/1628ffafe61faa5ddf8eddbaff61a4100b0ae8db))
+* added crud.getAttributeNames to observer attributeName param, this will allow observing custom attributes ([f52e23d](https://github.com/CoCreate-app/CoCreate-elements/commit/f52e23de8555d7060203b377d39238d43933befd))
+* supports rendering multiple db, database, collection and documents ([00a67e5](https://github.com/CoCreate-app/CoCreate-elements/commit/00a67e59ae8c26ebccc2ca3aadb38eb780d1c558))
+
 ## [1.12.12](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.12.11...v1.12.12) (2022-10-02)
 
 
