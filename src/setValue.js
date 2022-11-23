@@ -4,7 +4,7 @@ import { queryDocumentSelectorAll } from '@cocreate/utils';
 import '@cocreate/element-prototype';
 
 let crud
-if(CRUD && CRUD.default)
+if (CRUD && CRUD.default)
 	crud = CRUD.default
 else
 	crud = CRUD
@@ -42,12 +42,12 @@ function setValueByFind(element){
 		key = `{{${key}}}`;
 	
 	let value
-	if(element.getValue)
+	if (element.getValue)
 		value = element.getValue();
 	if (!value) return;
 
     let selector = element.getAttribute('set-value');
-    if(!selector) return;
+    if (!selector) return;
 	let elements;
 	if (element.hasAttribute('set-value-closest'))
 		elements = [element.closest(selector)];
@@ -72,7 +72,7 @@ function setValueByFind(element){
 					attrName = attrName.replace(regex, value);
 					setAttr = true;
 				}
-				if(setAttr)
+				if (setAttr)
 					element.setAttribute(attrName, attrValue);
 			}
 			let html = element.innerHTML;

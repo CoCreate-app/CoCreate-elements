@@ -8,7 +8,7 @@ import { initGetValues} from './getValue';
 import './fetchSrc';
 
 let crud
-if(CRUD && CRUD.default)
+if (CRUD && CRUD.default)
 	crud = CRUD.default
 else
 	crud = CRUD
@@ -138,7 +138,7 @@ function setData(elements, data) {
 		// if (data.document[0]['collection'] == collection && data.document[0]['_id'] == document_id) {
 			let value;
 			let valueType = el.getAttribute('value-type');
-            if(valueType == 'object' || valueType == 'json'){
+            if (valueType == 'object' || valueType == 'json'){
 				// if (name == 'data')
 				// 	value = JSON.stringify(data[name])
 				// else
@@ -227,7 +227,7 @@ observer.init({
 	target: selector,
 	callback: function(mutation) {
 		let {collection, document_id, name} = crud.getAttributes(mutation.target);
-		if(collection && document_id && name)
+		if (collection && document_id && name)
 			initElements([mutation.target]);
 	}
 });

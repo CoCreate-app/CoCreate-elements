@@ -17,15 +17,15 @@ function initElements(elements) {
 
 function initElement(element, mutation) {
     let selector = element.getAttribute('get-value') || element.getAttribute('get-value-closest');
-    if(!selector) return;
-	if(/{{\s*([\w\W]+)\s*}}/g.test(selector)) return;
+    if (!selector) return;
+	if (/{{\s*([\w\W]+)\s*}}/g.test(selector)) return;
 	
 	let valueEl
 	if (element.hasAttribute('get-value-closest'))
 		valueEl = element.closest(selector);
 	else
 		valueEl = document.querySelector(selector);
-	if(!valueEl) return;
+	if (!valueEl) return;
 
 	initEvents(valueEl, element, mutation);
 
@@ -61,7 +61,7 @@ function setValueByFind(valueEl, mutation) {
 	// todo can be removed if all elements have getValue using prototype
 	if (valueEl.hasAttribute('value'))
 		value = valueEl.getAttribute('value');
-	else if(valueEl.getValue)
+	else if (valueEl.getValue)
 		value = valueEl.getValue();
 	// else
 	// 	value = getValue(valueEl);
@@ -87,7 +87,7 @@ function setValueByFind(valueEl, mutation) {
 					attrName = attrName.replace(regex, value);
 					setAttr = true;
 				}
-				if(setAttr)
+				if (setAttr)
 					element.setAttribute(attrName, attrValue);
 			}
 			let html = element.innerHTML;
