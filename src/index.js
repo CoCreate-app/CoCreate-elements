@@ -1,17 +1,11 @@
 import observer from '@cocreate/observer';
 import action from '@cocreate/actions';
-import CRUD from '@cocreate/crud-client';
+import crud from '@cocreate/crud-client';
 import ccfilter from '@cocreate/filter';
 import '@cocreate/element-prototype';
 import { initSetValues} from './setValue';
 import { initGetValues} from './getValue';
 import './fetchSrc';
-
-let crud
-if (CRUD && CRUD.default)
-	crud = CRUD.default
-else
-	crud = CRUD
 
 
 const selector = "[collection][name]:not(cocreate-select, link), input, textarea, select, [contenteditable]";
