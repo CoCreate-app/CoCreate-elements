@@ -25,10 +25,10 @@ async function initElement(element) {
                 let text = await response.text(); // Replaces body with response
                 if (text){
                     element.innerHTML = text; // Replaces body with response
-                    initializing.delete(el)
+                    initializing.delete(element)
                 }
             } catch (err) {
-                console.log('Fetch error:' + err); // Error handling
+                console.log('FetchSrc error:' + err); // Error handling
             }
     }   
 };
