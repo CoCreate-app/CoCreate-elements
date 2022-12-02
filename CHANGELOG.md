@@ -1,3 +1,12 @@
+## [1.13.15](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.13.14...v1.13.15) (2022-12-02)
+
+
+### Bug Fixes
+
+* bump dependencies ([37b244b](https://github.com/CoCreate-app/CoCreate-elements/commit/37b244b721aff5fa56459dca97c03830a4822ecd))
+* docs ([0aaffac](https://github.com/CoCreate-app/CoCreate-elements/commit/0aaffac77840edce43668edf7ee4c9077826e5d6))
+* el typo. renamed to element ([94ff5f8](https://github.com/CoCreate-app/CoCreate-elements/commit/94ff5f8d32b026f5cc81d184bdc8e2661647c699))
+
 ## [1.13.14](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.13.13...v1.13.14) (2022-11-28)
 
 
