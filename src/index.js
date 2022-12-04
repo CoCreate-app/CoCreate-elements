@@ -139,7 +139,7 @@ function setData(elements, data) {
 				value = JSON.stringify(data.document[0][name])
 				value = decodeURIComponent(value)
             } else
-				value = crud.getObjectValueByPath(data.document[0], name);
+				value = crud.getValueFromObject(data.document[0], name);
 
 				el.setValue(value);
 
