@@ -1,3 +1,11 @@
+## [1.13.16](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.13.15...v1.13.16) (2022-12-04)
+
+
+### Bug Fixes
+
+* bump @cocreate/crud-client ([fdca75a](https://github.com/CoCreate-app/CoCreate-elements/commit/fdca75a85287a2953c820b8054704d73794914a8))
+* crud.getValueFromObject ([027c24a](https://github.com/CoCreate-app/CoCreate-elements/commit/027c24a13c87c4c54ff7b1ae4ec84c9f38dc57ba))
+
 ## [1.13.15](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.13.14...v1.13.15) (2022-12-02)
 
 
