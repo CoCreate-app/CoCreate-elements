@@ -1,3 +1,10 @@
+## [1.13.25](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.13.24...v1.13.25) (2022-12-15)
+
+
+### Bug Fixes
+
+* add missing dev dependency style-loader ([dfa7ef4](https://github.com/CoCreate-app/CoCreate-elements/commit/dfa7ef44e25da0fed5f4e6bf0093e35771bec156))
+
 ## [1.13.24](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.13.23...v1.13.24) (2022-12-13)
 
 
