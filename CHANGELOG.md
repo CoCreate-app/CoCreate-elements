@@ -1,3 +1,11 @@
+## [1.13.26](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.13.25...v1.13.26) (2022-12-20)
+
+
+### Bug Fixes
+
+* bump dependencies ([3de8486](https://github.com/CoCreate-app/CoCreate-elements/commit/3de848652d358db97b18b41831211975a7d41b10))
+* compare collection prior to setValue ([49df60e](https://github.com/CoCreate-app/CoCreate-elements/commit/49df60ecac8f0f78e67ef98d0a59258c3e56bc4d))
+
 ## [1.13.25](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.13.24...v1.13.25) (2022-12-15)
 
 
