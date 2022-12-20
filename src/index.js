@@ -123,13 +123,13 @@ function setData(elements, data) {
 	}
 	if (!elements || elements.length == 0)
 		return
-		
-	elements.forEach((el) => {
+	
+	for (let el of elements) {
 		const { collection, document_id, name, isRead, isUpdate, isCrdt } = crud.getAttributes(el);
-		if (el.hasAttribute('actions')) return;
-		if (isRead == "false" || isUpdate == "false" || isCrdt == "true") return;
+		if (el.hasAttribute('actions')) continue;
+		if (isRead == "false" || isUpdate == "false" || isCrdt == "true") continue;
 		
-		// if (data.document[0]['collection'] == collection && data.document[0]['_id'] == document_id) {
+		if (data.document[0]['collection'] == collection) {
 			let value;
 			let valueType = el.getAttribute('value-type');
             if (valueType == 'object' || valueType == 'json'){
@@ -138,16 +138,17 @@ function setData(elements, data) {
 				// else
 				value = JSON.stringify(data.document[0][name])
 				value = decodeURIComponent(value)
-            } else
+            } else {
 				value = crud.getValueFromObject(data.document[0], name);
-
-				el.setValue(value);
-
+			}
+			
+			el.setValue(value);
 			isRendered = true;
-		// }
+		}
+
 		initializing.delete(el)
 
-	});
+	}
 
 
 	if (isRendered) {
