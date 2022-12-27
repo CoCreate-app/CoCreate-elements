@@ -19,17 +19,33 @@ async function initElement(element) {
     let initialize = initializing.get(element)
     if (!initialize || initialize.src != src){
         initializing.set(element, {src});
-        if (src) 
+        if (src) {
             try {
                 let response = await fetch(src); // Gets a promise
                 let text = await response.text(); // Replaces body with response
-                if (text){
-                    element.innerHTML = text; // Replaces body with response
+                if (text) {
+                    let dom = document.createElement('dom')
+                    dom.innerHTML = text;
+                    
+                    let CoCreateJS = dom.querySelector('script[src*="CoCreate.js"], script[src*="CoCreate.min.js"]')
+                    if (CoCreateJS)
+                        CoCreateJS.remove()
+
+                    let CoCreateCSS = dom.querySelector('link[src*="CoCreate.css"], link[src*="CoCreate.min.css"]')
+                    if (CoCreateCSS)
+                        CoCreateCSS.remove()
+
+                    let css = dom.querySelector('link[collection], link[document]')
+                    if (css)
+                        css.remove()
+
+                    element.innerHTML = dom.innerHTML; // Replaces body with response
                     initializing.delete(element)
                 }
             } catch (err) {
                 console.log('FetchSrc error:' + err); // Error handling
             }
+        }
     }   
 };
 
