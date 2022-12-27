@@ -85,7 +85,7 @@ function setValueByFind(element){
 observer.init({
 	name: 'set-value',
 	observe: ['addedNodes'],
-	target: '[get-value], [get-value-closest]',
+	target: '[set-value], [set-value-closest]',
 	callback: function(mutation) {
 		initElement(mutation.target);
 	}
