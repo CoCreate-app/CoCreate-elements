@@ -1,3 +1,17 @@
+# [1.14.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.13.31...v1.14.0) (2022-12-27)
+
+
+### Bug Fixes
+
+* bump dependecies ([cd95cd1](https://github.com/CoCreate-app/CoCreate-elements/commit/cd95cd1c12582086f7776e880eb3e6b6c4f5b6fb))
+* bump dependencies ([03b8e18](https://github.com/CoCreate-app/CoCreate-elements/commit/03b8e18f658ca84a2d274c112d4f0e983b8862e1))
+* observer target setValue and setValue-closest ([85dec0d](https://github.com/CoCreate-app/CoCreate-elements/commit/85dec0d291164d70f6f0d4618757710a4f9fb1e4))
+
+
+### Features
+
+* fetch src will remove CoCreatejs, CoCreateCSS, and css-parser link as it already exists ([d4893f4](https://github.com/CoCreate-app/CoCreate-elements/commit/d4893f41d7ee34d76f5f57d24922e97b15938145))
+
 ## [1.13.31](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.13.30...v1.13.31) (2022-12-25)
 
 
