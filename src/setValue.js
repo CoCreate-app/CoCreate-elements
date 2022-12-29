@@ -35,9 +35,7 @@ function setValueByFind(element){
 	if (key)
 		key = `{{${key}}}`;
 	
-	let value
-	if (element.getValue)
-		value = element.getValue();
+	let value = element.getValue();
 	if (!value) return;
 
     let selector = element.getAttribute('set-value');

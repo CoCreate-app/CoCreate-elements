@@ -57,47 +57,41 @@ function initEvents(valueEl, element, mutation){
 }
 
 function setValueByFind(valueEl, mutation) {
-	let value;
-	// todo can be removed if all elements have getValue using prototype
-	if (valueEl.hasAttribute('value'))
-		value = valueEl.getAttribute('value');
-	else if (valueEl.getValue)
-		value = valueEl.getValue();
-	// else
-	// 	value = getValue(valueEl);
+	let value = valueEl.getValue();
 	if (!value) return;
+
 	let elements = mutation || valueEls.get(valueEl);
-	
-	if (elements)
-	for(let element of elements){
-		let key = element.getAttribute('get-value-key');
-		if (key){
-			key = `{{${key}}}`;
-			const regex = new RegExp(key, "g");
-			for (let attribute of element.attributes){
-				let attrName = attribute.name;
-				let attrValue = attribute.value;
-				let setAttr = false;
-				if (attrValue.includes(key)){
-					attrValue = attrValue.replace(regex, value);
-					setAttr = true;
+	if (elements) {
+		for(let element of elements){
+			let key = element.getAttribute('get-value-key');
+			if (key){
+				key = `{{${key}}}`;
+				const regex = new RegExp(key, "g");
+				for (let attribute of element.attributes){
+					let attrName = attribute.name;
+					let attrValue = attribute.value;
+					let setAttr = false;
+					if (attrValue.includes(key)){
+						attrValue = attrValue.replace(regex, value);
+						setAttr = true;
+					}
+					if (attrName.includes(key)){
+						element.removeAttribute(key);
+						attrName = attrName.replace(regex, value);
+						setAttr = true;
+					}
+					if (setAttr)
+						element.setAttribute(attrName, attrValue);
 				}
-				if (attrName.includes(key)){
-					element.removeAttribute(key);
-					attrName = attrName.replace(regex, value);
-					setAttr = true;
+				let html = element.innerHTML;
+				if (html.indexOf(key) !== -1){
+					html = html.replace(regex, value);
+					element.innerHTML = html;
 				}
-				if (setAttr)
-					element.setAttribute(attrName, attrValue);
 			}
-			let html = element.innerHTML;
-			if (html.indexOf(key) !== -1){
-				html = html.replace(regex, value);
-				element.innerHTML = html;
-			}
+			else
+				element.setValue(value);
 		}
-		else
-			element.setValue(value);
 	}
 }
 
