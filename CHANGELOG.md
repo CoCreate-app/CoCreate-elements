@@ -1,3 +1,11 @@
+## [1.14.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.14.0...v1.14.1) (2022-12-29)
+
+
+### Bug Fixes
+
+* bump dependencies ([d4637fa](https://github.com/CoCreate-app/CoCreate-elements/commit/d4637fa2089fbee92e3191704bcd65c9ac4d12fa))
+* exclusively use element-prototype getValue and setValue ([5d4bc05](https://github.com/CoCreate-app/CoCreate-elements/commit/5d4bc05c27e5f83275547d2f32e6de363a6c744e))
+
 # [1.14.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.13.31...v1.14.0) (2022-12-27)
 
 
