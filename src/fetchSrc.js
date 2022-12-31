@@ -31,7 +31,7 @@ async function initElement(element) {
                     if (CoCreateJS)
                         CoCreateJS.remove()
 
-                    let CoCreateCSS = dom.querySelector('link[src*="CoCreate.css"], link[src*="CoCreate.min.css"]')
+                    let CoCreateCSS = dom.querySelector('link[href*="CoCreate.css"], link[href*="CoCreate.min.css"]')
                     if (CoCreateCSS)
                         CoCreateCSS.remove()
 
