@@ -129,7 +129,7 @@ function setData(elements, data) {
 		if (el.hasAttribute('actions')) continue;
 		if (isRead == "false" || isUpdate == "false" || isCrdt == "true") continue;
 		
-		if (data.document[0]['collection'] == collection) {
+		if (data.document[0]['collection'] == collection && data.document[0]['_id'] == document_id) {
 			let value;
 			let valueType = el.getAttribute('value-type');
             if (valueType == 'object' || valueType == 'json'){
