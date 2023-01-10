@@ -1,3 +1,10 @@
+## [1.15.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.15.0...v1.15.1) (2023-01-10)
+
+
+### Bug Fixes
+
+* compare doument_id with element before seting value ([426b2d7](https://github.com/CoCreate-app/CoCreate-elements/commit/426b2d719eb9e0f012f05608ea1f70da463651f6))
+
 # [1.15.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.14.8...v1.15.0) (2023-01-10)
 
 
