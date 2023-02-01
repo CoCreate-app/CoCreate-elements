@@ -1,6 +1,8 @@
 import observer from '@cocreate/observer';
 import '@cocreate/element-prototype';
 
+// ToDo: actions="getValue", get-value-target, attribute get-value= selector or value compare to event components like toggle 
+
 const valueEls = new Map();
 
 function initGetValues() {

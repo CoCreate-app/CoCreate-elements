@@ -3,6 +3,8 @@ import crud from '@cocreate/crud-client';
 import { queryDocumentSelectorAll } from '@cocreate/utils';
 import '@cocreate/element-prototype';
 
+// ToDo: actions="setValue", set-value-target, attribute set-value= selector or value compare to event components like toggle
+ 
 function initSetValues() {
 	var elements = document.querySelectorAll('[set-value], [set-value-closest]');
 	initElements(elements);
