@@ -103,17 +103,10 @@ async function read(documents) {
 }
 	
 function setData(elements, data) {
-	let isRendered = false;
 	if (!data.document || !data.document[0]) return;
 	let key = getKey(data)
-
 	if (!elements) {
-		// ToDo: handle db and database, create key and get elements by key		
 		elements = els.get(key)
-		// let collection = data.document[0].collection;
-		// let document_id = data.document[0]._id;
-		// let selector = `[collection='${collection}'][document_id='${document_id}']:not(cocreate-select, link)`;
-		// elements = document.querySelectorAll(selector);
 	} else {
 		let eles = els.get(key)
 		if (eles && eles.length)
@@ -126,41 +119,15 @@ function setData(elements, data) {
 	
 	for (let el of elements) {
 		const { collection, document_id, name, isRead, isUpdate, isCrdt } = crud.getAttributes(el);
+		
 		if (el.hasAttribute('actions')) continue;
-		if (isRead == "false" || isUpdate == "false" || isCrdt == "true") continue;
+		if (!name || isRead == "false" || isUpdate == "false" || isCrdt == "true") continue;
 		
 		if (data.document[0]['collection'] == collection && data.document[0]['_id'] == document_id) {
-			let value;
-			let valueType = el.getAttribute('value-type');
-            if (valueType == 'object' || valueType == 'json'){
-				// if (name == 'data')
-				// 	value = JSON.stringify(data[name])
-				// else
-				value = JSON.stringify(data.document[0][name])
-				value = decodeURIComponent(value)
-            } else {
-				value = crud.getValueFromObject(data.document[0], name);
-			}
-			
+			let value = crud.getValueFromObject(data.document[0], name);
 			el.setValue(value);
-			isRendered = true;
+			initializing.delete(el)
 		}
-
-		initializing.delete(el)
-
-	}
-
-
-	if (isRendered) {
-		// ToDo: Replace with custom event
-		const event = new CustomEvent('CoCreateElements-rendered', {
-			eventType: 'rendered',
-			detail: {
-				data
-			}
-		});
-
-		document.dispatchEvent(event);
 	}
 }
 
