@@ -1,3 +1,10 @@
+## [1.15.10](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.15.9...v1.15.10) (2023-02-19)
+
+
+### Bug Fixes
+
+* setData valueType handeled by setValue ([34d196f](https://github.com/CoCreate-app/CoCreate-elements/commit/34d196ffe6e477f8d9e499e9c32e86532c632cd7))
+
 ## [1.15.9](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.15.8...v1.15.9) (2023-02-01)
 
 
