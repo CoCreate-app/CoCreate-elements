@@ -3,8 +3,6 @@ import action from '@cocreate/actions';
 import crud from '@cocreate/crud-client';
 import ccfilter from '@cocreate/filter';
 import '@cocreate/element-prototype';
-import { initSetValues} from './setValue';
-import { initGetValues} from './getValue';
 import './fetchSrc';
 
 
@@ -120,7 +118,7 @@ function setData(elements, data) {
 	for (let el of elements) {
 		const { collection, document_id, name, isRead, isUpdate, isCrdt } = crud.getAttributes(el);
 		
-		if (el.hasAttribute('actions')) continue;
+		if (el.hasAttribute('actions') || el.tagName === 'DIV' && !el.classList.contains('domEditor')) continue;
 		if (!name || isRead == "false" || isUpdate == "false" || isCrdt == "true") continue;
 		
 		if (data.document[0]['collection'] == collection && data.document[0]['_id'] == document_id) {
@@ -204,8 +202,5 @@ action.init({
 });
 
 init();
-initGetValues();
-initSetValues();
-
 
 export default {initElements, initElement, save};
