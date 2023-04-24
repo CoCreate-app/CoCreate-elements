@@ -1,3 +1,10 @@
+## [1.16.8](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.16.7...v1.16.8) (2023-04-24)
+
+
+### Bug Fixes
+
+* exclude source elements ([4fac006](https://github.com/CoCreate-app/CoCreate-elements/commit/4fac006525a292457ce8bf9eea4cdb52ca3349af))
+
 ## [1.16.7](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.16.6...v1.16.7) (2023-04-11)
 
 
