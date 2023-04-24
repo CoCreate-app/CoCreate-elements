@@ -1,3 +1,10 @@
+## [1.17.3](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.17.2...v1.17.3) (2023-04-24)
+
+
+### Bug Fixes
+
+* workflow node version updated  16 ([2361799](https://github.com/CoCreate-app/CoCreate-elements/commit/23617995f370ab653d3290cea7f343ecb29a21ed))
+
 ## [1.17.2](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.17.1...v1.17.2) (2023-04-24)
 
 
