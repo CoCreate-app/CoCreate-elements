@@ -1,3 +1,10 @@
+## [1.17.4](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.17.3...v1.17.4) (2023-04-24)
+
+
+### Bug Fixes
+
+* updated worrkflows to v3 and node version 16 ([cecd6d0](https://github.com/CoCreate-app/CoCreate-elements/commit/cecd6d0d772e33744a2fe0ad711651271d2b73d6))
+
 ## [1.17.3](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.17.2...v1.17.3) (2023-04-24)
 
 
