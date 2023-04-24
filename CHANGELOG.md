@@ -1,3 +1,10 @@
+## [1.16.9](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.16.8...v1.16.9) (2023-04-24)
+
+
+### Bug Fixes
+
+* add missing dependency @cocreate/filter ([84d861a](https://github.com/CoCreate-app/CoCreate-elements/commit/84d861a6794672ed6093118f2501a163c9c3c874))
+
 ## [1.16.8](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.16.7...v1.16.8) (2023-04-24)
 
 
