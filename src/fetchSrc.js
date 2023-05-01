@@ -1,6 +1,6 @@
 import observer from '@cocreate/observer';
 
-const selector = '[src]:not(img, video, script, input, iframe, frame, link, source)'
+const selector = '[src]:not(img, video, script, input, iframe, frame, link, source, object)'
 const initializing = new Map();
 
 
