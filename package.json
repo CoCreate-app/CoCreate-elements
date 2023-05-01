@@ -1,6 +1,6 @@
 {
   "name": "@cocreate/elements",
-  "version": "1.17.6",
+  "version": "1.17.7",
   "description": "Fetch content into any html element by using html5 attributes to query data stored in CoCreate headless CMS. If data is changed it will instantly reflect in html tags as changes are broadcasted in realtime",
   "keywords": [
     "elements",

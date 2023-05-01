@@ -1,3 +1,11 @@
+## [1.17.7](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.17.6...v1.17.7) (2023-05-01)
+
+
+### Bug Fixes
+
+* removed object from ignore list as it does not use src attribute ([c2ed841](https://github.com/CoCreate-app/CoCreate-elements/commit/c2ed841b1edb76be65bc70c1ed7137ff94576bd6))
+* replace fontawesome with svg ([549dfab](https://github.com/CoCreate-app/CoCreate-elements/commit/549dfab09eb5d5f874d864bc123a822a51fa9c40))
+
 ## [1.17.6](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.17.5...v1.17.6) (2023-05-01)
 
 
