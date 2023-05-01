@@ -1,3 +1,10 @@
+## [1.17.6](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.17.5...v1.17.6) (2023-05-01)
+
+
+### Bug Fixes
+
+* ignore objec element tag ([2f7e7c6](https://github.com/CoCreate-app/CoCreate-elements/commit/2f7e7c6bc47ff601650d259f2215d27c8515a59c))
+
 ## [1.17.5](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.17.4...v1.17.5) (2023-04-30)
 
 
