@@ -1,3 +1,10 @@
+## [1.17.9](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.17.8...v1.17.9) (2023-05-01)
+
+
+### Bug Fixes
+
+* test src for placeholder ([f3d4f54](https://github.com/CoCreate-app/CoCreate-elements/commit/f3d4f54287a5a333cb4086f6354db796194d3537))
+
 ## [1.17.8](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.17.7...v1.17.8) (2023-05-01)
 
 
