@@ -16,6 +16,9 @@ function initElements(elements) {
 
 async function initElement(element) {
     let src = element.getAttribute('src');
+
+    if (!src || /{{\s*([\w\W]+)\s*}}/g.test(src))
+        return;
     let initialize = initializing.get(element)
     if (!initialize || initialize.src != src){
         initializing.set(element, {src});
