@@ -1,3 +1,10 @@
+## [1.17.11](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.17.10...v1.17.11) (2023-05-10)
+
+
+### Bug Fixes
+
+* apikey renamed to key ([f67d5b4](https://github.com/CoCreate-app/CoCreate-elements/commit/f67d5b4d7251f915e0b75dd071c9f653d889b72b))
+
 ## [1.17.10](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.17.9...v1.17.10) (2023-05-06)
 
 
