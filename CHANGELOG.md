@@ -1,3 +1,10 @@
+## [1.17.12](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.17.11...v1.17.12) (2023-05-19)
+
+
+### Bug Fixes
+
+* update packages to latest version. This commit updates various packages in the dependencies section of the package.json file to their latest published versions, thereby fixing multiple bugs and improving overall performance. ([09ebdfa](https://github.com/CoCreate-app/CoCreate-elements/commit/09ebdface6d30e25eddbe9a3236a35b40939ffad))
+
 ## [1.17.11](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.17.10...v1.17.11) (2023-05-10)
 
 
