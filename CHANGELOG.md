@@ -1,3 +1,10 @@
+## [1.17.25](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.17.24...v1.17.25) (2023-06-11)
+
+
+### Bug Fixes
+
+* postintall error ([8181814](https://github.com/CoCreate-app/CoCreate-elements/commit/8181814cffcc5e5ea573afd00d3ae4d400e9fe8b))
+
 ## [1.17.24](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.17.23...v1.17.24) (2023-06-11)
 
 
