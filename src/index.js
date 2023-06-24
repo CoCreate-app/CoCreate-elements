@@ -64,7 +64,8 @@ function initElement(el) {
         return;
     }
 
-    const { collection, document_id, name, isRead } = crud.getAttributes(el);
+    // const data = crud.getObject(el);
+    const { storage, database, collection, index, document_id, name, isRead } = crud.getAttributes(el);
     if (!collection || !name) return;
 
     if (document_id)
@@ -75,7 +76,7 @@ function initElement(el) {
         filter = ccfilter.init(el, "filter_id");
     }
 
-    if (!crud.checkValue(collection) || !crud.checkValue(name)) return;
+    if (!filter && (!crud.checkValue(collection) || !crud.checkValue(name))) return;
 
     if (isRead == 'false') return;
     if (!document_id && !filter) return;
