@@ -204,7 +204,7 @@ function filterData(element, data, type) {
                 else if (index === 0 || index < count) {
                     data.filter.index = index
                 } else if (index) {
-                    let renderedNode = ''
+                    let renderedNode = ""
                     if (renderedNode)
                         renderedNode.remove()
                     return
