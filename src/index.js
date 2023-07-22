@@ -1,6 +1,7 @@
 import Observer from '@cocreate/observer';
 import Actions from '@cocreate/actions';
 import CRUD from '@cocreate/crud-client';
+import { dotNotationToObject, queryData, sortData } from '@cocreate/utils';
 import '@cocreate/filter';
 import '@cocreate/render';
 import '@cocreate/element-prototype';
@@ -125,12 +126,12 @@ function setData(element, data, action) {
 
         let matchingKeys = findMatchingKeys(data)
         for (let i = 0; i < matchingKeys.length; i++) {
-            let matchingElements = elements.get(matchingKeys[i])
-            if (matchingElements)
-                element.push(...matchingElements)
+            let matchingElements = keys.get(matchingKeys[i])
+            if (matchingElements && matchingElements.elements && matchingElements.elements.size)
+                element.push(...matchingElements.elements.keys())
         }
 
-        if (!element) return
+        if (!element.length) return
     }
 
     if (!(element instanceof HTMLCollection) && !Array.isArray(element))
@@ -138,7 +139,11 @@ function setData(element, data, action) {
 
 
     let type = data.type
-    if (type == 'name')
+    if (!type && action) {
+        type = action.match(/[A-Z][a-z]+/g);
+        type = type[0].toLowerCase()
+
+    } else if (type == 'name')
         type = 'document'
 
     for (let el of element) {
@@ -163,13 +168,13 @@ function setData(element, data, action) {
             el.setValue(value);
             // }
         } else {
-            filterData(el, data, data.type)
+            filterData(el, data, type, action)
         }
 
     }
 }
 
-function filterData(element, data, type) {
+function filterData(element, data, type, action) {
     if (!element)
         return;
 
@@ -191,34 +196,97 @@ function filterData(element, data, type) {
         } else {
             data = { [name]: data[type][name] }
         }
-
-        if (element.getFilter) {
-            let filter = element.getFilter()
-            if (filter && filter.query)
-                data = queryData(data, filter.query)
-            if (data) {
-                // apply sort to see what position the data is in
-                let index = getDataIndex(element, data)
-                if (index === null)
-                    return
-                else if (index === 0 || index < count) {
-                    data.filter.index = index
-                } else if (index) {
-                    let renderedNode = ""
-                    if (renderedNode)
-                        renderedNode.remove()
-                    return
-                }
-            }
-        }
     }
 
-    if (data)
+    if (element.getFilter && action && !action.startsWith('read')) {
+        checkFilters(element, data, type, action)
+    } else if (data)
         element.setValue(data);
 
     // render({ element, data, key: type });
     const evt = new CustomEvent('fetchedData', { bubbles: true });
     element.dispatchEvent(evt);
+}
+
+function checkFilters(element, data, type, action) {
+    let Data = element.getValue()
+    if (!Data) return
+
+    let newData
+    if (type) {
+        Data = Data[type]
+        newData = data[type]
+    } else
+        newData = data
+
+    let filter = element.getFilter()
+    if (filter && filter.query)
+        newData = queryData(newData, filter.query)
+    if (!newData.length)
+        return
+
+    if (Array.isArray(Data)) {
+        if (Array.isArray(newData)) {
+            for (let i = 0; i < newData.length; i++) {
+                checkIndex(element, data, Data, newData[i], type, filter, action)
+            }
+        } else {
+            checkIndex(element, data, Data, newData, type, filter, action)
+        }
+    } else {
+        let primaryKey
+        if (type === 'document') {
+            primaryKey = '_id';
+        } else {
+            primaryKey = 'name';
+        }
+
+        if (Data[primaryKey] === newData[primaryKey]) {
+            Data = dotNotationToObject(newData, Data)
+        }
+        element.setValue(data);
+    }
+}
+
+function checkIndex(element, data, Data, newData, type, filter, action) {
+    let index
+    if (type === 'document') {
+        index = Data.findIndex(obj => obj._id === newData._id);
+    } else {
+        index = Data.findIndex(obj => obj.name === newData.name);
+    }
+
+    if (!data.filter)
+        data.filter = {}
+
+    if (action.startsWith('delete')) {
+        if (!index && index !== 0)
+            return
+        data.filter.remove = true
+    } else {
+        if (!index && index !== 0) {
+            data.filter.create = true
+            Data.push(newData)
+        } else {
+            data.filter.update = true
+            data.filter.currentIndex = index
+            Data[index] = dotNotationToObject(newData, Data[index])
+        }
+
+        if (filter && filter.sort) {
+            newData.isNewData = true
+            Data = sortData(Data, filter.sort)
+            index = Data.findIndex(obj => obj.isNewData);
+        }
+
+        if (index >= 0) {
+            if (data.filter.currentIndex === index)
+                delete data.filter.currentIndex
+            data.filter.index = index
+            element.setValue(data);
+        }
+
+    }
 }
 
 function getKey(data) {
@@ -252,20 +320,28 @@ function findMatchingKeys(data) {
         let hasMatch = true;
 
         for (const key of targetKeys) {
-            if (data.hasOwnProperty(key) && sortedKey.hasOwnProperty(key)) {
-                if (Array.isArray(sortedKey[key]) && Array.isArray(data[key])) {
-                    const matches = sortedKey[key].some(value => data[key].includes(value));
+            if (data.hasOwnProperty(key)) {
+                if (!sortedKey.data.hasOwnProperty(key)) {
+                    hasMatch = false;
+                    break;
+                }
+                if (Array.isArray(sortedKey.data[key]) && Array.isArray(data[key])) {
+                    // if key is document check _id
+                    const matches = sortedKey.data[key].some(value => {
+                        if (key === 'document') {
+                            return data[key].some(obj => obj._id === value._id);
+                        } else {
+                            return data[key].includes(value)
+                        }
+                    });
                     if (!matches) {
                         hasMatch = false;
                         break;
                     }
-                } else if (sortedKey[key] !== data[key]) {
+                } else if (sortedKey.data[key] !== data[key]) {
                     hasMatch = false;
                     break;
                 }
-            } else {
-                hasMatch = false;
-                break;
             }
         }
 
@@ -322,93 +398,42 @@ function initSocket() {
 
 function initDndEvents() {
     window.addEventListener('dndsuccess', function (e) {
-        const { draggedEl, droppedEl, position } = e.detail;
+        const { draggedEl, draggedFrom, droppedEl, droppedIn, position } = e.detail;
 
-        let data = getDndTemplates(draggedEl, droppedEl, position)
+        if (!draggedFrom || !droppedIn) return
 
-        if (data.draggedFrom && data.droppedIn) {
-            if (!data.draggedFrom.isSameNode(data.droppedIn)) {
-                updateDocuments(data.draggedFrom);
-                updateDocuments(data.droppedIn);
-            } else {
-                updateDocuments(data.droppedIn);
-            }
+        if (!draggedFrom.isSameNode(droppedIn)) {
+            updateDocuments(draggedEl, draggedFrom);
+            updateDocuments(droppedEl, droppedIn, position);
+        } else {
+            updateDocuments(droppedEl, droppedIn, position);
         }
 
     });
 }
 
-function getDndTemplates(draggedEl, droppedEl, position) {
-    let draggedFrom = draggedEl.closest('[render-selector]')
-    let droppedIn = droppedEl.closest('[render-selector]')
-    let draggedEid = draggedEl.getAttribute('eid')
-    let droppedEid = droppedEl.getAttribute('eid')
-    let index
-
-    if (droppedEl) {
-        if (droppedEid) {
-            const children = droppedEl.parentElement.children;
-            for (let i = 0; i < children.length; i++) {
-                if (children[i].getAttribute('eid') === droppedEid) {
-                    if (position == 'afterend')
-                        index = i + 1
-                    else
-                        index = i
-                    break;
-                }
-            }
-        } else
-            index = 0
-    }
-    return {
-        draggedFrom,
-        droppedIn, // wrapper
-        draggedEl,
-        droppedEl,
-        draggedEid, // To get draggedEl
-        droppedEid, // To get droppedEl
-        index
-    }
-}
-
-function setDndTemplates({ draggedFrom, droppedIn, draggedEl, droppedEl, draggedEid, droppedEid, index }) {
-    if (draggedFrom && droppedIn) {
-        if (!draggedEl) {
-            draggedEl = draggedFrom.querySelector(`[eid='${draggedEid}']`);
-            if (!draggedEl)
-                draggedEl = droppedIn.querySelector(`[eid='${draggedEid}']`);
-        }
-
-        let data, type = 'document';
-        if (draggedEl) {
-            if (draggedFrom !== droppedIn) {
-                if (CoCreate && CoCreate.render)
-                    data = CoCreate.render.rederedNodes.get(draggedEl)
-                else
-                    data = {}
-
-                dropItem.renderedElements.set(draggedEid, data)
-            }
-
-            console.log('render fetch dnd', dropItem.element, data, type, draggedEl, index)
-            __renderElements(dropItem.element, data, type, draggedEl, index)
-        }
-
-    }
-}
-
 // update documents
-function updateDocuments(element) {
+function updateDocuments(draggedEl, draggedFrom, droppedEl, droppedIn, position) {
     // TODO: update crud, delete crud and add to new location 
     // if dropped el in a different storage, database, collection updated
     // if dnd clone do not delete dragged crud,  just add to dropped crud
 
-    let data = CRUD.getObject(element) // data should be object from crud read so we can move
-    data.filter = element.getFilter();
+    // data.filter = element.getFilter();
+    let data, index, newData
+    if (draggedEl) {
+        // remove item using crud
+        data = draggedFrom.getValue() // data should be object from crud read so we can move
+        newData = CRUD.getObject(draggedFrom)
+    }
 
+    if (droppedEl) {
+        data = droppedIn.getValue() // data should be object from crud read so we can move
+        newData = CRUD.getObject(droppedIn)
+    }
+
+    let object = {}
     let query = data.filter.query
     if (query && query.length) {
-        let object = {}
         for (let i = 0; i < query.length; i++) {
             if (query.operator === "$eq")
                 object[query.name] = query.value
@@ -417,41 +442,59 @@ function updateDocuments(element) {
         }
     }
 
-    if (type === 'document')
-        object._id = ''
+    let sortName, sortDirection
+    let sort = data.filter.sort
+    if (sort && sort.length) {
+        // for (let i = 0; i < sort.length; i++) {
+        for (let i = sort.length - 1; i >= 0; i--) {
+            if (typeof data[sort.name] === 'number') {
+                sortName = sort.name
+                sortDirection = sort.direction
+                break
+            }
+        }
+    }
 
-    data[type] = [object]
+    if (sortName) {
+        newData[newData.type] = []
+        if (draggedEl && draggedFrom) {
+            // could require performing a delete crud. how to dertimine if updating or deleting
+            // even a field name should be deleteable. like the concept of defining a key as undefined for deletion 
+            const nodeList = draggedFrom.querySelectorAll('[render-clone]');
+            const arrayFromNodeList = Array.from(nodeList);
+            index = arrayFromNodeList.indexOf(draggedEl);
 
-    // data.broadcast = false
-    // data.broadcastSender = false
-    // data.broadcastBrowser = false
+            for (let i = 0; i < nodeListArray.length; i++) {
+                if (i > index) {
+                    let previousData = data[data.type][index]
+                    object[sortName] = i - 1
+                    newData[newData.type].push({ ...previousData, ...object })
+                }
+            }
+        } else if (droppedEl && droppedIn) {
+            const nodeList = droppedIn.querySelectorAll('[render-clone]');
+            const nodeListArray = Array.from(nodeList);
+            index = nodeListArray.indexOf(droppedEl);
+            if (position === 'afterend')
+                index += 1
 
-    const children = template.querySelectorAll(`[templateid="${template_id}"][eid]:not(.template, [template])`);
+            for (let i = 0; i < nodeListArray.length; i++) {
+                if (i > index) {
+                    let previousData = data[data.type][index]
+                    object[sortName] = i + 1
+                    newData[newData.type].push({ ...previousData, ...object })
+                }
+            }
+        }
+    } else {
+        newData[newData.type] = [{ ...data[data.type][index], ...object }]
+    }
 
-    const sortName = item.filter.sort[0].name
-    let direction = item.filter.sort[0].direction
-    if (direction == 'desc')
-        children.reverse()
-
-    const queryName = template.getAttribute('filter-name');
-    const queryValue = template.getAttribute('filter-value');
-    const queryOperator = template.getAttribute('filter-operator');
-
-    // TODO: handle sort name to update index
-    children.forEach((child, index) => {
-        let doc = { _id: child.getAttribute('eid') }
-        if (sortName)
-            doc[sortName] = index
-        if (queryName && queryValue && queryOperator == '$eq')
-            doc[queryName] = queryValue
-        data.document.push({ ...doc })
-    });
-
-    if (data.document.length) {
-        if (crud)
-            crud.updateDocument(data)
+    if (newData[newData.type].length) {
+        if (CRUD)
+            CRUD.updateDocument(newData)
         else
-            console.log('fetch - dnd reorder data set as crud is unavailable')
+            console.log('dnd reordered data set as crud is unavailable')
     }
 }
 
