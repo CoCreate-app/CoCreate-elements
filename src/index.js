@@ -122,15 +122,7 @@ async function read(element, data, key) {
 
 function setData(element, data, action) {
     if (!element) {
-        element = []
-
-        let matchingKeys = findMatchingKeys(data)
-        for (let i = 0; i < matchingKeys.length; i++) {
-            let matchingElements = keys.get(matchingKeys[i])
-            if (matchingElements && matchingElements.elements && matchingElements.elements.size)
-                element.push(...matchingElements.elements.keys())
-        }
-
+        element = findMatchingElements(data)
         if (!element.length) return
     }
 
@@ -312,6 +304,17 @@ function getKey(data) {
     return { key, object };
 }
 
+function findMatchingElements(data) {
+    let element = []
+    let matchingKeys = findMatchingKeys(data)
+    for (let i = 0; i < matchingKeys.length; i++) {
+        let matchingElements = keys.get(matchingKeys[i])
+        if (matchingElements && matchingElements.elements && matchingElements.elements.size)
+            element.push(...matchingElements.elements.keys())
+    }
+    return element
+}
+
 function findMatchingKeys(data) {
     const matchingKeyStrings = [];
     const targetKeys = ["storage", "database", "collection", "index", "document", 'filter'];
@@ -396,49 +399,90 @@ function initSocket() {
 
 }
 
-function initDndEvents() {
-    window.addEventListener('dndsuccess', function (e) {
-        const { draggedEl, draggedFrom, droppedEl, droppedIn, position } = e.detail;
+Observer.init({
+    name: 'render',
+    observe: ['addedNodes'],
+    target: '[render-clone]',
+    callback: function (mutation) {
+        let renderedNode = CoCreate.render.renderedNodes.get(mutation.target)
+        if (!renderedNode) return
+
+        if (!mutation.movedFrom) return
+        let draggedEl = mutation.target
+        let draggedFrom = mutation.movedFrom.parentElement
+        let droppedEl = mutation.target.nextElementSibling || mutation.target.previousElementSibling
+        let droppedIn = mutation.parentElement
 
         if (!draggedFrom || !droppedIn) return
+        dndCrud(draggedEl, draggedFrom, droppedEl, droppedIn)
+    }
+})
 
-        if (!draggedFrom.isSameNode(droppedIn)) {
-            updateDocuments(draggedEl, draggedFrom);
-            updateDocuments(droppedEl, droppedIn, position);
-        } else {
-            updateDocuments(droppedEl, droppedIn, position);
+function dndCrud(draggedEl, draggedFrom, droppedEl, droppedIn) {
+    let draggedFromData = draggedFrom.getValue()
+    let draggedFromNewData = CRUD.getObject(draggedFrom)
+    let droppedInData = draggedFrom.getValue()
+    let droppedInNewData = CRUD.getObject(draggedFrom)
+
+    dndCrudData(draggedEl, draggedFrom, draggedFromData, draggedFromNewData, 'remove')
+    dndCrudData(droppedEl, droppedIn, droppedInData, droppedInNewData, 'add')
+
+    if (!draggedFrom.isSameNode(droppedIn)) {
+        let element = findMatchingElements(draggedFromData)
+        if (!element.length) return
+
+        let match = element.find(obj => obj === droppedIn);
+        if (!match) {
+            console.log('crudItem or keyPath needs to be deleted', test)
+            if (removeKeyPath) {
+                let test = { [keyPath]: undefined }
+                draggedFromNewData = dotNotationToObject(test, draggedFromNewData)
+                dndCrudSend(draggedFromNewData, 'update')
+            } else {
+                dndCrudSend(draggedFromNewData, 'delete')
+            }
         }
 
-    });
+        dndCrudSend(droppedInNewData, 'update')
+    } else {
+        dndCrudSend(droppedInNewData, 'update')
+    }
+
+
 }
 
-// update documents
-function updateDocuments(draggedEl, draggedFrom, droppedEl, droppedIn, position) {
-    // TODO: update crud, delete crud and add to new location 
-    // if dropped el in a different storage, database, collection updated
-    // if dnd clone do not delete dragged crud,  just add to dropped crud
+function dndCrudData(element, parent, parentData, parentNewData, operator) {
+    if (element && parent) {
+        let { newData, sortName, sortDirection, keyPath, clones, index } = dndNewData(element, parentData)
+        parentNewData[parentNewData.type] = []
 
-    // data.filter = element.getFilter();
-    let data, index, newData
-    if (draggedEl) {
-        // remove item using crud
-        data = draggedFrom.getValue() // data should be object from crud read so we can move
-        newData = CRUD.getObject(draggedFrom)
+        if (sortName) {
+            for (let i = 0; i < clones.length; i++) {
+                if (i > index) {
+                    let previousData = parentData[parentData.type][index]
+                    if (operator === 'add')
+                        newData[sortName] = i + 1
+                    else if (operator === 'remove')
+                        newData[sortName] = i - 1
+
+                    parentNewData[parentNewData.type].push({ ...previousData, ...newData })
+                }
+            }
+        } else {
+            parentNewData[parentNewData.type] = [{ ...parentData[parentData.type][index], ...newData }]
+        }
     }
+}
 
-    if (droppedEl) {
-        data = droppedIn.getValue() // data should be object from crud read so we can move
-        newData = CRUD.getObject(droppedIn)
-    }
-
-    let object = {}
+function dndNewData(element, data) {
+    let newData = {}
     let query = data.filter.query
     if (query && query.length) {
         for (let i = 0; i < query.length; i++) {
             if (query.operator === "$eq")
-                object[query.name] = query.value
+                newData[query.name] = query.value
             if (query.operator === "$ne")
-                object[query.name] = query.value
+                newData[query.name] = query.value
         }
     }
 
@@ -455,49 +499,30 @@ function updateDocuments(draggedEl, draggedFrom, droppedEl, droppedIn, position)
         }
     }
 
-    if (sortName) {
-        newData[newData.type] = []
-        if (draggedEl && draggedFrom) {
-            // could require performing a delete crud. how to dertimine if updating or deleting
-            // even a field name should be deleteable. like the concept of defining a key as undefined for deletion 
-            const nodeList = draggedFrom.querySelectorAll('[render-clone]');
-            const arrayFromNodeList = Array.from(nodeList);
-            index = arrayFromNodeList.indexOf(draggedEl);
+    let keyPath, clonesMap, clones, index
 
-            for (let i = 0; i < nodeListArray.length; i++) {
-                if (i > index) {
-                    let previousData = data[data.type][index]
-                    object[sortName] = i - 1
-                    newData[newData.type].push({ ...previousData, ...object })
-                }
-            }
-        } else if (droppedEl && droppedIn) {
-            const nodeList = droppedIn.querySelectorAll('[render-clone]');
-            const nodeListArray = Array.from(nodeList);
-            index = nodeListArray.indexOf(droppedEl);
-            if (position === 'afterend')
-                index += 1
-
-            for (let i = 0; i < nodeListArray.length; i++) {
-                if (i > index) {
-                    let previousData = data[data.type][index]
-                    object[sortName] = i + 1
-                    newData[newData.type].push({ ...previousData, ...object })
-                }
-            }
-        }
-    } else {
-        newData[newData.type] = [{ ...data[data.type][index], ...object }]
+    let renderedNode = CoCreate.render.renderedNodes.get(element)
+    if (renderedNode) {
+        keyPath = renderedNode.keyPath
+        clonesMap = renderedNode.template.clones
+        clones = Array.from(clonesMap.values());
+        index = clones.indexOf(element);
     }
 
-    if (newData[newData.type].length) {
-        if (CRUD)
-            CRUD.updateDocument(newData)
-        else
+    return { newData, sortName, sortDirection, keyPath, clones, index }
+
+}
+
+function dndCrudSend(currentNewData, crudType) {
+    if (currentNewData[currentNewData.type].length) {
+        if (CRUD) {
+            let action = currentNewData.type;
+            action = action.charAt(0).toUpperCase() + action.slice(1);
+            CRUD[crudType + action](currentNewData)
+        } else
             console.log('dnd reordered data set as crud is unavailable')
     }
 }
-
 
 //TODO: needs to updated in order to match new system
 function __deleteDocumentsAction(btn) {
@@ -542,6 +567,7 @@ Observer.init({
     observe: ['removedNodes'],
     target: selector,
     callback: function (mutation) {
+        if (mutation.target.parentElement) return
         remove(mutation.target)
     }
 });
