@@ -1,6 +1,6 @@
 import Observer from '@cocreate/observer';
 import Actions from '@cocreate/actions';
-import CRUD from '@cocreate/crud-client';
+import CRUD, { getValueFromObject } from '@cocreate/crud-client';
 import { dotNotationToObject, queryData, sortData } from '@cocreate/utils';
 import '@cocreate/filter';
 import '@cocreate/render';
@@ -419,70 +419,78 @@ Observer.init({
 })
 
 function dndCrud(draggedEl, draggedFrom, droppedEl, droppedIn) {
-    let draggedFromData = draggedFrom.getValue()
-    let draggedFromNewData = CRUD.getObject(draggedFrom)
-    let droppedInData = draggedFrom.getValue()
-    let droppedInNewData = CRUD.getObject(draggedFrom)
+    let from = dndCrudData(draggedEl, draggedFrom, 'remove')
+    let to = dndCrudData(droppedEl, droppedIn, 'add')
 
-    dndCrudData(draggedEl, draggedFrom, draggedFromData, draggedFromNewData, 'remove')
-    dndCrudData(droppedEl, droppedIn, droppedInData, droppedInNewData, 'add')
-
-    if (!draggedFrom.isSameNode(droppedIn)) {
-        let element = findMatchingElements(draggedFromData)
+    if (from && to && !draggedFrom.isSameNode(droppedIn)) {
+        let element = findMatchingElements(from.data)
         if (!element.length) return
 
         let match = element.find(obj => obj === droppedIn);
         if (!match) {
-            console.log('crudItem or keyPath needs to be deleted', test)
-            if (removeKeyPath) {
-                let test = { [keyPath]: undefined }
-                draggedFromNewData = dotNotationToObject(test, draggedFromNewData)
-                dndCrudSend(draggedFromNewData, 'update')
+            if (from.keyPath.includes('.')) {
+                let test = { [from.keyPath]: undefined }
+
+                from.newData = dotNotationToObject(test, from.newData)
+                dndCrudSend(from.newData, 'update')
             } else {
-                dndCrudSend(draggedFromNewData, 'delete')
+                const index = from.keyPath.match(/\[(\d+)\]/)
+                let removeData = from.newData[from.newData.type].splice(index, 1)[0];
+                if (removeData) {
+                    removeData.type = from.newData.type
+                    removeData[removeData.type] = removeData
+                    dndCrudSend(removeData, 'delete')
+                }
+
+                if (from.newData[from.newData.type].length)
+                    dndCrudSend(from.newData, 'update')
+
             }
         }
-
-        dndCrudSend(droppedInNewData, 'update')
-    } else {
-        dndCrudSend(droppedInNewData, 'update')
     }
+
+    if (to)
+        dndCrudSend(to.newData, 'update')
 
 
 }
 
-function dndCrudData(element, parent, parentData, parentNewData, operator) {
-    if (element && parent) {
-        let { newData, sortName, sortDirection, keyPath, clones, index } = dndNewData(element, parentData)
-        parentNewData[parentNewData.type] = []
+function dndCrudData(element, parent, operator) {
+    if (!elements.has(parent)) return
+    let data = parent.getValue()
+    let newData = CRUD.getObject(parent)
 
-        if (sortName) {
-            for (let i = 0; i < clones.length; i++) {
-                if (i > index) {
-                    let previousData = parentData[parentData.type][index]
-                    if (operator === 'add')
-                        newData[sortName] = i + 1
-                    else if (operator === 'remove')
-                        newData[sortName] = i - 1
+    let { Data, sortName, sortDirection, keyPath, clones, index } = dndNewData(element, data)
+    newData[newData.type] = []
 
-                    parentNewData[parentNewData.type].push({ ...previousData, ...newData })
-                }
+    if (sortName) {
+        for (let i = 0; i < clones.length; i++) {
+            if (i > index) {
+                let previousData = data[data.type][index]
+                if (operator === 'add')
+                    Data[sortName] = i + 1
+                else if (operator === 'remove')
+                    Data[sortName] = i - 1
+
+                newData[newData.type].push({ ...previousData, ...Data })
             }
-        } else {
-            parentNewData[parentNewData.type] = [{ ...parentData[parentData.type][index], ...newData }]
         }
+    } else {
+        newData[newData.type] = [{ ...data[data.type][index], ...Data }]
     }
+
+    return { data, newData, keyPath, clones, index }
 }
 
 function dndNewData(element, data) {
-    let newData = {}
+    let Data = {}
     let query = data.filter.query
     if (query && query.length) {
         for (let i = 0; i < query.length; i++) {
             if (query.operator === "$eq")
-                newData[query.name] = query.value
+                Data[query.name] = query.value
             if (query.operator === "$ne")
-                newData[query.name] = query.value
+                Data[query.name] = query.value
         }
     }
 
@@ -509,19 +517,17 @@ function dndNewData(element, data) {
         index = clones.indexOf(element);
     }
 
-    return { newData, sortName, sortDirection, keyPath, clones, index }
+    return { Data, sortName, sortDirection, keyPath, clones, index }
 
 }
 
-function dndCrudSend(currentNewData, crudType) {
-    if (currentNewData[currentNewData.type].length) {
-        if (CRUD) {
-            let action = currentNewData.type;
-            action = action.charAt(0).toUpperCase() + action.slice(1);
-            CRUD[crudType + action](currentNewData)
-        } else
-            console.log('dnd reordered data set as crud is unavailable')
-    }
+function dndCrudSend(data, crudType) {
+    if (CRUD) {
+        let action = data.type;
+        action = action.charAt(0).toUpperCase() + action.slice(1);
+        CRUD[crudType + action](data)
+    } else
+        console.log('dnd reordered data set as crud is unavailable')
 }
 
 //TODO: needs to updated in order to match new system
