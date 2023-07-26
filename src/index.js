@@ -418,6 +418,7 @@ Observer.init({
     }
 })
 
+// TODO: has the potential to work on most of the crud elements specifically if the value is an object or an array
 function dndCrud(draggedEl, draggedFrom, droppedEl, droppedIn) {
     let from = dndCrudData(draggedEl, draggedFrom, 'remove')
     let to = dndCrudData(droppedEl, droppedIn, 'add')
@@ -531,7 +532,13 @@ function dndCrudSend(data, crudType) {
 }
 
 //TODO: needs to updated in order to match new system
-function __deleteDocumentsAction(btn) {
+function deleteDocumentsAction(btn) {
+    // selector to point to crud item
+
+
+    // Could work on any crud type to delete an item or keyPath
+    // dndCrud(draggedEl, draggedFrom, droppedEl, droppedIn)
+
     const collection = btn.getAttribute('collection');
     if (checkValue(collection)) {
         const template_id = btn.getAttribute('template_id');
