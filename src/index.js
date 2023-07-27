@@ -145,24 +145,21 @@ function setData(element, data, action) {
             return;
         }
 
-        if (!data[type] || !data[type].length)
+        if (!data[type])
             continue;
 
         const { name, isRead, isUpdate, isCrdt } = CRUD.getAttributes(el);
         // TODO: Update to support other crudTypes
         if (name) {
-            // TODO: remove class domEditor as all elements will have value refrenced only certain types of elements actually get rendered
-            if (el.hasAttribute('actions') || el.tagName === 'DIV' && !el.classList.contains('domEditor')) continue;
+            if (!data[type].length) continue;
+            if (el.hasAttribute('actions')) continue;
             if (isRead == "false" || isUpdate == "false" || isCrdt == "true") continue;
 
-            // if (data.document[0]['collection'] == collection && data.document[0]['_id'] == document_id) {
             let value = CRUD.getValueFromObject(data[type][0], name);
             el.setValue(value);
-            // }
         } else {
             filterData(el, data, type, action)
         }
-
     }
 }
 
