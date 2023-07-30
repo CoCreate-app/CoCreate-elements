@@ -1,9 +1,9 @@
 import Observer from '@cocreate/observer';
 import Actions from '@cocreate/actions';
-import CRUD, { getValueFromObject } from '@cocreate/crud-client';
+import CRUD from '@cocreate/crud-client';
 import { dotNotationToObject, queryData, sortData } from '@cocreate/utils';
 import '@cocreate/filter';
-import '@cocreate/render';
+import { render } from '@cocreate/render';
 import '@cocreate/element-prototype';
 import './fetchSrc';
 
@@ -156,6 +156,9 @@ function setData(element, data, action) {
             if (isRead == "false" || isUpdate == "false" || isCrdt == "true") continue;
 
             let value = CRUD.getValueFromObject(data[type][0], name);
+            // if (el.hasAttribute('component') || el.hasAttribute('plugin'))
+            //     continue;
+
             el.setValue(value);
         } else {
             filterData(el, data, type, action)
@@ -190,7 +193,7 @@ function filterData(element, data, type, action) {
     if (element.getFilter && action && !action.startsWith('read')) {
         checkFilters(element, data, type, action)
     } else if (data)
-        element.setValue(data);
+        element.renderValue(data);
 
     // render({ element, data, key: type });
     const evt = new CustomEvent('fetchedData', { bubbles: true });
@@ -233,7 +236,8 @@ function checkFilters(element, data, type, action) {
         if (Data[primaryKey] === newData[primaryKey]) {
             Data = dotNotationToObject(newData, Data)
         }
-        element.setValue(data);
+        // render({ source: element, data: Data })
+        element.renderValue(data);
     }
 }
 
@@ -272,7 +276,8 @@ function checkIndex(element, data, Data, newData, type, filter, action) {
             if (data.filter.currentIndex === index)
                 delete data.filter.currentIndex
             data.filter.index = index
-            element.setValue(data);
+            // render({ source: element, data })
+            element.renderValue(data);
         }
 
     }
