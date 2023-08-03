@@ -1,3 +1,25 @@
+/********************************************************************************
+ * Copyright (C) 2023 CoCreate and Contributors.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License as published
+ * by the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ ********************************************************************************/
+
+// Commercial Licensing Information:
+// For commercial use of this software without the copyleft provisions of the AGPLv3,
+// you must obtain a commercial license from CoCreate LLC.
+// For details, visit <https://cocreate.app/licenses/> or contact us at sales@cocreate.app.
+
 import Observer from '@cocreate/observer';
 import Actions from '@cocreate/actions';
 import CRUD from '@cocreate/crud-client';
@@ -7,8 +29,7 @@ import { render } from '@cocreate/render';
 import '@cocreate/element-prototype';
 import './fetchSrc';
 
-
-const selector = "[storage], [database], [collection]:not(cocreate-select, link)";
+const selector = "[storage], [database], [array], [array]:not(cocreate-select, link)";
 const elements = new Map();
 const keys = new Map();
 const debounce = new Map();
@@ -52,7 +73,7 @@ function initElement(el) {
 
     // if (el.closest('.template')) return;
 
-    const { collection, document_id, isRead, name } = CRUD.getAttributes(el);
+    const { array, object, isRead, name } = CRUD.getAttributes(el);
 
     let data = CRUD.getObject(el);
 
@@ -73,15 +94,15 @@ function initElement(el) {
         data.filter = el.getFilter();
     } else {
         // TODO: Update to support other crudTypes
-        if (!collection || !name) return;
+        if (!array || !name) return;
 
-        if (document_id)
-            if (!document_id.match(/^[0-9a-fA-F]{24}$/)) return;
-        if (!CRUD.checkValue(collection) || !CRUD.checkValue(name)) return;
+        if (object)
+            if (!object.match(/^[0-9a-fA-F]{24}$/)) return;
+        if (!CRUD.checkValue(array) || !CRUD.checkValue(name)) return;
     }
 
     if (isRead == 'false') return;
-    if (!document_id && !data.filter) return;
+    if (!object && !data.filter) return;
 
     return data;
 }
@@ -92,9 +113,9 @@ function initEvents(element) {
             || element.hasAttribute('contenteditable')
             || element.contenteditable) {
             element.addEventListener('input', function (e) {
-                const { document_id, name, isRealtime, isCrdt } = CRUD.getAttributes(element);
-                if (isCrdt == "true" && document_id && document_id != 'pending' || isRealtime == "false" || name == "_id") return;
-                if (document_id && e.detail && e.detail.skip == true) return;
+                const { object, name, isRealtime, isCrdt } = CRUD.getAttributes(element);
+                if (isCrdt == "true" && object && object != 'pending' || isRealtime == "false" || name == "_id") return;
+                if (object && e.detail && e.detail.skip == true) return;
                 save(element);
             });
         }
@@ -107,15 +128,12 @@ async function read(element, data, key) {
     delayTimer = setTimeout(function () {
         debounce.delete(key)
         if (data.type === 'name')
-            data.type = 'document'
-        let action = 'read' + data.type.charAt(0).toUpperCase() + data.type.slice(1)
-        if (['readDatabase', 'readCollection', 'readIndex', 'readDocument'].includes(action)) {
-            CRUD[action](data).then((data) => {
-                setData(element, data);
-            })
-        } else if (data[data.type]) {
+            data.type = 'object'
+        if (!data.method)
+            data.method = 'read' + '.' + data.type
+        CRUD.send(data).then((data) => {
             setData(element, data);
-        }
+        })
     }, 500);
     debounce.set(key, delayTimer)
 }
@@ -132,11 +150,12 @@ function setData(element, data, action) {
 
     let type = data.type
     if (!type && action) {
-        type = action.match(/[A-Z][a-z]+/g);
-        type = type[0].toLowerCase()
+        type = action.split('.')[0]
+        // type = action.match(/[A-Z][a-z]+/g);
+        // type = type[0].toLowerCase()
 
     } else if (type == 'name')
-        type = 'document'
+        type = 'object'
 
     for (let el of element) {
         // if rendered in server side skip 
@@ -227,7 +246,7 @@ function checkFilters(element, data, type, action) {
         }
     } else {
         let primaryKey
-        if (type === 'document') {
+        if (type === 'object') {
             primaryKey = '_id';
         } else {
             primaryKey = 'name';
@@ -243,7 +262,7 @@ function checkFilters(element, data, type, action) {
 
 function checkIndex(element, data, Data, newData, type, filter, action) {
     let index
-    if (type === 'document') {
+    if (type === 'object') {
         index = Data.findIndex(obj => obj._id === newData._id);
     } else {
         index = Data.findIndex(obj => obj.name === newData.name);
@@ -285,7 +304,7 @@ function checkIndex(element, data, Data, newData, type, filter, action) {
 
 function getKey(data) {
     let key = {};
-    let attributes = ["storage", "database", "collection", "index", "document", 'filter'];
+    let attributes = ["storage", "database", "array", "index", "object", 'filter'];
 
     for (let attribute of attributes) {
         let value = data[attribute];
@@ -319,7 +338,7 @@ function findMatchingElements(data) {
 
 function findMatchingKeys(data) {
     const matchingKeyStrings = [];
-    const targetKeys = ["storage", "database", "collection", "index", "document", 'filter'];
+    const targetKeys = ["storage", "database", "array", "index", "object", 'filter'];
 
     for (const [keyString, sortedKey] of keys.entries()) {
         let hasMatch = true;
@@ -331,9 +350,9 @@ function findMatchingKeys(data) {
                     break;
                 }
                 if (Array.isArray(sortedKey.data[key]) && Array.isArray(data[key])) {
-                    // if key is document check _id
+                    // if key is object check _id
                     const matches = sortedKey.data[key].some(value => {
-                        if (key === 'document') {
+                        if (key === 'object') {
                             return data[key].some(obj => obj._id === value._id);
                         } else {
                             return data[key].includes(value)
@@ -379,15 +398,11 @@ async function remove(element) {
 
 function initSocket() {
     const array = ['create', 'update', 'delete'];
-    const attributes = ["storage", "database", "collection", "index", "document", 'filter'];
+    const attributes = ["storage", "database", "array", "index", "object", 'filter'];
 
     for (let i = 0; i < array.length; i++) {
-        const actionPrefix = array[i];
-
         for (let j = 0; j < attributes.length; j++) {
-            const attribute = attributes[j];
-            const capitalizedAttribute = attribute.charAt(0).toUpperCase() + attribute.slice(1);
-            const action = actionPrefix + capitalizedAttribute;
+            const action = array[i] + '.' + attributes[j];
 
             CRUD.listen(action, function (data) {
                 setData(null, data, action);
@@ -534,32 +549,33 @@ function dndCrudSend(data, crudType) {
 }
 
 //TODO: needs to updated in order to match new system
-function deleteDocumentsAction(btn) {
+function deleteObjectsAction(btn) {
     // selector to point to crud item
 
 
     // Could work on any crud type to delete an item or keyPath
     // dndCrud(draggedEl, draggedFrom, droppedEl, droppedIn)
 
-    const collection = btn.getAttribute('collection');
-    if (checkValue(collection)) {
+    const array = btn.getAttribute('array');
+    if (checkValue(array)) {
         const template_id = btn.getAttribute('template_id');
         if (!template_id) return;
 
         let _ids = []
-        const selectedEls = document.querySelectorAll(`.selected[templateid="${template_id}"]`);
+        const selectedEls = Object.querySelectorAll(`.selected[templateid="${template_id}"]`);
         for (let i = 0; i < selectedEls.length; i++) {
-            const _id = selectedEls[i].getAttribute('document_id');
+            const _id = selectedEls[i].getAttribute('object');
             if (checkValue(_id))
                 _ids.push({ _id })
         }
 
         if (_ids.length > 0 && crud) {
-            CRUD.deleteDocument({
-                collection,
-                document: _ids
+            CRUD.send({
+                method: 'delete.object',
+                array,
+                object: _ids
             }).then(() => {
-                document.dispatchEvent(new CustomEvent('deletedDocuments', {
+                document.dispatchEvent(new CustomEvent('deletedObjects', {
                     detail: {}
                 }));
             })
@@ -590,7 +606,7 @@ Observer.init({
 Observer.init({
     name: 'CoCreateElementsAttributes',
     observe: ['attributes'],
-    attributeName: CRUD.getAttributeNames(['storage', 'database', 'collection', 'document_id', 'name']),
+    attributeName: CRUD.getAttributeNames(['storage', 'database', 'array', 'object', 'name']),
     target: selector,
     callback: function (mutation) {
         remove(mutation.target)
@@ -608,10 +624,10 @@ Actions.init(
         },
     },
     {
-        name: "deleteDocuments",
-        endEvent: "deletedDocuments",
+        name: "deleteObjects",
+        endEvent: "deletedObjects",
         callback: (data) => {
-            __deleteDocumentsAction(data.element);
+            __deleteObjectsAction(data.element);
         }
     }
 );
