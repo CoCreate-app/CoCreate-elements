@@ -320,7 +320,7 @@ function getDataKey(data) {
     }
 
     const object = Object.fromEntries(Object.entries(dataKey).sort(([a], [b]) => a.localeCompare(b)));
-    dataKey = JSON.stringify(object);
+    const string = JSON.stringify(object);
 
     return { string, object };
 }
