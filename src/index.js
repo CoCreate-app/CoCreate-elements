@@ -49,13 +49,13 @@ function init(element) {
 
         let data = initElement(element[i]);
         if (data) {
-            let { key, object } = getKey(data)
-            if (keys.has(key))
-                keys.get(key).elements.set(element[i], '')
+            let dataKey = getDataKey(data)
+            if (keys.has(dataKey.string))
+                keys.get(dataKey.string).elements.set(element[i], '')
             else
-                keys.set(key, { elements: new Map([[element[i], '']]), data, object });
-            elements.set(element[i], key)
-            dataObjects.set(key, data)
+                keys.set(dataKey.string, { elements: new Map([[element[i], '']]), data, dataKey });
+            elements.set(element[i], dataKey.string)
+            dataObjects.set(dataKey.string, data)
         }
     }
 
@@ -73,32 +73,32 @@ function initElement(el) {
 
     // if (el.closest('.template')) return;
 
-    const { array, object, isRead, name } = CRUD.getAttributes(el);
+    const { array, object, isRead, key } = CRUD.getAttributes(el);
 
     let data = CRUD.getObject(el);
 
     if (el.getFilter) {
         el.setFilter = (filter) => {
             data.filter = filter
-            let { key, object } = getKey(data)
-            if (keys.has(key))
-                keys.get(key).elements.set(el, '')
+            let dataKey = getDataKey(data)
+            if (keys.has(dataKey.string))
+                keys.get(dataKey.string).elements.set(el, '')
             else
-                keys.set(key, { elements: new Map([[el, '']]), data, object });
-            elements.set(el, key)
+                keys.set(dataKey.string, { elements: new Map([[el, '']]), data, dataKey });
+            elements.set(el, dataKey.string)
 
             // remove(el)
             // init([el]);
-            read(el, data, key)
+            read(el, data, dataKey)
         }
         data.filter = el.getFilter();
     } else {
         // TODO: Update to support other crudTypes
-        if (!array || !name) return;
+        if (!array || !key) return;
 
         if (object)
             if (!object.match(/^[0-9a-fA-F]{24}$/)) return;
-        if (!CRUD.checkValue(array) || !CRUD.checkValue(name)) return;
+        if (!CRUD.checkValue(array) || !CRUD.checkValue(key)) return;
     }
 
     if (isRead == 'false') return;
@@ -113,8 +113,8 @@ function initEvents(element) {
             || element.hasAttribute('contenteditable')
             || element.contenteditable) {
             element.addEventListener('input', function (e) {
-                const { object, name, isRealtime, isCrdt } = CRUD.getAttributes(element);
-                if (isCrdt == "true" && object && object != 'pending' || isRealtime == "false" || name == "_id") return;
+                const { object, key, isRealtime, isCrdt } = CRUD.getAttributes(element);
+                if (isCrdt == "true" && object && object != 'pending' || isRealtime == "false" || key == "_id") return;
                 if (object && e.detail && e.detail.skip == true) return;
                 save(element);
             });
@@ -122,12 +122,12 @@ function initEvents(element) {
     }
 }
 
-async function read(element, data, key) {
-    let delayTimer = debounce.get(key)
+async function read(element, data, dataKey) {
+    let delayTimer = debounce.get(dataKey.string)
     clearTimeout(delayTimer);
     delayTimer = setTimeout(function () {
-        debounce.delete(key)
-        if (data.type === 'name')
+        debounce.delete(dataKey.string)
+        if (data.type === 'key')
             data.type = 'object'
         if (!data.method)
             data.method = 'read' + '.' + data.type
@@ -135,12 +135,12 @@ async function read(element, data, key) {
             setData(element, data);
         })
     }, 500);
-    debounce.set(key, delayTimer)
+    debounce.set(dataKey.string, delayTimer)
 }
 
 function setData(element, data, action) {
     if (!element) {
-        element = findMatchingElements(data)
+        element = getDataElements(data)
         if (!element.length) return
     }
 
@@ -154,7 +154,7 @@ function setData(element, data, action) {
         // type = action.match(/[A-Z][a-z]+/g);
         // type = type[0].toLowerCase()
 
-    } else if (type == 'name')
+    } else if (type == 'key')
         type = 'object'
 
     for (let el of element) {
@@ -167,14 +167,14 @@ function setData(element, data, action) {
         if (!data[type])
             continue;
 
-        const { name, isRead, isUpdate, isCrdt } = CRUD.getAttributes(el);
+        const { key, isRead, isUpdate, isCrdt } = CRUD.getAttributes(el);
         // TODO: Update to support other crudTypes
-        if (name) {
+        if (key) {
             if (!data[type].length) continue;
             if (el.hasAttribute('actions')) continue;
             if (isRead == "false" || isUpdate == "false" || isCrdt == "true") continue;
 
-            let value = CRUD.getValueFromObject(data[type][0], name);
+            let value = CRUD.getValueFromObject(data[type][0], key);
             // if (el.hasAttribute('component') || el.hasAttribute('plugin'))
             //     continue;
 
@@ -189,23 +189,23 @@ function filterData(element, data, type, action) {
     if (!element)
         return;
 
-    let name = element.getAttribute('name');
+    let key = element.getAttribute('key');
 
-    if (name) {
+    if (key) {
         if (!data.type) return
         if (Array.isArray(data[type])) {
             let Data = []
             for (let doc of data[type]) {
-                if (doc[name]) {
-                    if (Array.isArray(doc[name]))
-                        Data.push(...doc[name])
+                if (doc[key]) {
+                    if (Array.isArray(doc[key]))
+                        Data.push(...doc[key])
                     else
-                        Data.push(doc[name])
+                        Data.push(doc[key])
                 }
             }
             let data = Data
         } else {
-            data = { [name]: data[type][name] }
+            data = { [key]: data[type][key] }
         }
     }
 
@@ -249,7 +249,7 @@ function checkFilters(element, data, type, action) {
         if (type === 'object') {
             primaryKey = '_id';
         } else {
-            primaryKey = 'name';
+            primaryKey = 'key';
         }
 
         if (Data[primaryKey] === newData[primaryKey]) {
@@ -302,32 +302,32 @@ function checkIndex(element, data, Data, newData, type, filter, action) {
     }
 }
 
-function getKey(data) {
-    let key = {};
+function getDataKey(data) {
+    let dataKey = {};
     let attributes = ["storage", "database", "array", "index", "object", 'filter'];
 
     for (let attribute of attributes) {
         let value = data[attribute];
         if (value) {
             if (Array.isArray(value)) {
-                key[attribute] = [...value];
+                dataKey[attribute] = [...value];
                 if (typeof value[0] === 'string')
-                    key[attribute].sort(); // Sort the values alphabetically
+                    dataKey[attribute].sort(); // Sort the values alphabetically
             } else {
-                key[attribute] = value;
+                dataKey[attribute] = value;
             }
         }
     }
 
-    const object = Object.fromEntries(Object.entries(key).sort(([a], [b]) => a.localeCompare(b)));
-    key = JSON.stringify(object);
+    const object = Object.fromEntries(Object.entries(dataKey).sort(([a], [b]) => a.localeCompare(b)));
+    dataKey = JSON.stringify(object);
 
-    return { key, object };
+    return { string, object };
 }
 
-function findMatchingElements(data) {
+function getDataElements(data) {
     let element = []
-    let matchingKeys = findMatchingKeys(data)
+    let matchingKeys = getDataKeys(data)
     for (let i = 0; i < matchingKeys.length; i++) {
         let matchingElements = keys.get(matchingKeys[i])
         if (matchingElements && matchingElements.elements && matchingElements.elements.size)
@@ -336,7 +336,7 @@ function findMatchingElements(data) {
     return element
 }
 
-function findMatchingKeys(data) {
+function getDataKeys(data) {
     const matchingKeyStrings = [];
     const targetKeys = ["storage", "database", "array", "index", "object", 'filter'];
 
@@ -441,7 +441,7 @@ function dndCrud(draggedEl, draggedFrom, droppedEl, droppedIn) {
     let to = dndCrudData(droppedEl, droppedIn, 'add')
 
     if (from && to && !draggedFrom.isSameNode(droppedIn)) {
-        let element = findMatchingElements(from.data)
+        let element = getDataElements(from.data)
         if (!element.length) return
 
         let match = element.find(obj => obj === droppedIn);
@@ -506,9 +506,9 @@ function dndNewData(element, data) {
     if (query && query.length) {
         for (let i = 0; i < query.length; i++) {
             if (query.operator === "$eq")
-                Data[query.name] = query.value
+                Data[query.key] = query.value
             if (query.operator === "$ne")
-                Data[query.name] = query.value
+                Data[query.key] = query.value
         }
     }
 
@@ -517,8 +517,8 @@ function dndNewData(element, data) {
     if (sort && sort.length) {
         // for (let i = 0; i < sort.length; i++) {
         for (let i = sort.length - 1; i >= 0; i--) {
-            if (typeof data[sort.name] === 'number') {
-                sortName = sort.name
+            if (typeof data[sort.key] === 'number') {
+                sortName = sort.key
                 sortDirection = sort.direction
                 break
             }
@@ -606,7 +606,7 @@ Observer.init({
 Observer.init({
     name: 'CoCreateElementsAttributes',
     observe: ['attributes'],
-    attributeName: CRUD.getAttributeNames(['storage', 'database', 'array', 'object', 'name']),
+    attributeName: CRUD.getAttributeNames(['storage', 'database', 'array', 'object', 'key']),
     target: selector,
     callback: function (mutation) {
         remove(mutation.target)
