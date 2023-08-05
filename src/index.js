@@ -29,7 +29,7 @@ import { render } from '@cocreate/render';
 import '@cocreate/element-prototype';
 import './fetchSrc';
 
-const selector = "[storage], [database], [array], [array]:not(cocreate-select, link)";
+const selector = "[storage], [database], [array], [render-json]";
 const elements = new Map();
 const keys = new Map();
 const debounce = new Map();
@@ -68,8 +68,36 @@ function init(element) {
 }
 
 function initElement(el) {
+    if (el.hasAttribute('render-json')) {
+        // TODO find the json template in the text or attributes
+        // if found add the node as an element, if the element has crud attributes also add as the element
+        for (let attribute of el.attributes) {
+            if (attribute.match(/{{(.*?)}}/)) {
+                let value = renderValue(attribute, undefined, attribute.value)
+                if (value)
+                    attribute.value = value
+            }
+        }
+        if (el.innerHTML.match(/{{(.*?)}}/)) {
+            let value = renderValue(el, undefined, el.innerHTML)
+            if (value)
+                attribute.value = value
+        }
+        // if (el.textContent.match(/{{(.*?)}}/)) {
+        //     let value = renderValue(el, undefined, el.textContent)
+        //     if (value)
+        //         attribute.value = value
+        // }
+
+        // let Data = JSON.parse(match[1]);
+        // Data.method = read.object
+        // CRUD.send(Data)
+
+    }
+
     initEvents(el);
     elements.set(el, '')
+
 
     // if (el.closest('.template')) return;
 
@@ -108,17 +136,16 @@ function initElement(el) {
 }
 
 function initEvents(element) {
-    if (!elements.has(element)) {
-        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName)
-            || element.hasAttribute('contenteditable')
-            || element.contenteditable) {
-            element.addEventListener('input', function (e) {
-                const { object, key, isRealtime, isCrdt } = CRUD.getAttributes(element);
-                if (isCrdt == "true" && object && object != 'pending' || isRealtime == "false" || key == "_id") return;
-                if (object && e.detail && e.detail.skip == true) return;
-                save(element);
-            });
-        }
+    if (!elements.has(element)) return;
+    if (['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName)
+        || element.hasAttribute('contenteditable')
+        || element.contenteditable) {
+        element.addEventListener('input', function (e) {
+            const { object, key, isRealtime, isCrdt } = CRUD.getAttributes(element);
+            if (isCrdt == "true" && object && object != 'pending' || isRealtime == "false" || key == "_id") return;
+            if (object && e.detail && e.detail.skip == true) return;
+            save(element);
+        });
     }
 }
 
@@ -147,50 +174,39 @@ function setData(element, data, action) {
     if (!(element instanceof HTMLCollection) && !Array.isArray(element))
         element = [element]
 
-
     let type = data.type
     if (!type && action) {
         type = action.split('.')[0]
-        // type = action.match(/[A-Z][a-z]+/g);
-        // type = type[0].toLowerCase()
-
     } else if (type == 'key')
         type = 'object'
 
     for (let el of element) {
         // if rendered in server side skip 
-        if (el.hasAttribute('rendered')) {
-            el.removeAttribute('rendered');
-            return;
-        }
+        if (el.hasAttribute('rendered'))
+            return el.removeAttribute('rendered');
 
         if (!data[type])
             continue;
 
+        action = el.getAttribute('actions')
+        if (action && ['database', 'array', 'object', 'key'].includes(action)) continue;
+
         const { key, isRead, isUpdate, isCrdt } = CRUD.getAttributes(el);
-        // TODO: Update to support other crudTypes
-        if (key) {
+        if (el.getFilter || el.renderValue)
+            filterData(el, data, type, key, action)
+        else if (key) {
             if (!data[type].length) continue;
-            if (el.hasAttribute('actions')) continue;
             if (isRead == "false" || isUpdate == "false" || isCrdt == "true") continue;
 
             let value = CRUD.getValueFromObject(data[type][0], key);
-            // if (el.hasAttribute('component') || el.hasAttribute('plugin'))
-            //     continue;
-
             el.setValue(value);
         } else {
-            filterData(el, data, type, action)
+            el.setValue(value);
         }
     }
 }
 
-function filterData(element, data, type, action) {
-    if (!element)
-        return;
-
-    let key = element.getAttribute('key');
-
+function filterData(element, data, type, key, action) {
     if (key) {
         if (!data.type) return
         if (Array.isArray(data[type])) {
@@ -209,12 +225,14 @@ function filterData(element, data, type, action) {
         }
     }
 
-    if (element.getFilter && action && !action.startsWith('read')) {
+    if (element.getFilter && action && !action.startsWith('read'))
         checkFilters(element, data, type, action)
-    } else if (data)
+    else if (element.renderValue)
         element.renderValue(data);
-
     // render({ element, data, key: type });
+    else if (data)
+        element.setValue(data)
+
     const evt = new CustomEvent('fetchedData', { bubbles: true });
     element.dispatchEvent(evt);
 }
