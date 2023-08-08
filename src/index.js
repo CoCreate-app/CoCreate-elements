@@ -28,10 +28,12 @@ import '@cocreate/filter';
 import { render } from '@cocreate/render';
 import '@cocreate/element-prototype';
 import './fetchSrc';
+import { reset } from './form'
 
 const selector = "[storage], [database], [array], [render-json]";
 const elements = new Map();
 const keys = new Map();
+const forms = new Map(); // form, [elements]
 const debounce = new Map();
 
 function init(element) {
@@ -44,17 +46,12 @@ function init(element) {
 
     let dataObjects = new Map();
     for (let i = 0; i < element.length; i++) {
-        if (elements.has(element[i]))
+        if (elements.has(element[i]) || element.tagName === 'FORM')
             continue
 
         let data = initElement(element[i]);
         if (data) {
-            let dataKey = getDataKey(data)
-            if (keys.has(dataKey.string))
-                keys.get(dataKey.string).elements.set(element[i], '')
-            else
-                keys.set(dataKey.string, { elements: new Map([[element[i], '']]), data, dataKey });
-            elements.set(element[i], dataKey.string)
+            let dataKey = initDataKey(element[i], data)
             dataObjects.set(dataKey.string, data)
         }
     }
@@ -83,6 +80,7 @@ function initElement(el) {
             if (value)
                 attribute.value = value
         }
+
         // if (el.textContent.match(/{{(.*?)}}/)) {
         //     let value = renderValue(el, undefined, el.textContent)
         //     if (value)
@@ -98,41 +96,69 @@ function initElement(el) {
     initEvents(el);
     elements.set(el, '')
 
-
     // if (el.closest('.template')) return;
 
-    const { array, object, isRead, key } = CRUD.getAttributes(el);
+    const { isRead } = CRUD.getAttributes(el);
 
     let data = CRUD.getObject(el);
+    if (!data) return
 
     if (el.getFilter) {
+        data.filter = el.getFilter();
         el.setFilter = (filter) => {
             data.filter = filter
-            let dataKey = getDataKey(data)
-            if (keys.has(dataKey.string))
-                keys.get(dataKey.string).elements.set(el, '')
-            else
-                keys.set(dataKey.string, { elements: new Map([[el, '']]), data, dataKey });
-            elements.set(el, dataKey.string)
-
-            // remove(el)
-            // init([el]);
+            let dataKey = initDataKey(el, data)
             read(el, data, dataKey)
         }
-        data.filter = el.getFilter();
-    } else {
-        // TODO: Update to support other crudTypes
-        if (!array || !key) return;
-
-        if (object)
-            if (!object.match(/^[0-9a-fA-F]{24}$/)) return;
-        if (!CRUD.checkValue(array) || !CRUD.checkValue(key)) return;
+    } else if (data.type === 'object' && data.object) {
+        if (typeof data.object === 'object' && !data.object._id.match(/^[0-9a-fA-F]{24}$/))
+            return
+        else if (typeof data.object === 'string' && !data.object.match(/^[0-9a-fA-F]{24}$/))
+            return;
     }
 
-    if (isRead == 'false') return;
-    if (!object && !data.filter) return;
+    if (isRead === 'false')
+        return;
 
     return data;
+}
+
+function initDataKey(element, data) {
+    let dataKey = getDataKey(data)
+    if (keys.has(dataKey.string))
+        keys.get(dataKey.string).elements.set(element, '')
+    else
+        keys.set(dataKey.string, { elements: new Map([[element, '']]), data, dataKey });
+
+    elements.set(element, dataKey.string)
+
+    if (element.parentElement) {
+        let form = element.parentElement.closest('form')
+        if (form) {
+            if (!form.save)
+                form.save = () => save(form)
+
+            if (!form.getData)
+                form.getData = () => getData(form)
+
+            let formObject = forms.get(form)
+            if (formObject) {
+                formObject.elements.set(element, data)
+                if (formObject.types.has(data.type))
+                    formObject.types.get(data.type).set(element, data)
+                else
+                    formObject.types.set(data.type, new Map([[element, data]]));
+            } else
+                forms.set(form, { elements: new Map([[element, data]]), types: new Map([[data.type, new Map([[element, data]])]]) });
+        }
+    }
+
+    if (!element.read)
+        element.read = () => read(element)
+    if (!element.save)
+        element.save = () => save(element)
+
+    return dataKey
 }
 
 function initEvents(element) {
@@ -149,13 +175,31 @@ function initEvents(element) {
     }
 }
 
+async function getData(form) {
+    let dataArray = []
+    let formObject = forms.get(form)
+    for (let type of formObject.types.values()) {
+        for (let [element, data] of type.entries()) {
+            let value = element.getValue()
+            console.log(value)
+            // group by methods then objectId
+            // TODO: if object with same _id and same method 
+
+        }
+    }
+    return dataArray
+}
+
 async function read(element, data, dataKey) {
+    if (!dataKey)
+        dataKey = elements.get(element)
+    if (!data)
+        data = keys.get(dataKey).data
+
     let delayTimer = debounce.get(dataKey.string)
     clearTimeout(delayTimer);
     delayTimer = setTimeout(function () {
         debounce.delete(dataKey.string)
-        if (data.type === 'key')
-            data.type = 'object'
         if (!data.method)
             data.method = 'read' + '.' + data.type
         CRUD.send(data).then((data) => {
@@ -163,6 +207,10 @@ async function read(element, data, dataKey) {
         })
     }, 500);
     debounce.set(dataKey.string, delayTimer)
+    // if (!dataKey & !data)
+    // dataKey = elements.get()
+    // return responseData;
+
 }
 
 function setData(element, data, action) {
@@ -191,16 +239,16 @@ function setData(element, data, action) {
         action = el.getAttribute('actions')
         if (action && ['database', 'array', 'object', 'key'].includes(action)) continue;
 
-        const { key, isRead, isUpdate, isCrdt } = CRUD.getAttributes(el);
+        const { key, isRead, isListen, isCrdt } = CRUD.getAttributes(el);
         if (el.getFilter || el.renderValue)
             filterData(el, data, type, key, action)
-        else if (key) {
-            if (!data[type].length) continue;
-            if (isRead == "false" || isUpdate == "false" || isCrdt == "true") continue;
-
+        else {
             let value = CRUD.getValueFromObject(data[type][0], key);
-            el.setValue(value);
-        } else {
+            if (key) {
+                if (!data[type].length) continue;
+                if (isRead == "false" || isCrdt == "true") continue;
+                if (isListen == "false" && !data.method.startsWith('read')) continue;
+            }
             el.setValue(value);
         }
     }
@@ -238,7 +286,7 @@ function filterData(element, data, type, key, action) {
 }
 
 function checkFilters(element, data, type, action) {
-    let Data = element.getValue()
+    let Data = element.getData()
     if (!Data) return
 
     let newData
@@ -322,9 +370,11 @@ function checkIndex(element, data, Data, newData, type, filter, action) {
 
 function getDataKey(data) {
     let dataKey = {};
-    let attributes = ["storage", "database", "array", "index", "object", 'filter'];
+    let attributes = ["host", "organization_id", "apikey", "method", "type", "storage", "database", "array", "index", "object", "key", "updateKey", "filter", "upsert", "namespace", "room", "broadcast", "broadcastSender", "broadcastBrowser"];
 
     for (let attribute of attributes) {
+        if (attribute === 'key' && data.type === 'object')
+            continue
         let value = data[attribute];
         if (value) {
             if (Array.isArray(value)) {
@@ -356,7 +406,7 @@ function getDataElements(data) {
 
 function getDataKeys(data) {
     const matchingKeyStrings = [];
-    const targetKeys = ["storage", "database", "array", "index", "object", 'filter'];
+    const targetKeys = ["type", "storage", "database", "array", "index", "object", 'filter'];
 
     for (const [keyString, sortedKey] of keys.entries()) {
         let hasMatch = true;
@@ -396,8 +446,130 @@ function getDataKeys(data) {
 }
 
 async function save(element) {
-    let value = element.getValue();
-    CRUD.save(element, value);
+    if (!element) return;
+    let data, value
+    if (element.tagName === "FORM") {
+        data = element.getData()
+    } else {
+        let isSave = element.getAttribute('save')
+        if (isSave === 'false') return
+
+        let form = element.closest('form');
+        if (form)
+            return save(form);
+
+        let dataKey = elements.get(element)
+        data = keys.get(dataKey).data
+        value = element.getValue();
+        data[data.type][data.key] = value
+        data = [data]
+    }
+
+    for (let i = 0; i < data.length; i++) {
+        if (data.method.startsWith('create'))
+            element.setAttribute(data.type, 'pending');
+        else if (data.method.startsWith('update') && data.type == 'object' && typeof value == 'string' && window.CoCreate.crdt && !'crdt') {
+            return window.CoCreate.crdt.replaceText({
+                array: data.array,
+                key: data.key,
+                object: data.object._id,
+                value
+            });
+        }
+
+        data = await CRUD.send(data);
+
+        if (data && (!object || object !== data.object[0]._id)) {
+            setTypeValue(element, array, data.object[0]._id);
+        }
+
+    }
+
+}
+
+function setTypeValue(element, data) {
+    if (!data) return;
+
+    let form
+    if (element.tagName === "FORM")
+        form = element
+    else if (element.parentElement)
+        form = element.parentElement.closest('form')
+
+    if (!form) {
+        if (data.type === 'object') {
+            element.setAttribute('object', data.object[0]._id)
+        } else {
+            element.setAttribute(data.type, data[data.type].name)
+        }
+    } else {
+        let formObject = forms.get(form)
+        let elements = formObject.types.get(data.type)
+
+        for (let [el, Data] of elements.entries()) {
+            if (data.type === 'object') {
+                if (!Data.object || Data.object === 'pending') {
+                    Data.object = data.object[0]._id
+                    el.setAttribute('object', data.object[0]._id)
+                }
+            } else if (!Data[data.type]) {
+                Data[data.type] = data[data.type].name
+                el.setAttribute(data.type, data[data.type].name)
+            }
+        }
+
+        //     const pass_ids = new Map();
+
+        //     let pass_id = form.getAttribute('pass_id');
+        //     if (pass_id) {
+        //         // Set pass_ids to pass_ids if array is not set
+        //         if (form.getAttribute('array') == array)
+        //             pass_ids.set(pass_id, '');
+        //     }
+
+        //     let objectId = el.getAttribute('object');
+        //     let key = el.getAttribute('key')
+        //     // set object and pass_id attributes to the object id if the object id is pending
+        //     if (key && (objectId == '' || objectId == 'pending')) {
+        //         el.setAttribute('object', id);
+        //         // Set the id attribute of the element
+        //         if (key == '_id')
+        //             el.setValue(id)
+        //         let pass_id = el.getAttribute('pass_id');
+        //         // Set the pass id to the pass_ids.
+        //         if (pass_id) {
+        //             pass_ids.set(pass_id, '');
+        //         }
+
+        //         if (el.hasAttribute('pass-object')) {
+        //             let passObjectId = el.getAttribute('pass-object');
+        //             // Set the pass object id if not set.
+        //             if (passObjectId == '') {
+        //                 el.setAttribute('pass-object', id);
+        //                 let pass_id = el.getAttribute('pass_id');
+        //                 // Set the pass id to the pass_ids.
+        //                 if (pass_id) {
+        //                     pass_ids.set(pass_id, '');
+        //                 }
+        //             }
+        //         }
+
+        //         // Set the object attribute of all pass_ids to the object attribute of all pass_ids
+        //         if (pass_ids.size > 0) {
+        //             for (let key of pass_ids.keys()) {
+        //                 let passEls = document.querySelectorAll(`[pass_id="${key}"]`)
+        //                 for (let passEl of passEls) {
+        //                     // if (passEl.getAttribute('array') == array){
+        //                     // Set the object id attribute to the passEl s object if it is not set.
+        //                     if (passEl.getAttribute('object') == '') {
+        //                         passEl.setAttribute('object', id);
+        //                     }
+        //                     // }
+        //                 }
+        //             }
+        //         }
+        //     }
+    }
 }
 
 async function remove(element) {
@@ -410,6 +582,7 @@ async function remove(element) {
             els.delete(element[i])
             elements.delete(key)
             debounce.delete(element[i])
+            // TODO: delete element from forms map
         }
     }
 }
@@ -488,12 +661,11 @@ function dndCrud(draggedEl, draggedFrom, droppedEl, droppedIn) {
     if (to)
         dndCrudSend(to.newData, 'update')
 
-
 }
 
 function dndCrudData(element, parent, operator) {
     if (!elements.has(parent)) return
-    let data = parent.getValue()
+    let data = parent.getData()
     let newData = CRUD.getObject(parent)
 
     let { Data, sortName, sortDirection, keyPath, clones, index } = dndNewData(element, data)
@@ -566,41 +738,9 @@ function dndCrudSend(data, crudType) {
         console.log('dnd reordered data set as crud is unavailable')
 }
 
-//TODO: needs to updated in order to match new system
-function deleteObjectsAction(btn) {
-    // selector to point to crud item
-
-
-    // Could work on any crud type to delete an item or keyPath
-    // dndCrud(draggedEl, draggedFrom, droppedEl, droppedIn)
-
-    const array = btn.getAttribute('array');
-    if (checkValue(array)) {
-        const template_id = btn.getAttribute('template_id');
-        if (!template_id) return;
-
-        let _ids = []
-        const selectedEls = Object.querySelectorAll(`.selected[templateid="${template_id}"]`);
-        for (let i = 0; i < selectedEls.length; i++) {
-            const _id = selectedEls[i].getAttribute('object');
-            if (checkValue(_id))
-                _ids.push({ _id })
-        }
-
-        if (_ids.length > 0 && crud) {
-            CRUD.send({
-                method: 'delete.object',
-                array,
-                object: _ids
-            }).then(() => {
-                document.dispatchEvent(new CustomEvent('deletedObjects', {
-                    detail: {}
-                }));
-            })
-        }
-
-    }
-}
+// crud delete selected elements can be done with click-selector="" to target elements with a specified selector
+// ex. [actions*='save'][selected] which could be used to trigger a click event on the save action
+// in a form with crud and delete attribute causing each selected item to be deleted
 
 Observer.init({
     name: 'CoCreateElementsChildList',
@@ -632,24 +772,15 @@ Observer.init({
     }
 });
 
-Actions.init(
-    {
-        name: "saveHtml",
-        endEvent: "changed-element",
-        callback: (data) => {
-            let form = data.element.closet('form');
-            save(form);
-        },
-    },
-    {
-        name: "deleteObjects",
-        endEvent: "deletedObjects",
-        callback: (data) => {
-            __deleteObjectsAction(data.element);
-        }
+Actions.init({
+    name: "save",
+    endEvent: "saved",
+    callback: (action) => {
+        const form = action.element.closest("form");
+        save(form);
     }
-);
+});
 
 init();
 
-export default { init, save, elements, keys, debounce };
+export default { init, read, save, getData, reset, elements, keys, forms, debounce };
