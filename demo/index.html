@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>HTML Tags | CoCreateJS</title>
+        <title>Elements | CoCreateJS</title>
         <!-- CoCreate Favicon -->
         <link
             rel="icon"
@@ -10,31 +10,173 @@
             sizes="16x16" />
         <link rel="manifest" href="/manifest.webmanifest" />
     </head>
-    <body>
-        <form
-            array="test"
-            object="6465646af1e023c0aee760c2"
-            realtime="false"
-            class="margin:20px">
-            <input key="name" />
-            <input key="_id" />
-            <!-- <p name document>eeeeeer</p>
-            <h1 key="name" contenteditable></h1>
-            <h2 key="name"></h2>
-            <h3 key="color" ></h3>
-            <h4 key="search"></h4>
-            <h5 key="date"></h5>
-            <h6 key="time"></h6>
-            <p key="date-time"></p>
-            <span key="date-time"></span>
-            <div key="text_area" classs="domeditor"></div>
-            <span key="personal_info.email"></span> -->
-            <button type="button" actions="save">save</button>
+    <body class="padding:20px">
+        <!-- Supports create and update of all crud types -->
+        <h2>Supports create and update of all crud types</h2>
+        <form>
+            <!-- creates a database -->
+            <input database key="name" />
+            <!-- updates a database -->
+            <input database="test" key="name" />
+            <!-- deletes a database -->
+            <input database="test" delete />
+
+            <!-- creates an array -->
+            <input array key="name" />
+            <!-- updates an array -->
+            <input array="test" key="name" />
+            <!-- deletes an array -->
+            <input array="test" delete />
+
+            <!-- creates an index -->
+            <input array="test" index key="name" />
+            <!-- updates an index -->
+            <input array="test" index="test" key="name" />
+            <!-- deletes an index -->
+            <input array="test" index="test" delete />
+
+            <!-- creates an object -->
+            <input array="test" object key="name" />
+            <!-- updates an object -->
+            <input array="test" object="6465646af1e023c0aee760c2" key="name" />
+            <!-- deletes an object -->
+            <input array="test" object="6465646af1e023c0aee760c2" delete />
+
+            <!-- updates a key -->
+            <input
+                array="test"
+                object="6465646af1e023c0aee760c2"
+                key="name"
+                update />
+            <!-- deletes a key -->
+            <input
+                array="test"
+                object="6465646af1e023c0aee760c2"
+                key="name"
+                delete />
+
+            <br />
+
+            <a actions="save"></a>
+        </form>
+
+        <!-- Supports all data types -->
+        <h2>Supports all data types</h2>
+        <form>
+            <!-- inserts the value at the end of the array and returns index number. attribute "push" is optional, result is same -->
+            <input
+                array="test"
+                object="6465646af1e023c0aee760c2"
+                key="name[]"
+                push />
+
+            <!-- inserts the value at a specified index position of an array  -->
+            <input
+                array="test"
+                object="6465646af1e023c0aee760c2"
+                key="name[3]"
+                splice />
+
+            <!-- updates the value at a specified index position of an array  -->
+            <input
+                array="test"
+                object="6465646af1e023c0aee760c2"
+                key="name[0]" />
+
+            <!-- delete an item from the array. attribute "delete" or "slice" can be used with same result -->
+            <input
+                array="test"
+                object="6465646af1e023c0aee760c2"
+                key="name[0]"
+                slice />
+
+            <!-- delete the last item from the array. attribute "delete" or "slice" can be used with same result -->
+            <input
+                array="test"
+                object="6465646af1e023c0aee760c2"
+                key="name[]"
+                slice />
+
+            <!-- move an item in the array to a new index postion -->
+            <input
+                array="test"
+                object="6465646af1e023c0aee760c2"
+                key="name[3]"
+                update />
+            <!--  -->
+        </form>
+
+        <!-- Supports all input types -->
+        <h2>Supports all input types</h2>
+        <form array="apples" object="" realtime="false">
+            <input
+                type="text"
+                class="floating-label"
+                placeholder="Text"
+                key="name" />
+            <input
+                type="number"
+                class="floating-label"
+                placeholder="number"
+                key="number" />
+            <input
+                type="text"
+                class="floating-label"
+                placeholder="color"
+                key="color" />
+            <input
+                type="date"
+                class="floating-label"
+                placeholder="Date"
+                key="date" />
+            <input
+                type="time"
+                class="floating-label"
+                placeholder="Time"
+                key="time" />
+            <input
+                type="datetime-local"
+                class="floating-label"
+                placeholder="Date Time"
+                key="date-time" />
+            <textarea
+                class="floating-label"
+                placeholder="Text Area"
+                key="text_area"></textarea>
+            <!-- <cocreate-select
+                class="floating-label"
+                placeholder="Primary View"
+                key="navbar-menu-primary">
+                <input
+                    placeholder="Search"
+                    filter-next="[array]"
+                    filter-search />
+                <cc-options
+                    array="files"
+                    render-selector="[template]"
+                    class="overflow:auto">
+                    <cc-option
+                        template
+                        value="{{object._id}}"
+                        object="{{object._id}}"
+                        render="data">
+                        <h3>{{object.name}}</h3>
+                        <h5>{{object._id}}</h5>
+                    </cc-option>
+                </cc-options>
+            </cocreate-select> -->
+
+            <button
+                actions="save, reset"
+                class="position:fixed bottom:15px right:15px bg-blue grow-hover round">
+                <i
+                    class="height:20px fill:#505050"
+                    src="/assets/svg/save.svg"></i>
+            </button>
         </form>
 
         <!-- <script src="../dist/CoCreate-elements.js"></script> -->
-        <script src="../../../CoCreateJS/dist/CoCreate.js"></script>
-
-        <!-- <script src="https://cdn.cocreate.app/latest/CoCreate.min.js"></script> -->
+        <!-- <script src="../../../CoCreateJS/dist/CoCreate.js"></script> -->
+        <script src="https://cdn.cocreate.app/latest/CoCreate.min.js"></script>
     </body>
 </html>
