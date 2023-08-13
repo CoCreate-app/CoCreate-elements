@@ -348,8 +348,11 @@ function checkFilters(element, data, type, action) {
         if (Data[primaryKey] === newData[primaryKey]) {
             Data = dotNotationToObject(newData, Data)
         }
-        // render({ source: element, data: Data })
-        element.renderValue(data);
+        if (element.renderValue)
+            element.renderValue(data);
+        // render({ element, data, key: type });
+        else if (data)
+            element.setValue(data)
     }
 }
 
@@ -388,8 +391,11 @@ function checkIndex(element, data, Data, newData, type, filter, action) {
             if (data.filter.currentIndex === index)
                 delete data.filter.currentIndex
             data.filter.index = index
-            // render({ source: element, data })
-            element.renderValue(data);
+            if (element.renderValue)
+                element.renderValue(data);
+            // render({ element, data, key: type });
+            else if (data)
+                element.setValue(data)
         }
 
     }
