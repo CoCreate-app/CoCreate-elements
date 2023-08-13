@@ -1,5 +1,5 @@
 import Observer from '@cocreate/observer';
-import Crud from '@cocreate/crud-client';
+import { getAttributeNames, ObjectId } from '@cocreate/utils';
 import Action from '@cocreate/actions';
 import '@cocreate/element-prototype';
 
@@ -14,7 +14,7 @@ function init(elements) {
     else if (!Array.isArray(elements))
         elements = [elements]
     for (let element of elements) {
-        ObjectId(element);
+        runObjectId(element);
         setAttribute(element);
         disableAutoFill(element);
         // element.setData = () => { }
@@ -25,7 +25,7 @@ function init(elements) {
 /**
 * @param form
 */
-function ObjectId(form) {
+function runObjectId(form) {
     let elements = form.querySelectorAll("[object='ObjectId()']")
     let arrays = []
     // Add a array to the array list
@@ -39,7 +39,8 @@ function ObjectId(form) {
     }
     // Sets the object id for each array in the array.
     for (let i = 0; i < arrays.length; i++) {
-        setObjectId(form, { array: arrays[i], object: [{ _id: Crud.ObjectId() }] });
+        // TODO: needs access to setTypeValue
+        setTypeValue(form, { array: arrays[i], object: [{ _id: ObjectId() }] });
     }
 }
 
@@ -123,7 +124,7 @@ Observer.init({
 Observer.init({
     name: 'CoCreateForm',
     observe: ['attributes'],
-    attributeName: Crud.getAttributeNames(['storage', 'database', 'array', 'object', 'index']),
+    attributeName: getAttributeNames(['storage', 'database', 'array', 'object', 'index']),
     target: 'form',
     callback: mutation => mutation.target.tagName === "FORM" &&
         setAttribute(mutation.target)
