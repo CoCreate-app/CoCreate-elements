@@ -23,7 +23,7 @@
 import Observer from '@cocreate/observer';
 import Actions from '@cocreate/actions';
 import CRUD from '@cocreate/crud-client';
-import { dotNotationToObject, queryData, sortData } from '@cocreate/utils';
+import { dotNotationToObject, queryData, sortData, getAttributes, getAttributeNames, checkValue } from '@cocreate/utils';
 import '@cocreate/filter';
 import { render } from '@cocreate/render';
 import '@cocreate/element-prototype';
@@ -59,7 +59,7 @@ function init(element) {
     if (dataObjects && dataObjects.size > 0) {
         for (let key of dataObjects.keys()) {
             let { elements, data } = keys.get(key)
-            read(Array.from(elements.keys()), data, key);
+            read(Array.from(elements.keys()), data, { string: key });
         }
     }
 }
@@ -93,15 +93,29 @@ function initElement(el) {
 
     }
 
-    initEvents(el);
-    elements.set(el, '')
-
     // if (el.closest('.template')) return;
 
-    const { isRead } = CRUD.getAttributes(el);
+    let data = getObject(el);
+    if (!data || !data.type) return
 
-    let data = CRUD.getObject(el);
-    if (!data) return
+    if (!elements.has(el)) {
+        elements.set(el, '')
+
+        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName)
+            || (el.hasAttribute('contenteditable') && el.getAttribute('contenteditable') !== 'false')
+            || el.contenteditable) {
+            el.addEventListener('input', function (e) {
+                const { object, key, isRealtime, isCrdt } = getAttributes(el);
+                if (isRealtime == "false" || key == "_id") return;
+
+                if (isCrdt == "true" && object && object !== 'pending') return
+                if (object && e.detail && e.detail.skip == true) return;
+                if (data.type !== 'object' && data[data.type] === 'pending') return
+
+                save(el);
+            });
+        }
+    }
 
     if (el.getFilter) {
         data.filter = el.getFilter();
@@ -110,17 +124,55 @@ function initElement(el) {
             let dataKey = initDataKey(el, data)
             read(el, data, dataKey)
         }
-    } else if (data.type === 'object' && data.object) {
-        if (typeof data.object === 'object' && !data.object._id.match(/^[0-9a-fA-F]{24}$/))
-            return
-        else if (typeof data.object === 'string' && !data.object.match(/^[0-9a-fA-F]{24}$/))
-            return;
     }
 
+    const isRead = el.getAttribute('read');
     if (isRead === 'false')
         return;
 
     return data;
+}
+
+function getObject(element) {
+    const data = getAttributes(element);
+    const crudType = ['storage', 'database', 'array', 'index', 'object']
+
+    for (let i = 0; i < crudType.length; i++) {
+        if (!checkValue(data[crudType[i]]))
+            return
+
+        if (data[crudType[i]] && data[crudType[i]].includes(",")) {
+            const array = data[crudType[i]].split(',');
+            data[crudType[i]] = []
+
+            for (let j = 0; j < array.length; j++) {
+                array[i].trim()
+                if (crudType[i] === 'object') {
+                    data[crudType[i]].push({ _id: array[j] })
+                } else {
+                    data[crudType[i]].push(array[j])
+                }
+            }
+        }
+    }
+
+    if (data.object || data.object === '') {
+        if (!data.array || data.array && !data.array.length) return
+        data.type = 'object'
+    } else if (data.index || data.index === '') {
+        if (!data.array || data.array && !data.array.length) return
+        data.type = 'index'
+    } else if (data.array || data.array === '')
+        data.type = 'array'
+    else if (data.database || data.database === '')
+        data.type = 'database'
+    else if (data.storage || data.storage === '')
+        data.type = 'storage'
+    else if (data.data)
+        data.type = 'data'
+
+    delete data.isRealtime
+    return data
 }
 
 function initDataKey(element, data) {
@@ -161,56 +213,31 @@ function initDataKey(element, data) {
     return dataKey
 }
 
-function initEvents(element) {
-    if (!elements.has(element)) return;
-    if (['INPUT', 'TEXTAREA', 'SELECT'].includes(element.tagName)
-        || element.hasAttribute('contenteditable')
-        || element.contenteditable) {
-        element.addEventListener('input', function (e) {
-            const { object, key, isRealtime, isCrdt } = CRUD.getAttributes(element);
-            if (isCrdt == "true" && object && object != 'pending' || isRealtime == "false" || key == "_id") return;
-            if (object && e.detail && e.detail.skip == true) return;
-            save(element);
-        });
-    }
-}
-
-async function getData(form) {
-    let dataArray = []
-    let formObject = forms.get(form)
-    for (let type of formObject.types.values()) {
-        for (let [element, data] of type.entries()) {
-            let value = element.getValue()
-            console.log(value)
-            // group by methods then objectId
-            // TODO: if object with same _id and same method 
-
-        }
-    }
-    return dataArray
-}
-
 async function read(element, data, dataKey) {
     if (!dataKey)
         dataKey = elements.get(element)
     if (!data)
-        data = keys.get(dataKey).data
+        data = { ...keys.get(dataKey).data }
 
     let delayTimer = debounce.get(dataKey.string)
     clearTimeout(delayTimer);
     delayTimer = setTimeout(function () {
         debounce.delete(dataKey.string)
-        if (!data.method)
-            data.method = 'read' + '.' + data.type
+        // TODO: should server support string and string array for type object, methods create, read, delete
+        if (data.type === 'object') {
+            if (typeof data.object === 'string')
+                data.object = { _id: data.object }
+
+            if (!data.object._id.match(/^[0-9a-fA-F]{24}$/))
+                return
+        }
+
+        data.method = 'read' + '.' + data.type
         CRUD.send(data).then((data) => {
             setData(element, data);
         })
     }, 500);
     debounce.set(dataKey.string, delayTimer)
-    // if (!dataKey & !data)
-    // dataKey = elements.get()
-    // return responseData;
-
 }
 
 function setData(element, data, action) {
@@ -239,7 +266,7 @@ function setData(element, data, action) {
         action = el.getAttribute('actions')
         if (action && ['database', 'array', 'object', 'key'].includes(action)) continue;
 
-        const { key, isRead, isListen, isCrdt } = CRUD.getAttributes(el);
+        const { key, isRead, isListen, isCrdt } = getAttributes(el);
         if (el.getFilter || el.renderValue)
             filterData(el, data, type, key, action)
         else {
@@ -445,6 +472,99 @@ function getDataKeys(data) {
     return matchingKeyStrings;
 }
 
+function getData(form) {
+    let dataKeys = new Map()
+    let formObject = forms.get(form)
+    for (let type of formObject.types.values()) {
+        for (let [element, data] of type.entries()) {
+            let Data = { ...data }
+            let dataKey = elements.get(element)
+            let value = element.getValue()
+            console.log(type, value, data)
+
+            if (!Data[Data.type] && Data.key) {
+                Data.method = 'create.' + Data.type
+                if (Data.type === 'object') {
+                    if (typeof Data.object === 'string')
+                        Data.object = { _id: Data.object }
+
+                    if (Data.key)
+                        Data.object[Data.key] = value
+
+                } else
+                    Data[Data.type] = value
+
+            } else if (Data[Data.type] && Data.key) {
+                let isUpdate = element.getAttribute('update')
+                let isDelete = element.getAttribute('delete')
+                let splice = element.getAttribute('splice') // could work on string and array
+                let slice = element.getAttribute('slice') // could work on string and array
+
+                if (/\.([0-9]*)/g.test(Data.key)) {
+
+                    if (splice || splice === "") {
+                        Data[Data.type][Data.key] = { $splice: value }
+                    } else if (slice) {
+                        Data[Data.type][Data.key] = '$delete'
+                    } else if (isUpdate) {
+                        value = Data.key.replace(/\[.*?\]/, '[' + value + ']')
+                        Data.updateKey[Data.key] = value
+                        Data[Data.type][Data.key] = { $update: value } // $update is string use the value as the key name
+                        // Data[Data.type][Data.key] = { $update: {[value]: value} } // $update is an object use the key as the value to use for the new key
+                    }
+
+                } else if (Data.type = 'object')
+                    Data.object[Data.key] = value
+                else {
+                    Data[Data.type] = { [Data[Data.type]]: value }
+                }
+
+                if (Data.isUpdate || Data.isUpdate === '') {
+                    if (!Data.key) return
+                    delete Data.isUpdate
+                    Data.updateKey = { [Data.key]: value }
+                    Data.method = 'update.' + Data.type
+                } else if (Data.isDelete || Data.isDelete === '') {
+                    delete Data.isDelete
+                    if (Data.type == 'object' && Data.key) {
+                        Data.method = 'update.' + Data.type
+                        // TODO: Data.type can be a string _id or an array for string _id needs to be converted to object
+                        if (typeof Data[Data.type] === 'string')
+                            Data[Data.type] = { _id: Data[Data.type], [Data.key]: undefined }
+                        else if (Array.isArray(Data[Data.type])) {
+                            console.log('Data.type is an array function incomplete')
+                        } else if (typeof Data[Data.type] === 'object')
+                            Data[Data.type][Data.key] = undefined
+                    } else {
+                        Data.method = 'delete.' + Data.type
+                    }
+                } else if (Data.type !== 'object' && Data[Data.type] === '') {
+                    // if (!Data.key)
+                    //     Data.method = 'read.' + Data.type
+                    // else if (Data.key === 'name')
+                    //     Data.method = 'create.' + Data.type
+                } else if (Data.type !== 'object' && Data[Data.type]) {
+                    // if (Data.key)
+                    //     Data.method = 'update.' + Data.type
+                }
+
+            }
+
+            //dataKey should be used to group
+            let key = dataKey + Data.method
+            if (dataKeys.has(key))
+                dataKeys.get(key).push(Data)
+            else
+                dataKeys.set(key, [Data])
+
+        }
+    }
+
+    // TODO: group by methods so we can make one crud request per method
+    let dataArray = []
+    return dataArray
+}
+
 async function save(element) {
     if (!element) return;
     let data, value
@@ -459,28 +579,55 @@ async function save(element) {
             return save(form);
 
         let dataKey = elements.get(element)
-        data = keys.get(dataKey).data
+        data = { ...keys.get(dataKey).data }
+
         value = element.getValue();
-        data[data.type][data.key] = value
+
+        if (typeof data[data.type] === 'string')
+            data[data.type] = { _id: data[data.type], [data.key]: value }
+        else if (Array.isArray(data[data.type])) {
+            console.log('data.type is an array function incomplete')
+        } else if (typeof data[data.type] === 'object')
+            data[data.type][data.key] = value
+
+
+        if (/\.([0-9]*)/g.test(data.key)) {
+            let splice = element.getAttribute('splice')
+            let slice = element.getAttribute('slice')
+            let update = element.getAttribute('update')
+
+            if (splice || splice === "") {
+                data[data.type][data.key] = { $splice: value }
+            } else if (slice) {
+                data[data.type][data.key] = '$delete'
+            } else if (update) {
+                value = data.key.replace(/\[.*?\]/, '[' + value + ']')
+                data.updateKey[data.key] = value
+                data[data.type][data.key] = { $update: value } // $update is string use the value as the key name
+                // data[data.type][data.key] = { $update: {[value]: value} } // $update is an object use the key as the value to use for the new key
+            }
+
+        }
+
         data = [data]
     }
 
     for (let i = 0; i < data.length; i++) {
-        if (data.method.startsWith('create'))
-            element.setAttribute(data.type, 'pending');
-        else if (data.method.startsWith('update') && data.type == 'object' && typeof value == 'string' && window.CoCreate.crdt && !'crdt') {
+        if (data[i].method && data[i].method.startsWith('create'))
+            element.setAttribute(data[i].type, 'pending');
+        else if (data[i].method && data[i].method.startsWith('update') && data[i].type == 'object' && typeof value == 'string' && window.CoCreate.crdt && !'crdt') {
             return window.CoCreate.crdt.replaceText({
-                array: data.array,
-                key: data.key,
-                object: data.object._id,
+                array: data[i].array,
+                key: data[i].key,
+                object: data[i].object._id,
                 value
             });
         }
 
-        data = await CRUD.send(data);
+        data[i] = await CRUD.send(data[i]);
 
-        if (data && (!object || object !== data.object[0]._id)) {
-            setTypeValue(element, array, data.object[0]._id);
+        if (data[i] && (data[i].method.startsWith('create') || data[i].type !== 'object' && data[i].method.startsWith('update'))) {
+            setTypeValue(element, data[i])
         }
 
     }
@@ -488,6 +635,8 @@ async function save(element) {
 }
 
 function setTypeValue(element, data) {
+    // TODO: if an array name is updated, the attibute array="" needs to be updated.
+
     if (!data) return;
 
     let form
@@ -666,7 +815,7 @@ function dndCrud(draggedEl, draggedFrom, droppedEl, droppedIn) {
 function dndCrudData(element, parent, operator) {
     if (!elements.has(parent)) return
     let data = parent.getData()
-    let newData = CRUD.getObject(parent)
+    let newData = getObject(parent)
 
     let { Data, sortName, sortDirection, keyPath, clones, index } = dndNewData(element, data)
     newData[newData.type] = []
@@ -738,10 +887,6 @@ function dndCrudSend(data, crudType) {
         console.log('dnd reordered data set as crud is unavailable')
 }
 
-// crud delete selected elements can be done with click-selector="" to target elements with a specified selector
-// ex. [actions*='save'][selected] which could be used to trigger a click event on the save action
-// in a form with crud and delete attribute causing each selected item to be deleted
-
 Observer.init({
     name: 'CoCreateElementsChildList',
     observe: ['childList'],
@@ -764,7 +909,7 @@ Observer.init({
 Observer.init({
     name: 'CoCreateElementsAttributes',
     observe: ['attributes'],
-    attributeName: CRUD.getAttributeNames(['storage', 'database', 'array', 'object', 'key']),
+    attributeName: getAttributeNames(['storage', 'database', 'array', 'object', 'key']),
     target: selector,
     callback: function (mutation) {
         remove(mutation.target)
@@ -783,4 +928,4 @@ Actions.init({
 
 init();
 
-export default { init, read, save, getData, reset, elements, keys, forms, debounce };
+export default { init, read, save, getData, reset, elements, keys, forms, debounce, getAttributes };
