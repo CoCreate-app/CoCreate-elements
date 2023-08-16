@@ -1,3 +1,35 @@
+# [1.18.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.17.33...v1.18.0) (2023-08-16)
+
+
+### Bug Fixes
+
+* bug in initElement function and add more attributes to getAttributes ([a2d3d80](https://github.com/CoCreate-app/CoCreate-elements/commit/a2d3d804bae20eea808a81a2a63e34bc5819a157))
+* crud attributes renamed ([b09677b](https://github.com/CoCreate-app/CoCreate-elements/commit/b09677bc98484dab211717855c22a6b6c5e6fceb))
+* Fix data rendering issue and add support for other crudTypes ([c52d0ad](https://github.com/CoCreate-app/CoCreate-elements/commit/c52d0ad3265b58c975eb7dc8854fe7209c7bee08))
+* Refactor form.js: import, function name changes, and additions ([102a478](https://github.com/CoCreate-app/CoCreate-elements/commit/102a4788960c37241aba0db5461746c8c4881d04))
+* Refactor imports in index.js and update setValue() calls. ([e3d0573](https://github.com/CoCreate-app/CoCreate-elements/commit/e3d05737f423b9cc46655b184c83149f451336f4))
+* Refactor rendering logic for better code clarity and readability ([d87ba13](https://github.com/CoCreate-app/CoCreate-elements/commit/d87ba13239993dc5a1c68a8f7f5ec8aa7eae6b83))
+* replace -target -selector ([69a5703](https://github.com/CoCreate-app/CoCreate-elements/commit/69a570398e8c4b81c836eaafa0f39f862f7e7b7d))
+* updated actions callback data object ([3549583](https://github.com/CoCreate-app/CoCreate-elements/commit/354958307bcbc384058ca54378b5e015c0c9e703))
+* webpack.config and package.json make use of mode=production instead of process.env ([1d3a5d9](https://github.com/CoCreate-app/CoCreate-elements/commit/1d3a5d9241fcc5740619eaf9b3e7f3e505db8eab))
+
+
+### Features
+
+* Add form functionality and save method ([b97842a](https://github.com/CoCreate-app/CoCreate-elements/commit/b97842a700a8ec996b4cedb133901dc1cf3d1fca))
+* Add more utility functions for data manipulation ([5dd71d2](https://github.com/CoCreate-app/CoCreate-elements/commit/5dd71d205b7964fe6e88c1442a0b4e3e2d02eb40))
+* Add new utility functions for dot notation conversion, query data, and sort data ([fdee5cf](https://github.com/CoCreate-app/CoCreate-elements/commit/fdee5cf112db9747dbc7d0efd976e8abf4265692))
+* Change selector in index.js to include [render-json] ([c732fb5](https://github.com/CoCreate-app/CoCreate-elements/commit/c732fb5fe4a7f9d4748af78953d2767967e62fca))
+* findMatchingElements function ([038a1fa](https://github.com/CoCreate-app/CoCreate-elements/commit/038a1faa72321c95af4a534989d11db22dfaf2dd))
+* **form:** implement form initialization and reset functionality ([d804e55](https://github.com/CoCreate-app/CoCreate-elements/commit/d804e55dd89550a4927856139e7fd87c2d935d29))
+* name attribute and variable renamed to key ([6964765](https://github.com/CoCreate-app/CoCreate-elements/commit/6964765c0d40b3758a0c87d2707940fa7fd4c7e4))
+* Refactor code to improve readability and efficiency ([7489c69](https://github.com/CoCreate-app/CoCreate-elements/commit/7489c69dd151d63e15711c2e57ee577274a37316))
+* Refactor dndCrud function and related functions ([9384c99](https://github.com/CoCreate-app/CoCreate-elements/commit/9384c99d2e62537afdab8ec7f609765ffbd43c3b))
+* Refactor getDataKey() in index.js to improve code clarity and maintainability. ([3ad9a9f](https://github.com/CoCreate-app/CoCreate-elements/commit/3ad9a9fe7250f3e835718f9e50fff106880aa48c))
+* refactored to handle fetching a list of data using filters. replaces @cocreate/fetch ([af5859f](https://github.com/CoCreate-app/CoCreate-elements/commit/af5859fcadf3f064f05c577e276bb842b1f53c58))
+* refactored to handle fetching and filtering data. Replaces @cocreate/fetch ([84113ee](https://github.com/CoCreate-app/CoCreate-elements/commit/84113ee5da083d3ec724e8e536ea505c1a2483c6))
+* update template_id to render-selector attribute. update filter attributes to filter selector-attributes ([96e0aa4](https://github.com/CoCreate-app/CoCreate-elements/commit/96e0aa4a45395bec8124e77fd6a6ab71ebcf7bb4))
+
 ## [1.17.33](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.17.32...v1.17.33) (2023-06-14)
 
 
