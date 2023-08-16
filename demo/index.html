@@ -13,34 +13,47 @@
     <body class="padding:20px">
         <!-- Supports create and update of all crud types -->
         <h2>Supports create and update of all crud types</h2>
-        <form>
+        <form realtime="false">
+            <input
+                placeholder="test"
+                array="test"
+                object="6465646af1e023c0aee760c2"
+                key="name" />
+
+            <a actions="save">Save</a>
+        </form>
+        <form realtime="false">
             <!-- creates a database -->
             <input database key="name" />
             <!-- updates a database -->
             <input database="test" key="name" />
             <!-- deletes a database -->
-            <input database="test" delete />
+            <input database="test" key="name" value="$delete" />
 
             <!-- creates an array -->
             <input array key="name" />
             <!-- updates an array -->
             <input array="test" key="name" />
             <!-- deletes an array -->
-            <input array="test" delete />
+            <input array="test" key="name" value="$delete" />
 
             <!-- creates an index -->
             <input array="test" index key="name" />
             <!-- updates an index -->
             <input array="test" index="test" key="name" />
             <!-- deletes an index -->
-            <input array="test" index="test" delete />
+            <input array="test" index="test" key="name" value="$delete" />
 
-            <!-- creates an object -->
+            <!-- creates an object with key name -->
             <input array="test" object key="name" />
-            <!-- updates an object -->
+            <!-- updates an object keys value -->
             <input array="test" object="6465646af1e023c0aee760c2" key="name" />
-            <!-- deletes an object -->
-            <input array="test" object="6465646af1e023c0aee760c2" delete />
+            <!-- deletes an object key if the object key is primary the object will be deleted -->
+            <input
+                array="test"
+                object="6465646af1e023c0aee760c2"
+                key="_id"
+                value="$delete" />
 
             <!-- updates a key -->
             <input
@@ -48,12 +61,13 @@
                 object="6465646af1e023c0aee760c2"
                 key="name"
                 update />
-            <!-- deletes a key -->
+
+            <!-- updating the key name to a new key using value and/or value-prefix, value-suffix to generate a valid json sting {$update: value } -->
             <input
                 array="test"
                 object="6465646af1e023c0aee760c2"
                 key="name"
-                delete />
+                value="{$update: firstName}" />
 
             <br />
 
@@ -61,7 +75,7 @@
         </form>
 
         <!-- Supports all data types -->
-        <h2>Supports all data types</h2>
+        <h2>Supports updating arrays</h2>
         <form>
             <!-- inserts the value at the end of the array and returns index number. attribute "push" is optional, result is same -->
             <input
@@ -83,27 +97,33 @@
                 object="6465646af1e023c0aee760c2"
                 key="name[0]" />
 
-            <!-- delete an item from the array. attribute "delete" or "slice" can be used with same result -->
+            <!-- delete an item from the array by setting its value to "$delete" or "$slice" -->
             <input
                 array="test"
                 object="6465646af1e023c0aee760c2"
                 key="name[0]"
-                slice />
+                value="$delete" />
 
-            <!-- delete the last item from the array. attribute "delete" or "slice" can be used with same result -->
+            <!-- delete the last item from the array by settting its value to "$delete" or "$slice" -->
             <input
                 array="test"
                 object="6465646af1e023c0aee760c2"
                 key="name[]"
-                slice />
+                value="$delete" />
 
-            <!-- move an item in the array to a new index postion -->
+            <!-- updating the key name will move the item to a new position -->
             <input
                 array="test"
                 object="6465646af1e023c0aee760c2"
                 key="name[3]"
                 update />
-            <!--  -->
+
+            <!-- updating the key name to a new key using value and/or value-prefix, value-suffix to generate a valid json sting {$update: value } -->
+            <input
+                array="test"
+                object="6465646af1e023c0aee760c2"
+                key="name[3]"
+                value="{$splice: name[1]}" />
         </form>
 
         <!-- Supports all input types -->
@@ -159,7 +179,7 @@
                         template
                         value="{{object._id}}"
                         object="{{object._id}}"
-                        render="data">
+                        render="object">
                         <h3>{{object.name}}</h3>
                         <h5>{{object._id}}</h5>
                     </cc-option>
