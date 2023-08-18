@@ -1,3 +1,10 @@
+## [1.19.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.19.0...v1.19.1) (2023-08-18)
+
+
+### Bug Fixes
+
+* export default to export ([18284d2](https://github.com/CoCreate-app/CoCreate-elements/commit/18284d20dcf76738c47988981d67aaa9f805313e))
+
 # [1.19.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.18.0...v1.19.0) (2023-08-17)
 
 
