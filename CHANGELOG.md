@@ -1,3 +1,10 @@
+## [1.19.2](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.19.1...v1.19.2) (2023-08-18)
+
+
+### Bug Fixes
+
+* add missing dependency @cocreate/render ([3277416](https://github.com/CoCreate-app/CoCreate-elements/commit/3277416548fffa6a6868e7deac168ebe0a7fe158))
+
 ## [1.19.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.19.0...v1.19.1) (2023-08-18)
 
 
