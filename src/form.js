@@ -140,4 +140,4 @@ Action.init({
 
 init();
 
-export default { reset };
+export { reset };
