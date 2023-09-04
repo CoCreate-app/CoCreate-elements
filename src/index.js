@@ -240,7 +240,7 @@ async function read(element, data, dataKey) {
     debounce.set(dataKey.string, delayTimer)
 }
 
-function setData(element, data, action) {
+function setData(element, data) {
     if (!element) {
         element = getDataElements(data)
         if (!element.length) return
@@ -250,8 +250,8 @@ function setData(element, data, action) {
         element = [element]
 
     let type = data.type
-    if (!type && action) {
-        type = action.split('.')[0]
+    if (!type && data.method) {
+        type = data.method.split('.')[1]
     } else if (type == 'key')
         type = 'object'
 
@@ -263,7 +263,7 @@ function setData(element, data, action) {
         if (!data[type])
             continue;
 
-        action = el.getAttribute('actions')
+        let action = el.getAttribute('actions')
         if (action && ['database', 'array', 'object', 'key'].includes(action)) continue;
 
         const { key, isRead, isListen, isCrdt } = getAttributes(el);
@@ -751,13 +751,13 @@ function initSocket() {
             const action = array[i] + '.' + attributes[j];
 
             CRUD.listen(action, function (data) {
-                setData(null, data, action);
+                setData(null, data);
             });
         }
     }
 
     CRUD.listen('sync', function (data) {
-        setData(null, data, action);
+        setData(null, data);
     });
 
 }
@@ -838,6 +838,8 @@ function dndCrudData(element, parent, operator) {
                 newData[newData.type].push({ ...previousData, ...Data })
             }
         }
+
+
     } else {
         newData[newData.type] = [{ ...data[data.type][index], ...Data }]
     }
@@ -869,6 +871,7 @@ function dndNewData(element, data) {
             }
         }
     }
+
 
     let keyPath, clonesMap, clones, index
 
