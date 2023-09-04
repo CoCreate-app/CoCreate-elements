@@ -4,22 +4,22 @@ module.exports = {
     "host": "",
     "sources": [
         {
+            "entry": "./docs",
+            "exclude": [
+                "demo"
+            ],
             "array": "files",
             "object": {
-                "_id": "601f4b1c6b402c72efc07e0b",
-                "name": "index.html",
-                "path": "/docs/elements/index.html",
-                "src": "{{./docs/index.html}}",
+                "name": "{{name}}",
+                "src": "{{source}}",
                 "host": [
-                    "*",
-                    "general.cocreate.app"
+                    "*"
                 ],
-                "directory": "/docs/elements",
-                "parentDirectory": "{{parentDirectory}}",
+                "directory": "/docs/{{directory}}",
+                "path": "{{path}}",
                 "content-type": "{{content-type}}",
-                "public": "true",
-                "website_id": "644d4bff8036fb9d1d1fd69c"
+                "public": "true"
             }
         }
     ]
-}
+};
