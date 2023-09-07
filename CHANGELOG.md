@@ -1,3 +1,10 @@
+## [1.20.2](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.20.1...v1.20.2) (2023-09-07)
+
+
+### Bug Fixes
+
+* get type from method ([274751e](https://github.com/CoCreate-app/CoCreate-elements/commit/274751e8ef66e8ef19cf8d323297599e78c82ef9))
+
 ## [1.20.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.20.0...v1.20.1) (2023-08-21)
 
 
