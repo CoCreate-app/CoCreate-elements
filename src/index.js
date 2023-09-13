@@ -118,9 +118,9 @@ function initElement(el) {
     }
 
     if (el.getFilter) {
-        data.filter = el.getFilter();
+        data.$filter = el.getFilter();
         el.setFilter = (filter) => {
-            data.filter = filter
+            data.$filter = filter
             let dataKey = initDataKey(el, data)
             read(el, data, dataKey)
         }
@@ -364,20 +364,20 @@ function checkIndex(element, data, Data, newData, type, filter, action) {
         index = Data.findIndex(obj => obj.name === newData.name);
     }
 
-    if (!data.filter)
-        data.filter = {}
+    if (!data.$filter)
+        data.$filter = {}
 
     if (action.startsWith('delete')) {
         if (!index && index !== 0)
             return
-        data.filter.remove = true
+        data.$filter.remove = true
     } else {
         if (!index && index !== 0) {
-            data.filter.create = true
+            data.$filter.create = true
             Data.push(newData)
         } else {
-            data.filter.update = true
-            data.filter.currentIndex = index
+            data.$filter.update = true
+            data.$filter.currentIndex = index
             Data[index] = dotNotationToObject(newData, Data[index])
         }
 
@@ -388,9 +388,9 @@ function checkIndex(element, data, Data, newData, type, filter, action) {
         }
 
         if (index >= 0) {
-            if (data.filter.currentIndex === index)
-                delete data.filter.currentIndex
-            data.filter.index = index
+            if (data.$filter.currentIndex === index)
+                delete data.$filter.currentIndex
+            data.$filter.index = index
             if (element.renderValue)
                 element.renderValue(data);
             // render({ element, data, key: type });
@@ -849,7 +849,7 @@ function dndCrudData(element, parent, operator) {
 
 function dndNewData(element, data) {
     let Data = {}
-    let query = data.filter.query
+    let query = data.$filter.query
     if (query && query.length) {
         for (let i = 0; i < query.length; i++) {
             if (query.operator === "$eq")
@@ -860,7 +860,7 @@ function dndNewData(element, data) {
     }
 
     let sortName, sortDirection
-    let sort = data.filter.sort
+    let sort = data.$filter.sort
     if (sort && sort.length) {
         // for (let i = 0; i < sort.length; i++) {
         for (let i = sort.length - 1; i >= 0; i--) {
