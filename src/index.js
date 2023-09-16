@@ -15,10 +15,13 @@
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
  ********************************************************************************/
 
-// Commercial Licensing Information:
-// For commercial use of this software without the copyleft provisions of the AGPLv3,
-// you must obtain a commercial license from CoCreate LLC.
-// For details, visit <https://cocreate.app/licenses/> or contact us at sales@cocreate.app.
+/**
+ * Commercial Licensing Information:
+ * For commercial use of this software without the copyleft provisions of the AGPLv3,
+ * you must obtain a commercial license from CoCreate LLC.
+ * For details, visit <https://cocreate.app/licenses/> or contact us at sales@cocreate.app.
+ */
+/** */
 
 import Observer from '@cocreate/observer';
 import Actions from '@cocreate/actions';
@@ -217,7 +220,7 @@ async function read(element, data, dataKey) {
     if (!dataKey)
         dataKey = elements.get(element)
     if (!data)
-        data = { ...keys.get(dataKey).data }
+        data = { ...keys.get(dataKey).dataKey.object }
 
     let delayTimer = debounce.get(dataKey.string)
     clearTimeout(delayTimer);
@@ -232,7 +235,8 @@ async function read(element, data, dataKey) {
                 return
         }
 
-        data.method = 'read' + '.' + data.type
+        data.method = 'read.' + data.type
+
         CRUD.send(data).then((data) => {
             setData(element, data);
         })
@@ -585,17 +589,22 @@ async function save(element) {
             return save(form);
 
         let dataKey = elements.get(element)
-        data = { ...keys.get(dataKey).data }
+        data = { ...keys.get(dataKey).dataKey.object }
 
         value = element.getValue();
 
-        if (typeof data[data.type] === 'string')
-            data[data.type] = { _id: data[data.type], [data.key]: value }
-        else if (Array.isArray(data[data.type])) {
-            console.log('data.type is an array function incomplete')
-        } else if (typeof data[data.type] === 'object')
-            data[data.type][data.key] = value
+        let key = element.getAttribute('key')
 
+        if (typeof data[data.type] === 'string')
+            if (key == '{}')
+                data[data.type] = { _id: data[data.type], ...value }
+            else
+                data[data.type] = { _id: data[data.type], [key]: value }
+        else if (typeof data[data.type] === 'object')
+            if (key == '{}')
+                data[data.type] = { ...data[data.type], ...value }
+            else
+                data[data.type][key] = value
 
         if (/\.([0-9]*)/g.test(data.key)) {
             let splice = element.getAttribute('splice')
@@ -603,14 +612,15 @@ async function save(element) {
             let update = element.getAttribute('update')
 
             if (splice || splice === "") {
-                data[data.type][data.key] = { $splice: value }
+                data[data.type][key] = { $splice: value }
             } else if (slice) {
-                data[data.type][data.key] = '$delete'
+                data[data.type][key] = '$delete'
             } else if (update) {
                 value = data.key.replace(/\[.*?\]/, '[' + value + ']')
-                data.updateKey[data.key] = value
-                data[data.type][data.key] = { $update: value } // $update is string use the value as the key name
-                // data[data.type][data.key] = { $update: {[value]: value} } // $update is an object use the key as the value to use for the new key
+                data.updateKey[key] = value
+                data[data.type][key] = { $update: value } // $update is string use the value as the key name
+
+                // data[data.type][key] = { $update: {[value]: value} } // $update is an object use the key as the value to use for the new key
             }
 
         }
@@ -619,6 +629,8 @@ async function save(element) {
     }
 
     for (let i = 0; i < data.length; i++) {
+        data[i].method = 'update.' + data[i].type
+
         if (data[i].method && data[i].method.startsWith('create'))
             element.setAttribute(data[i].type, 'pending');
         else if (data[i].method && data[i].method.startsWith('update') && data[i].type == 'object' && typeof value == 'string' && window.CoCreate.crdt && !'crdt') {
