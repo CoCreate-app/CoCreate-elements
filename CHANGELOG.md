@@ -1,3 +1,15 @@
+# [1.21.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.20.2...v1.21.0) (2023-09-17)
+
+
+### Bug Fixes
+
+* filter renamed to $filter ([02ecdcf](https://github.com/CoCreate-app/CoCreate-elements/commit/02ecdcf8f12fc49b7e1537caa7b1f56625b693be))
+
+
+### Features
+
+* support key {}, merges object with value ([dba003a](https://github.com/CoCreate-app/CoCreate-elements/commit/dba003a8bd327021f639ba93f4cba662a8c5ea43))
+
 ## [1.20.2](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.20.1...v1.20.2) (2023-09-07)
 
 
