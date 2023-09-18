@@ -15,8 +15,9 @@ module.exports = {
                 "host": [
                     "*"
                 ],
-                "directory": "/docs/{{directory}}",
+                "directory": "{{directory}}",
                 "path": "{{path}}",
+                "pathname": "{{pathname}}",
                 "content-type": "{{content-type}}",
                 "public": "true"
             }
