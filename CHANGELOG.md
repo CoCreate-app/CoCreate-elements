@@ -1,3 +1,11 @@
+## [1.21.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.21.0...v1.21.1) (2023-09-18)
+
+
+### Bug Fixes
+
+*  Add path and pathname ([3335926](https://github.com/CoCreate-app/CoCreate-elements/commit/3335926a4b9e1a16a4da399e0c92f2322c1f9f6d))
+* Update dCoCreate dpendencies to latest versions ([0c93f61](https://github.com/CoCreate-app/CoCreate-elements/commit/0c93f6190b77ca92d49a8066736ff00ec0ecec0e))
+
 # [1.21.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.20.2...v1.21.0) (2023-09-17)
 
 
