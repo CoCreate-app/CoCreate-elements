@@ -280,6 +280,7 @@ function setData(element, data) {
                 if (isRead == "false" || isCrdt == "true") continue;
                 if (isListen == "false" && !data.method.startsWith('read')) continue;
             }
+            // TODO: update.object data returned from server will not include $operator
             el.setValue(value);
         }
     }
@@ -505,25 +506,18 @@ function getData(form) {
                     Data[Data.type] = value
 
             } else if (Data[Data.type] && Data.key) {
-                let isUpdate = element.getAttribute('update')
-                let isDelete = element.getAttribute('delete')
-                let splice = element.getAttribute('splice') // could work on string and array
-                let slice = element.getAttribute('slice') // could work on string and array
-
-                if (/\.([0-9]*)/g.test(Data.key)) {
-
-                    if (splice || splice === "") {
-                        Data[Data.type][Data.key] = { $splice: value }
-                    } else if (slice) {
-                        Data[Data.type][Data.key] = '$delete'
-                    } else if (isUpdate) {
-                        value = Data.key.replace(/\[.*?\]/, '[' + value + ']')
-                        Data.updateKey[Data.key] = value
-                        Data[Data.type][Data.key] = { $update: value } // $update is string use the value as the key name
-                        // Data[Data.type][Data.key] = { $update: {[value]: value} } // $update is an object use the key as the value to use for the new key
+                let attributes = element.attributes
+                if (!Data.key.startsWith('$')) {
+                    for (let i = 0; i < attributes.length; i++) {
+                        let operators = ['$rename', '$inc', '$push', '$each', '$splice', '$unset', '$delete', '$slice', '$pop', '$shift', '$addToSet', '$pull']
+                        if (!operators.includes(attributes[i].name)) {
+                            Data.key = attributes[i].name + '.' + Data.key
+                            break;
+                        }
                     }
+                }
 
-                } else if (Data.type = 'object')
+                if (Data.type = 'object')
                     Data.object[Data.key] = value
                 else {
                     Data[Data.type] = { [Data[Data.type]]: value }
