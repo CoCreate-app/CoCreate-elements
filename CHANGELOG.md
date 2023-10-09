@@ -1,3 +1,15 @@
+# [1.23.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.22.0...v1.23.0) (2023-10-09)
+
+
+### Bug Fixes
+
+* removed listener sync ([4b5fa05](https://github.com/CoCreate-app/CoCreate-elements/commit/4b5fa051dfa0f116b2d58f1a990b26e92c7b6d84))
+
+
+### Features
+
+* check element for $<operator> attribute and add to key. ([f7bc8b0](https://github.com/CoCreate-app/CoCreate-elements/commit/f7bc8b0acf140043904a28ba4a6958c4274cdb31))
+
 # [1.22.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.21.1...v1.22.0) (2023-09-19)
 
 
