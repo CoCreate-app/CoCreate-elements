@@ -761,11 +761,6 @@ function initSocket() {
             });
         }
     }
-
-    CRUD.listen('sync', function (data) {
-        setData(null, data);
-    });
-
 }
 
 Observer.init({
