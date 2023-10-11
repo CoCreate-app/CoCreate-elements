@@ -919,8 +919,8 @@ Observer.init({
 Observer.init({
     name: 'CoCreateElementsAttributes',
     observe: ['attributes'],
-    attributeName: getAttributeNames(['storage', 'database', 'array', 'object', 'key']),
-    target: selector,
+    attributeName: ['storage', 'database', 'array', 'index', 'object', 'key'],
+    // target: selector, // blocks mutations when applied
     callback: function (mutation) {
         remove(mutation.target)
         init([mutation.target]);
