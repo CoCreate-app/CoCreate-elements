@@ -491,7 +491,7 @@ function getData(form) {
             let Data = { ...data }
             let dataKey = elements.get(element)
             let value = element.getValue()
-            console.log(type, value, data)
+            // console.log(type, value, data)
 
             if (!Data[Data.type] && Data.key) {
                 Data.method = 'create.' + Data.type
@@ -556,16 +556,18 @@ function getData(form) {
 
             //dataKey should be used to group
             let key = dataKey + Data.method
-            if (dataKeys.has(key))
-                dataKeys.get(key).push(Data)
-            else
-                dataKeys.set(key, [Data])
-
+            if (dataKeys.has(key)) {
+                let storedData = dataKeys.get(key)[Data.type]
+                dataKeys.get(key)[type] = { ...storedData, ...Data[Data.type] }
+            } else {
+                dataKeys.set(key, Data)
+            }
+            dataArray.push(Data)
         }
     }
 
     // TODO: group by methods so we can make one crud request per method
-    let dataArray = []
+    let dataArray = dataKeys.values()
     return dataArray
 }
 
@@ -625,9 +627,9 @@ async function save(element) {
     for (let i = 0; i < data.length; i++) {
         data[i].method = 'update.' + data[i].type
 
-        if (data[i].method && data[i].method.startsWith('create'))
+        if (data[i].method && data[i].method.startsWith('create')) {
             element.setAttribute(data[i].type, 'pending');
-        else if (data[i].method && data[i].method.startsWith('update') && data[i].type == 'object' && typeof value == 'string' && window.CoCreate.crdt && !'crdt') {
+        } else if (data[i].method && data[i].method.startsWith('update') && data[i].type == 'object' && typeof value == 'string' && window.CoCreate.crdt && !'crdt') {
             return window.CoCreate.crdt.replaceText({
                 array: data[i].array,
                 key: data[i].key,
