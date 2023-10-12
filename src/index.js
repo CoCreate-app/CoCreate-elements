@@ -27,8 +27,8 @@ import Observer from '@cocreate/observer';
 import Actions from '@cocreate/actions';
 import CRUD from '@cocreate/crud-client';
 import { dotNotationToObject, queryData, sortData, getAttributes, getAttributeNames, checkValue } from '@cocreate/utils';
-import '@cocreate/filter';
-import { render } from '@cocreate/render';
+import filter from '@cocreate/filter';
+import render from '@cocreate/render';
 import '@cocreate/element-prototype';
 import './fetchSrc';
 import { reset } from './form'
@@ -39,7 +39,7 @@ const keys = new Map();
 const forms = new Map(); // form, [elements]
 const debounce = new Map();
 
-function init(element) {
+async function init(element) {
     if (element && !(element instanceof HTMLCollection) && !Array.isArray(element))
         element = [element]
     else if (!element) {
@@ -52,7 +52,7 @@ function init(element) {
         if (elements.has(element[i]) || element.tagName === 'FORM')
             continue
 
-        let data = initElement(element[i]);
+        let data = await initElement(element[i]);
         if (data) {
             let dataKey = initDataKey(element[i], data)
             dataObjects.set(dataKey.string, data)
@@ -67,7 +67,7 @@ function init(element) {
     }
 }
 
-function initElement(el) {
+async function initElement(el) {
     if (el.hasAttribute('render-json')) {
         // TODO find the json template in the text or attributes
         // if found add the node as an element, if the element has crud attributes also add as the element
@@ -119,9 +119,12 @@ function initElement(el) {
             });
         }
     }
-
+    // let attributes = ['filter-key', 'filter-search', 'filter-sort-key', 'filter-on', 'filter-limit']
+    // if (el.getFilter || attributes.some(attr => el.hasAttribute(attr))) {
+    await filter.init()
     if (el.getFilter) {
         data.$filter = el.getFilter();
+
         el.setFilter = (filter) => {
             data.$filter = filter
             let dataKey = initDataKey(el, data)
@@ -227,9 +230,12 @@ async function read(element, data, dataKey) {
     delayTimer = setTimeout(function () {
         debounce.delete(dataKey.string)
         // TODO: should server support string and string array for type object, methods create, read, delete
-        if (data.type === 'object') {
+        if (!data.$filter && data.type === 'object') {
             if (typeof data.object === 'string')
                 data.object = { _id: data.object }
+
+            if (Array.isArray(data.object))
+                data.object = { _id: data.object[0]._id }
 
             if (!data.object._id.match(/^[0-9a-fA-F]{24}$/))
                 return
@@ -408,7 +414,7 @@ function checkIndex(element, data, Data, newData, type, filter, action) {
 
 function getDataKey(data) {
     let dataKey = {};
-    let attributes = ["host", "organization_id", "apikey", "method", "type", "storage", "database", "array", "index", "object", "key", "updateKey", "filter", "upsert", "namespace", "room", "broadcast", "broadcastSender", "broadcastBrowser"];
+    let attributes = ["host", "organization_id", "apikey", "method", "type", "storage", "database", "array", "index", "object", "key", "updateKey", "$filter", "upsert", "namespace", "room", "broadcast", "broadcastSender", "broadcastBrowser"];
 
     for (let attribute of attributes) {
         if (attribute === 'key' && data.type === 'object')
@@ -444,7 +450,7 @@ function getDataElements(data) {
 
 function getDataKeys(data) {
     const matchingKeyStrings = [];
-    const targetKeys = ["type", "storage", "database", "array", "index", "object", 'filter'];
+    const targetKeys = ["type", "storage", "database", "array", "index", "object", '$filter'];
 
     for (const [keyString, sortedKey] of keys.entries()) {
         let hasMatch = true;
@@ -507,19 +513,29 @@ function getData(form) {
 
             } else if (Data[Data.type] && Data.key) {
                 let attributes = element.attributes
-                if (!Data.key.startsWith('$')) {
+                if (Data.key.startsWith('$')) {
                     for (let i = 0; i < attributes.length; i++) {
                         let operators = ['$rename', '$inc', '$push', '$each', '$splice', '$unset', '$delete', '$slice', '$pop', '$shift', '$addToSet', '$pull']
-                        if (!operators.includes(attributes[i].name)) {
+                        if (operators.includes(attributes[i].name)) {
                             Data.key = attributes[i].name + '.' + Data.key
                             break;
                         }
                     }
                 }
 
-                if (Data.type = 'object')
-                    Data.object[Data.key] = value
-                else {
+
+                if (Data.type = 'object') {
+                    if (typeof Data[Data.type] === 'string')
+                        if (Data.key == '{}')
+                            Data[Data.type] = { _id: Data[Data.type], ...value }
+                        else
+                            Data[Data.type] = { _id: Data[Data.type], [Data.key]: value }
+                    else if (typeof Data[Data.type] === 'object')
+                        if (Data.key == '{}')
+                            Data[Data.type] = { ...Data[Data.type], ...value }
+                        else
+                            Data[Data.type][Data.key] = value
+                } else {
                     Data[Data.type] = { [Data[Data.type]]: value }
                 }
 
@@ -558,16 +574,17 @@ function getData(form) {
             let key = dataKey + Data.method
             if (dataKeys.has(key)) {
                 let storedData = dataKeys.get(key)[Data.type]
-                dataKeys.get(key)[type] = { ...storedData, ...Data[Data.type] }
+                dataKeys.get(key)[Data.type] = { ...storedData, ...Data[Data.type] }
             } else {
                 dataKeys.set(key, Data)
             }
-            dataArray.push(Data)
+            console.log(dataKeys.get(key))
         }
     }
 
     // TODO: group by methods so we can make one crud request per method
-    let dataArray = dataKeys.values()
+    let dataArray = Array.from(dataKeys.values())
+
     return dataArray
 }
 
@@ -739,13 +756,35 @@ async function remove(element) {
     if (element && !(element instanceof HTMLCollection) && !Array.isArray(element))
         element = [element]
     for (let i = 0; i < element.length; i++) {
-        let key = elements.get(element[i])
-        if (key) {
-            let els = keys.get(key).elements
-            els.delete(element[i])
-            elements.delete(key)
-            debounce.delete(element[i])
-            // TODO: delete element from forms map
+        if (element[i].tagName === 'FORM') {
+            let form = forms.get(element[i]).elements
+            for (let el of form.keys()) {
+                let key = elements.get(el)
+                if (key) {
+                    keys.get(key).elements.delete(el)
+                    elements.delete(el)
+                    // debounce.delete(key)
+                }
+            }
+            let key = elements.get(element[i])
+            if (key) {
+                keys.get(key).elements.delete(element[i])
+            }
+            elements.delete(element[i])
+            forms.delete(element[i])
+        } else {
+
+            let key = elements.get(element[i])
+            if (key) {
+                keys.get(key).elements.delete(element[i])
+                elements.delete(element[i])
+                // debounce.delete(key)
+                let form = element[i].closest('form')
+                form = forms.get(form)
+                if (form) {
+                    form.elements.delete(element[i])
+                }
+            }
         }
     }
 }
@@ -770,7 +809,11 @@ Observer.init({
     observe: ['addedNodes'],
     target: '[render-clone]',
     callback: function (mutation) {
-        let renderedNode = CoCreate.render.renderedNodes.get(mutation.target)
+        let delayTimer = debounce.get(mutation)
+        clearTimeout(delayTimer);
+        debounce.delete(mutation.target)
+
+        let renderedNode = render.renderedNodes.get(mutation.target)
         if (!renderedNode) return
 
         if (!mutation.movedFrom) return
@@ -913,7 +956,15 @@ Observer.init({
     observe: ['removedNodes'],
     target: selector,
     callback: function (mutation) {
-        if (mutation.target.parentElement) return
+        // if (mutation.target.parentElement) return
+        // if (mutation.target.parentElement) {
+        //     let delayTimer = setTimeout(function () {
+        //         debounce.delete(mutation.target)
+        //         remove(mutation.target)
+        //     }, 3000);
+        //     debounce.set(mutation.target, delayTimer)
+        // } else
+        if (mutation.target.hasAttribute('render-clone')) return
         remove(mutation.target)
     }
 });
