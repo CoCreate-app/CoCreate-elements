@@ -48,7 +48,7 @@ function runObjectId(form) {
 * @param form
 */
 function setAttribute(form) {
-    let elements = form.querySelectorAll('[key]');
+    let elements = form.querySelectorAll('[storage], [database], [array], [index], [object], [key]');
 
     for (let attribute of form.attributes) {
         let variable = window.CoCreateConfig.attributes[attribute.name]
