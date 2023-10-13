@@ -278,7 +278,7 @@ function setData(element, data) {
 
         const { key, isRead, isListen, isCrdt } = getAttributes(el);
         if (el.getFilter || el.renderValue)
-            filterData(el, data, type, key, action)
+            filterData(el, data, type, key)
         else {
             let value = CRUD.getValueFromObject(data[type][0], key);
             if (key) {
@@ -292,7 +292,7 @@ function setData(element, data) {
     }
 }
 
-function filterData(element, data, type, key, action) {
+function filterData(element, data, type, key) {
     if (key) {
         if (!data.type) return
         if (Array.isArray(data[type])) {
@@ -311,8 +311,8 @@ function filterData(element, data, type, key, action) {
         }
     }
 
-    if (element.getFilter && action && !action.startsWith('read'))
-        checkFilters(element, data, type, action)
+    if (element.getFilter && data.method && !data.method.startsWith('read'))
+        checkFilters(element, data, type)
     else if (element.renderValue)
         element.renderValue(data);
     // render({ element, data, key: type });
@@ -323,7 +323,7 @@ function filterData(element, data, type, key, action) {
     element.dispatchEvent(evt);
 }
 
-function checkFilters(element, data, type, action) {
+function checkFilters(element, data, type) {
     let Data = element.getData()
     if (!Data) return
 
@@ -335,25 +335,31 @@ function checkFilters(element, data, type, action) {
         newData = data
 
     let filter = element.getFilter()
-    if (filter && filter.query)
-        newData = queryData(newData, filter.query)
-    if (!newData.length)
+    if (filter && filter.query) {
+        for (let i = 0; i < newData.length; i++) {
+            let isMatch = queryData(newData[i], filter.query)
+            if (!isMatch)
+                newData.slice(i, 1)
+        }
+    }
+
+    if (!newData || !newData.length)
         return
 
     if (Array.isArray(Data)) {
         if (Array.isArray(newData)) {
             for (let i = 0; i < newData.length; i++) {
-                checkIndex(element, data, Data, newData[i], type, filter, action)
+                checkIndex(element, data, Data, newData[i], type, filter)
             }
         } else {
-            checkIndex(element, data, Data, newData, type, filter, action)
+            checkIndex(element, data, Data, newData, type, filter)
         }
     } else {
         let primaryKey
         if (type === 'object') {
             primaryKey = '_id';
         } else {
-            primaryKey = 'key';
+            primaryKey = 'name';
         }
 
         if (Data[primaryKey] === newData[primaryKey]) {
@@ -367,7 +373,7 @@ function checkFilters(element, data, type, action) {
     }
 }
 
-function checkIndex(element, data, Data, newData, type, filter, action) {
+function checkIndex(element, data, Data, newData, type, filter) {
     let index
     if (type === 'object') {
         index = Data.findIndex(obj => obj._id === newData._id);
@@ -378,7 +384,7 @@ function checkIndex(element, data, Data, newData, type, filter, action) {
     if (!data.$filter)
         data.$filter = {}
 
-    if (action.startsWith('delete')) {
+    if (data.method.startsWith('delete')) {
         if (!index && index !== 0)
             return
         data.$filter.remove = true
@@ -393,7 +399,7 @@ function checkIndex(element, data, Data, newData, type, filter, action) {
         }
 
         if (filter && filter.sort) {
-            newData.isNewData = true
+            Data[index].isNewData = true
             Data = sortData(Data, filter.sort)
             index = Data.findIndex(obj => obj.isNewData);
         }
