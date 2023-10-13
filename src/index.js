@@ -494,6 +494,13 @@ function getData(form) {
     let formObject = forms.get(form)
     for (let type of formObject.types.values()) {
         for (let [element, data] of type.entries()) {
+            if (!element.hasAttribute('key'))
+                continue
+            if (element.hasAttribute('actions')) {
+                let attribute = element.getAttribute('actions')
+                if (attribute.includes('save', 'delete'))
+                    continue
+            }
             let Data = { ...data }
             let dataKey = elements.get(element)
             let value = element.getValue()
@@ -659,7 +666,10 @@ async function save(element) {
 
         if (data[i] && (data[i].method.startsWith('create') || data[i].type !== 'object' && data[i].method.startsWith('update'))) {
             setTypeValue(element, data[i])
-        }
+        } else if (data[i])
+            document.dispatchEvent(new CustomEvent('saved', {
+                detail: data[i]
+            }));
 
     }
 
@@ -750,6 +760,11 @@ function setTypeValue(element, data) {
         //         }
         //     }
     }
+
+    document.dispatchEvent(new CustomEvent('saved', {
+        detail: data
+    }));
+
 }
 
 async function remove(element) {
@@ -986,6 +1001,24 @@ Actions.init({
     callback: (action) => {
         const form = action.element.closest("form");
         save(form);
+    }
+});
+
+Actions.init({
+    name: "delete",
+    endEvent: "deleted",
+    callback: async (action) => {
+        const data = getObject(action.element);
+        if (data) {
+            data.method = 'delete.' + data.type
+            if (data.type === 'object' && typeof data[data.type] === 'string')
+                data[data.type] = { _id: data[data.type] }
+
+            let response = await CRUD.send(data)
+            document.dispatchEvent(new CustomEvent('deleted', {
+                detail: response
+            }));
+        }
     }
 });
 
