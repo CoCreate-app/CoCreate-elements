@@ -585,7 +585,6 @@ function getData(form) {
             } else {
                 dataKeys.set(key, Data)
             }
-            console.log(dataKeys.get(key))
         }
     }
 
@@ -598,6 +597,9 @@ function getData(form) {
 async function save(element) {
     if (!element) return;
     let data, value
+    let upsert = element.getAttribute('upsert')
+    if (upsert !== undefined || upsert !== null)
+        upsert = true
     if (element.tagName === "FORM") {
         data = element.getData()
     } else {
@@ -649,7 +651,33 @@ async function save(element) {
     }
 
     for (let i = 0; i < data.length; i++) {
-        data[i].method = 'update.' + data[i].type
+        if (data[i].type === 'object' && !data[i]) {
+            if (typeof data[i].object === 'string') {
+                if (!data[i]._id)
+                    data[i].method = 'create.object'
+                else {
+                    data[i].method = 'update.object'
+                    if (upsert)
+                        data[i].upsert = true
+                }
+            } else if (Array.isArray(data[i].object)) {
+                if (!data[i].object[0]._id)
+                    data[i].method = 'create.object'
+                else {
+                    data[i].method = 'update.object'
+                    if (upsert)
+                        data[i].upsert = true
+                }
+            } else if (typeof data[i].object === 'object') {
+                if (!data[i].object._id)
+                    data[i].method = 'create.object'
+                else {
+                    data[i].method = 'update.object'
+                    if (upsert)
+                        data[i].upsert = true
+                }
+            }
+        }
 
         if (data[i].method && data[i].method.startsWith('create')) {
             element.setAttribute(data[i].type, 'pending');
