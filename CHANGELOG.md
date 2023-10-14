@@ -1,3 +1,17 @@
+## [1.23.5](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.23.4...v1.23.5) (2023-10-14)
+
+
+### Bug Fixes
+
+* added other crud types to attribute queries ([513472c](https://github.com/CoCreate-app/CoCreate-elements/commit/513472c768412e8b7ed5b205a48d16a49349cfaa))
+* attribute mutation not firing when selector applied. temporarily removed selector ([3b5551f](https://github.com/CoCreate-app/CoCreate-elements/commit/3b5551ff0e7c3838b7079e6d14574831ad6a7ba5))
+* bump dependencies ([1aa9443](https://github.com/CoCreate-app/CoCreate-elements/commit/1aa944336afdcd38b4f0915c6146d89d0ea56b1c))
+* data.filter updated to data$filter ([5a64fbf](https://github.com/CoCreate-app/CoCreate-elements/commit/5a64fbfe0d5e580633aa0deed131619c070e0fac))
+* getData ([e74675e](https://github.com/CoCreate-app/CoCreate-elements/commit/e74675ea5ed0f9b800fb18874864c93e8a8a5353))
+* improved setting method conditions ([013753a](https://github.com/CoCreate-app/CoCreate-elements/commit/013753a541eca3f88b4d5350763f52f38bef2932))
+* replaced action with data.method ([bfe513c](https://github.com/CoCreate-app/CoCreate-elements/commit/bfe513c5c498c84d2f11ce7d07ce71095dd232bf))
+* save and delete action ([f32e9b6](https://github.com/CoCreate-app/CoCreate-elements/commit/f32e9b6e661211b8fb0548aaa03ffd28b4bd1edd))
+
 ## [1.23.4](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.23.3...v1.23.4) (2023-10-09)
 
 
