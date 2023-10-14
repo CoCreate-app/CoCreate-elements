@@ -1044,6 +1044,10 @@ Actions.init({
     name: "delete",
     endEvent: "deleted",
     callback: async (action) => {
+        let elements = queryElements({ element: btn, prefix: 'delete' });
+        if (elements === false)
+            elements = [btn.closest('[render-clone]')];
+        console.log('delete elements crud')
         const data = getObject(action.element);
         if (data) {
             data.method = 'delete.' + data.type
