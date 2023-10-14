@@ -656,8 +656,10 @@ async function save(element) {
         data = [data]
     }
 
+
+
     for (let i = 0; i < data.length; i++) {
-        if (data[i].type === 'object' && !data[i]) {
+        if (data[i].type === 'object' && !data[i].method) {
             if (typeof data[i].object === 'string') {
                 if (!data[i]._id)
                     data[i].method = 'create.object'
