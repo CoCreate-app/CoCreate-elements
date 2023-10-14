@@ -26,7 +26,7 @@
 import Observer from '@cocreate/observer';
 import Actions from '@cocreate/actions';
 import CRUD from '@cocreate/crud-client';
-import { dotNotationToObject, queryData, sortData, getAttributes, getAttributeNames, checkValue } from '@cocreate/utils';
+import { dotNotationToObject, queryElements, queryData, sortData, getAttributes, getAttributeNames, checkValue } from '@cocreate/utils';
 import filter from '@cocreate/filter';
 import render from '@cocreate/render';
 import '@cocreate/element-prototype';
@@ -251,6 +251,8 @@ async function read(element, data, dataKey) {
 }
 
 function setData(element, data) {
+    if (data.method === 'delete.object')
+        console.log('test')
     if (!element) {
         element = getDataElements(data)
         if (!element.length) return
@@ -403,19 +405,18 @@ function checkIndex(element, data, Data, newData, type, filter) {
             Data = sortData(Data, filter.sort)
             index = Data.findIndex(obj => obj.isNewData);
         }
-
-        if (index >= 0) {
-            if (data.$filter.currentIndex === index)
-                delete data.$filter.currentIndex
-            data.$filter.index = index
-            if (element.renderValue)
-                element.renderValue(data);
-            // render({ element, data, key: type });
-            else if (data)
-                element.setValue(data)
-        }
-
     }
+
+    if (index >= 0) {
+        if (data.$filter.currentIndex === index)
+            delete data.$filter.currentIndex
+        data.$filter.index = index
+        if (element.renderValue)
+            element.renderValue(data);
+        else if (data)
+            element.setValue(data)
+    }
+
 }
 
 function getDataKey(data) {
@@ -1044,14 +1045,32 @@ Actions.init({
     name: "delete",
     endEvent: "deleted",
     callback: async (action) => {
-        let elements = queryElements({ element: btn, prefix: 'delete' });
+        let elements = queryElements({ element: action.element, prefix: 'delete' });
         if (elements === false)
-            elements = [btn.closest('[render-clone]')];
-        console.log('delete elements crud')
-        const data = getObject(action.element);
-        if (data) {
+            elements = [action.element]
+
+        for (let i = 0; i < elements.length; i++) {
+            const data = getObject(elements[i]);
+            if (!data) return
             data.method = 'delete.' + data.type
-            if (data.type === 'object' && typeof data[data.type] === 'string')
+
+            if (elements[i].renderValue) {
+                let selected = elements[i].querySelectorAll('.selected')
+                for (let j = 0; j < selected.length; j++) {
+                    data[data.type] = []
+                    let attribute = selected[j].getAttribute(data.type)
+                    if (attribute) {
+                        attribute = attribute.split(',')
+                        for (let k = 0; k < attribute.length; k++) {
+                            if (data.type === 'object')
+                                data[data.type].push({ _id: attribute[k] })
+                            else {
+                                data[data.type].push(attribute[k])
+                            }
+                        }
+                    }
+                }
+            } else if (data.type === 'object' && typeof data[data.type] === 'string')
                 data[data.type] = { _id: data[data.type] }
 
             let response = await CRUD.send(data)
