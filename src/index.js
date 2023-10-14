@@ -1060,4 +1060,4 @@ Actions.init({
 
 init();
 
-export default { init, read, save, getData, reset, elements, keys, forms, debounce, getAttributes };
+export default { init, read, save, getData, getObject, reset, elements, keys, forms, debounce, getAttributes };
