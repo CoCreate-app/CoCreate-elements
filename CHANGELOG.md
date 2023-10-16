@@ -1,3 +1,18 @@
+# [1.24.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.23.5...v1.24.0) (2023-10-16)
+
+
+### Bug Fixes
+
+* data[i].method ([71c0b7c](https://github.com/CoCreate-app/CoCreate-elements/commit/71c0b7ccd28d0f4bbf03b7d8cec615f21479af18))
+* delete for loop ([5507a86](https://github.com/CoCreate-app/CoCreate-elements/commit/5507a86526bdee6b7ac8f74d6ae051068ff9e736))
+* export getObject ([42bd4b3](https://github.com/CoCreate-app/CoCreate-elements/commit/42bd4b3fa66de724a94230c1c3ccfa7faea3a8b8))
+* replaced deleteDocuments with delete ([8e06633](https://github.com/CoCreate-app/CoCreate-elements/commit/8e0663351d459bd79a9f955a0a296df46ed3d580))
+
+
+### Features
+
+* delete-selector w/ fallback to clicked el ([4143fbb](https://github.com/CoCreate-app/CoCreate-elements/commit/4143fbbfade97c3073e8df6b1ce5b8051b5d5fe0))
+
 ## [1.23.5](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.23.4...v1.23.5) (2023-10-14)
 
 
