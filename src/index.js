@@ -250,7 +250,7 @@ async function read(element, data, dataKey) {
     debounce.set(dataKey.string, delayTimer)
 }
 
-function setData(element, data) {
+async function setData(element, data) {
     if (!element) {
         element = getDataElements(data)
         if (!element.length) return
@@ -278,7 +278,7 @@ function setData(element, data) {
 
         const { key, isRead, isListen, isCrdt } = getAttributes(el);
         if (el.getFilter || el.renderValue)
-            filterData(el, data, type, key)
+            await filterData(el, data, type, key)
         else {
             let value = CRUD.getValueFromObject(data[type][0], key);
             if (key) {
@@ -292,7 +292,7 @@ function setData(element, data) {
     }
 }
 
-function filterData(element, data, type, key) {
+async function filterData(element, data, type, key) {
     if (key) {
         if (!data.type) return
         if (Array.isArray(data[type])) {
@@ -312,7 +312,7 @@ function filterData(element, data, type, key) {
     }
 
     if (element.getFilter && data.method && !data.method.startsWith('read'))
-        checkFilters(element, data, type)
+        await checkFilters(element, data, type)
     else if (element.renderValue)
         element.renderValue(data);
     // render({ element, data, key: type });
@@ -323,8 +323,8 @@ function filterData(element, data, type, key) {
     element.dispatchEvent(evt);
 }
 
-function checkFilters(element, data, type) {
-    let Data = element.getData()
+async function checkFilters(element, data, type) {
+    let Data = await element.getData()
     if (!Data) return
 
     let newData
@@ -494,7 +494,7 @@ function getDataKeys(data) {
     return matchingKeyStrings;
 }
 
-function getData(form) {
+async function getData(form) {
     let dataKeys = new Map()
     let formObject = forms.get(form)
     for (let type of formObject.types.values()) {
@@ -508,9 +508,9 @@ function getData(form) {
             }
             let Data = { ...data }
             let dataKey = elements.get(element)
-            let value = element.getValue()
-            // console.log(type, value, data)
+            let value = await element.getValue()
 
+            // console.log(type, value, data)
             if (!Data[Data.type] && Data.key) {
                 Data.method = 'create.' + Data.type
                 if (Data.type === 'object') {
@@ -606,7 +606,7 @@ async function save(element) {
     if (upsert !== undefined || upsert !== null)
         upsert = true
     if (element.tagName === "FORM") {
-        data = element.getData()
+        data = await element.getData()
     } else {
         let isSave = element.getAttribute('save')
         if (isSave === 'false') return
@@ -618,8 +618,7 @@ async function save(element) {
         let dataKey = elements.get(element)
         data = { ...keys.get(dataKey).dataKey.object }
 
-        value = element.getValue();
-
+        value = await element.getValue();
         let key = element.getAttribute('key')
 
         if (typeof data[data.type] === 'string')
@@ -878,9 +877,9 @@ Observer.init({
 })
 
 // TODO: has the potential to work on most of the crud elements specifically if the value is an object or an array
-function dndCrud(draggedEl, draggedFrom, droppedEl, droppedIn) {
-    let from = dndCrudData(draggedEl, draggedFrom, 'remove')
-    let to = dndCrudData(droppedEl, droppedIn, 'add')
+async function dndCrud(draggedEl, draggedFrom, droppedEl, droppedIn) {
+    let from = await dndCrudData(draggedEl, draggedFrom, 'remove')
+    let to = await dndCrudData(droppedEl, droppedIn, 'add')
 
     if (from && to && !draggedFrom.isSameNode(droppedIn)) {
         let element = getDataElements(from.data)
@@ -914,9 +913,9 @@ function dndCrud(draggedEl, draggedFrom, droppedEl, droppedIn) {
 
 }
 
-function dndCrudData(element, parent, operator) {
+async function dndCrudData(element, parent, operator) {
     if (!elements.has(parent)) return
-    let data = parent.getData()
+    let data = await parent.getData()
     let newData = getObject(parent)
 
     let { Data, sortName, sortDirection, keyPath, clones, index } = dndNewData(element, data)
