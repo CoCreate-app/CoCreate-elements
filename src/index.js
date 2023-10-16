@@ -251,8 +251,6 @@ async function read(element, data, dataKey) {
 }
 
 function setData(element, data) {
-    if (data.method === 'delete.object')
-        console.log('test')
     if (!element) {
         element = getDataElements(data)
         if (!element.length) return
