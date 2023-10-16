@@ -1056,8 +1056,8 @@ Actions.init({
 
             if (elements[i].renderValue) {
                 let selected = elements[i].querySelectorAll('.selected')
+                data[data.type] = []
                 for (let j = 0; j < selected.length; j++) {
-                    data[data.type] = []
                     let attribute = selected[j].getAttribute(data.type)
                     if (attribute) {
                         attribute = attribute.split(',')
