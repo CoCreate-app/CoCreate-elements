@@ -1,3 +1,11 @@
+## [1.24.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.24.0...v1.24.1) (2023-10-17)
+
+
+### Bug Fixes
+
+* await getValue() ([5970879](https://github.com/CoCreate-app/CoCreate-elements/commit/5970879904665a1f8c6659141928b0ea4de32d9f))
+* create item in rendered element ([3b68724](https://github.com/CoCreate-app/CoCreate-elements/commit/3b687245207d1d06c1ddbe8bece64893b6e46478))
+
 # [1.24.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.23.5...v1.24.0) (2023-10-16)
 
 
