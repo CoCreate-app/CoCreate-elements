@@ -384,25 +384,32 @@ function checkIndex(element, data, Data, newData, type, filter) {
     if (!data.$filter)
         data.$filter = {}
 
-    if (data.method.startsWith('delete')) {
+    if (data.method.startsWith('delete.')) {
         if (!index && index !== 0)
             return
         data.$filter.remove = true
     } else {
-        if (!index && index !== 0) {
-            data.$filter.create = true
-            Data.push(newData)
+        if (data.method.startsWith('create.')) {
+            if (index === -1) {
+                data.$filter.create = true
+                if (filter && filter.sort)
+                    newData.isNewData = true
+                Data.push(newData)
+            }
         } else {
             data.$filter.update = true
             data.$filter.currentIndex = index
             Data[index] = dotNotationToObject(newData, Data[index])
+            if (filter && filter.sort) {
+                Data[index].isNewData = true
+            }
         }
 
         if (filter && filter.sort) {
-            Data[index].isNewData = true
             Data = sortData(Data, filter.sort)
             index = Data.findIndex(obj => obj.isNewData);
         }
+
     }
 
     if (index >= 0) {
@@ -461,7 +468,9 @@ function getDataKeys(data) {
         let hasMatch = true;
 
         for (const key of targetKeys) {
-            if (data.hasOwnProperty(key)) {
+            if (!data.$filter && (data.type === key || key === '$filter'))
+                hasMatch = true
+            else if (data.hasOwnProperty(key)) {
                 if (!sortedKey.data.hasOwnProperty(key)) {
                     hasMatch = false;
                     break;
