@@ -1,3 +1,11 @@
+## [1.24.2](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.24.1...v1.24.2) (2023-10-19)
+
+
+### Bug Fixes
+
+* create.object condition undefined ([50e8a14](https://github.com/CoCreate-app/CoCreate-elements/commit/50e8a140da1b7de9a7ae93a12c7b35a884931283))
+* declartion of render functions using object spread ([d4ecf62](https://github.com/CoCreate-app/CoCreate-elements/commit/d4ecf623f83869b54dc2938ccbebd26358597bdb))
+
 ## [1.24.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.24.0...v1.24.1) (2023-10-17)
 
 
