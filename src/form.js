@@ -17,8 +17,6 @@ function init(elements) {
         runObjectId(element);
         setAttribute(element);
         disableAutoFill(element);
-        // element.setData = () => { }
-        // element.getData = () => getFormData(element)
     }
 }
 
