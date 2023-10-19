@@ -554,8 +554,11 @@ async function getData(form) {
                     else if (typeof Data[Data.type] === 'object')
                         if (Data.key == '{}')
                             Data[Data.type] = { ...Data[Data.type], ...value }
-                        else
+                        else {
                             Data[Data.type][Data.key] = value
+                            if (!Data[Data.type]._id)
+                                Data.method = 'create.' + Data.type
+                        }
                 } else {
                     Data[Data.type] = { [Data[Data.type]]: value }
                 }
@@ -664,7 +667,7 @@ async function save(element) {
     }
 
 
-
+    let Data = []
     for (let i = 0; i < data.length; i++) {
         if (data[i].type === 'object' && !data[i].method) {
             if (typeof data[i].object === 'string') {
@@ -705,7 +708,10 @@ async function save(element) {
             });
         }
 
+
         data[i] = await CRUD.send(data[i]);
+
+        Data.push(data[i])
 
         if (data[i] && (data[i].method.startsWith('create') || data[i].type !== 'object' && data[i].method.startsWith('update'))) {
             setTypeValue(element, data[i])
@@ -716,6 +722,7 @@ async function save(element) {
 
     }
 
+    return Data
 }
 
 function setTypeValue(element, data) {
