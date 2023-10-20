@@ -110,9 +110,8 @@ async function initElement(el) {
             el.addEventListener('input', function (e) {
                 const { object, key, isRealtime, isCrdt } = getAttributes(el);
                 if (isRealtime == "false" || key == "_id") return;
-
                 if (isCrdt == "true" && object && object !== 'pending') return
-                if (object && e.detail && e.detail.skip == true) return;
+                if (e.detail && e.detail.skip == true) return;
                 if (data.type !== 'object' && data[data.type] === 'pending') return
 
                 save(el);
@@ -231,7 +230,9 @@ async function read(element, data, dataKey) {
         debounce.delete(dataKey.string)
         // TODO: should server support string and string array for type object, methods create, read, delete
         if (!data.$filter && data.type === 'object') {
-            if (typeof data.object === 'string')
+            if (!data.object)
+                return
+            else if (typeof data.object === 'string')
                 data.object = { _id: data.object }
             else if (Array.isArray(data.object)) {
                 if (data.object.length)
