@@ -1,3 +1,10 @@
+## [1.24.3](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.24.2...v1.24.3) (2023-10-20)
+
+
+### Bug Fixes
+
+* condition on read ([fe53a8e](https://github.com/CoCreate-app/CoCreate-elements/commit/fe53a8ea9808502af64a8298a14dd38bbfd07940))
+
 ## [1.24.2](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.24.1...v1.24.2) (2023-10-19)
 
 
