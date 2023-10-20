@@ -233,11 +233,10 @@ async function read(element, data, dataKey) {
         if (!data.$filter && data.type === 'object') {
             if (typeof data.object === 'string')
                 data.object = { _id: data.object }
-
-            if (Array.isArray(data.object))
-                data.object = { _id: data.object[0]._id }
-
-            if (!data.object._id.match(/^[0-9a-fA-F]{24}$/))
+            else if (Array.isArray(data.object)) {
+                if (data.object.length)
+                    data.object = { _id: data.object[0]._id }
+            } else if (!data.object._id.match(/^[0-9a-fA-F]{24}$/))
                 return
         }
 
@@ -284,7 +283,7 @@ async function setData(element, data) {
             if (key) {
                 if (!data[type].length) continue;
                 if (isRead == "false" || isCrdt == "true") continue;
-                if (isListen == "false" && !data.method.startsWith('read')) continue;
+                if (isListen == "false" && !data.method.startsWith('read.')) continue;
             }
             // TODO: update.object data returned from server will not include $operator
             el.setValue(value);
@@ -311,7 +310,7 @@ async function filterData(element, data, type, key) {
         }
     }
 
-    if (element.getFilter && data.method && !data.method.startsWith('read'))
+    if (element.getFilter && data.method && !data.method.startsWith('read.'))
         await checkFilters(element, data, type)
     else if (element.renderValue)
         element.renderValue(data);
@@ -697,9 +696,9 @@ async function save(element) {
             }
         }
 
-        if (data[i].method && data[i].method.startsWith('create')) {
+        if (data[i].method && data[i].method.startsWith('create.')) {
             element.setAttribute(data[i].type, 'pending');
-        } else if (data[i].method && data[i].method.startsWith('update') && data[i].type == 'object' && typeof value == 'string' && window.CoCreate.crdt && !'crdt') {
+        } else if (data[i].method && data[i].method.startsWith('update.') && data[i].type == 'object' && typeof value == 'string' && window.CoCreate.crdt && !'crdt') {
             return window.CoCreate.crdt.replaceText({
                 array: data[i].array,
                 key: data[i].key,
@@ -713,7 +712,7 @@ async function save(element) {
 
         Data.push(data[i])
 
-        if (data[i] && (data[i].method.startsWith('create') || data[i].type !== 'object' && data[i].method.startsWith('update'))) {
+        if (data[i] && (data[i].method.startsWith('create.') || data[i].type !== 'object' && data[i].method.startsWith('update.'))) {
             setTypeValue(element, data[i])
         } else if (data[i])
             document.dispatchEvent(new CustomEvent('saved', {
@@ -822,7 +821,10 @@ async function remove(element) {
         element = [element]
     for (let i = 0; i < element.length; i++) {
         if (element[i].tagName === 'FORM') {
-            let form = forms.get(element[i]).elements
+            let form = forms.get(element[i])
+            if (!form) return
+
+            form = form.elements
             for (let el of form.keys()) {
                 let key = elements.get(el)
                 if (key) {
