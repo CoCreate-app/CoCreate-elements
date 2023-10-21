@@ -1047,54 +1047,55 @@ Observer.init({
     }
 });
 
-Actions.init({
-    name: "save",
-    endEvent: "saved",
-    callback: (action) => {
-        const form = action.element.closest("form");
-        save(form);
-    }
-});
+Actions.init([
+    {
+        name: "save",
+        endEvent: "saved",
+        callback: (action) => {
+            const form = action.element.closest("form");
+            save(form);
+        }
+    },
+    {
+        name: "delete",
+        endEvent: "deleted",
+        callback: async (action) => {
+            let elements = queryElements({ element: action.element, prefix: 'delete' });
+            if (elements === false)
+                elements = [action.element]
 
-Actions.init({
-    name: "delete",
-    endEvent: "deleted",
-    callback: async (action) => {
-        let elements = queryElements({ element: action.element, prefix: 'delete' });
-        if (elements === false)
-            elements = [action.element]
+            for (let i = 0; i < elements.length; i++) {
+                const data = getObject(elements[i]);
+                if (!data) return
+                data.method = 'delete.' + data.type
 
-        for (let i = 0; i < elements.length; i++) {
-            const data = getObject(elements[i]);
-            if (!data) return
-            data.method = 'delete.' + data.type
-
-            if (elements[i].renderValue) {
-                let selected = elements[i].querySelectorAll('.selected')
-                data[data.type] = []
-                for (let j = 0; j < selected.length; j++) {
-                    let attribute = selected[j].getAttribute(data.type)
-                    if (attribute) {
-                        attribute = attribute.split(',')
-                        for (let k = 0; k < attribute.length; k++) {
-                            if (data.type === 'object')
-                                data[data.type].push({ _id: attribute[k] })
-                            else {
-                                data[data.type].push(attribute[k])
+                if (elements[i].renderValue) {
+                    let selected = elements[i].querySelectorAll('.selected')
+                    data[data.type] = []
+                    for (let j = 0; j < selected.length; j++) {
+                        let attribute = selected[j].getAttribute(data.type)
+                        if (attribute) {
+                            attribute = attribute.split(',')
+                            for (let k = 0; k < attribute.length; k++) {
+                                if (data.type === 'object')
+                                    data[data.type].push({ _id: attribute[k] })
+                                else {
+                                    data[data.type].push(attribute[k])
+                                }
                             }
                         }
                     }
-                }
-            } else if (data.type === 'object' && typeof data[data.type] === 'string')
-                data[data.type] = { _id: data[data.type] }
+                } else if (data.type === 'object' && typeof data[data.type] === 'string')
+                    data[data.type] = { _id: data[data.type] }
 
-            let response = await CRUD.send(data)
-            document.dispatchEvent(new CustomEvent('deleted', {
-                detail: response
-            }));
+                let response = await CRUD.send(data)
+                document.dispatchEvent(new CustomEvent('deleted', {
+                    detail: response
+                }));
+            }
         }
     }
-});
+]);
 
 init();
 
