@@ -38,7 +38,7 @@ function runObjectId(form) {
     // Sets the object id for each array in the array.
     for (let i = 0; i < arrays.length; i++) {
         // TODO: needs access to setTypeValue
-        setTypeValue(form, { array: arrays[i], object: [{ _id: ObjectId() }] });
+        setTypeValue(form, { array: arrays[i], object: [{ _id: ObjectId().toString() }] });
     }
 }
 
