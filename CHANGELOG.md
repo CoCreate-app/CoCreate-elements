@@ -1,3 +1,15 @@
+# [1.25.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.24.3...v1.25.0) (2023-10-22)
+
+
+### Bug Fixes
+
+* conditions ([484ad35](https://github.com/CoCreate-app/CoCreate-elements/commit/484ad358f13fc07e92ebafbf710ccdc1fb740950))
+
+
+### Features
+
+* ObjectId() returns an object containg the parts iof the _id along with a toString() function ([82e3956](https://github.com/CoCreate-app/CoCreate-elements/commit/82e3956db5c5bc966d160a04d9067bc039c34d37))
+
 ## [1.24.3](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.24.2...v1.24.3) (2023-10-20)
 
 
