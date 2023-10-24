@@ -1,3 +1,10 @@
+## [1.25.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.25.0...v1.25.1) (2023-10-24)
+
+
+### Bug Fixes
+
+* compbin Actions in to one array of Actions ([716602d](https://github.com/CoCreate-app/CoCreate-elements/commit/716602dd74368e32be5f1e053903b32b54fb003d))
+
 # [1.25.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.24.3...v1.25.0) (2023-10-22)
 
 
