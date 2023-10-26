@@ -20,13 +20,16 @@ async function initElement(element) {
     if (!src || /{{\s*([\w\W]+)\s*}}/g.test(src))
         return;
     let initialize = initializing.get(element)
-    if (!initialize || initialize.src != src){
-        initializing.set(element, {src});
+    if (!initialize || initialize.src != src) {
+        initializing.set(element, { src });
         if (src) {
             try {
-                let response = await fetch(src); 
+                let response = await fetch(src);
                 let text = await response.text();
                 if (text) {
+                    let path = element.getAttribute('path')
+                    if (path)
+                        text = text.replaceAll('{{path}}', path)
                     element.setValue(text);
                     initializing.delete(element)
                 }
@@ -34,26 +37,26 @@ async function initElement(element) {
                 console.log('FetchSrc error:' + err);
             }
         }
-    }   
+    }
 };
 
 observer.init({
-	name: 'CoCreateSrc',
-	observe: ['addedNodes'],
-	target: selector,
-	callback: function(mutation) {
-		initElement(mutation.target);
-	}
+    name: 'CoCreateSrc',
+    observe: ['addedNodes'],
+    target: selector,
+    callback: function (mutation) {
+        initElement(mutation.target);
+    }
 });
 
 observer.init({
-	name: 'CoCreateSrcAttributes',
-	observe: ['attributes'],
-	attributeName: ['src'],
-	target: selector,
-	callback: function(mutation) {
-		initElement(mutation.target);
-	}
+    name: 'CoCreateSrcAttributes',
+    observe: ['attributes'],
+    attributeName: ['src'],
+    target: selector,
+    callback: function (mutation) {
+        initElement(mutation.target);
+    }
 });
 
 init()
