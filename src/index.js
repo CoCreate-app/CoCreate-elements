@@ -91,7 +91,7 @@ async function initElement(el) {
         // }
 
         // let Data = JSON.parse(match[1]);
-        // Data.method = read.object
+        // Data.method = object.read
         // CRUD.send(Data)
 
     }
@@ -241,7 +241,7 @@ async function read(element, data, dataKey) {
                 return
         }
 
-        data.method = 'read.' + data.type
+        data.method = data.type + '.read'
 
         CRUD.send(data).then((data) => {
             setData(element, data);
@@ -261,7 +261,7 @@ async function setData(element, data) {
 
     let type = data.type
     if (!type && data.method) {
-        type = data.method.split('.')[1]
+        type = data.method.split('.')[0]
     } else if (type == 'key')
         type = 'object'
 
@@ -284,7 +284,7 @@ async function setData(element, data) {
             if (key) {
                 if (!data[type].length) continue;
                 if (isRead == "false" || isCrdt == "true") continue;
-                if (isListen == "false" && !data.method.startsWith('read.')) continue;
+                if (isListen == "false" && !data.method.endsWith('.read')) continue;
             }
             // TODO: update.object data returned from server will not include $operator
             el.setValue(value);
@@ -311,7 +311,7 @@ async function filterData(element, data, type, key) {
         }
     }
 
-    if (element.getFilter && data.method && !data.method.startsWith('read.'))
+    if (element.getFilter && data.method && !data.method.endsWith('.read'))
         await checkFilters(element, data, type)
     else if (element.renderValue)
         element.renderValue(data);
@@ -384,12 +384,12 @@ function checkIndex(element, data, Data, newData, type, filter) {
     if (!data.$filter)
         data.$filter = {}
 
-    if (data.method.startsWith('delete.')) {
+    if (data.method.endsWith('.delete')) {
         if (!index && index !== 0)
             return
         data.$filter.remove = true
     } else {
-        if (data.method.startsWith('create.')) {
+        if (data.method.endsWith('.create')) {
             if (index === -1) {
                 data.$filter.create = true
                 if (filter && filter.sort)
@@ -521,7 +521,7 @@ async function getData(form) {
 
             // console.log(type, value, data)
             if (!Data[Data.type] && Data.key) {
-                Data.method = 'create.' + Data.type
+                Data.method = Data.type + '.create'
                 if (Data.type === 'object') {
                     if (typeof Data.object === 'string')
                         Data.object = { _id: Data.object }
@@ -557,7 +557,7 @@ async function getData(form) {
                         else {
                             Data[Data.type][Data.key] = value
                             if (!Data[Data.type]._id)
-                                Data.method = 'create.' + Data.type
+                                Data.method = Data.type + '.create'
                         }
                 } else {
                     Data[Data.type] = { [Data[Data.type]]: value }
@@ -567,11 +567,11 @@ async function getData(form) {
                     if (!Data.key) return
                     delete Data.isUpdate
                     Data.updateKey = { [Data.key]: value }
-                    Data.method = 'update.' + Data.type
+                    Data.method = Data.type + '.update'
                 } else if (Data.isDelete || Data.isDelete === '') {
                     delete Data.isDelete
                     if (Data.type == 'object' && Data.key) {
-                        Data.method = 'update.' + Data.type
+                        Data.method = Data.type + '.update'
                         // TODO: Data.type can be a string _id or an array for string _id needs to be converted to object
                         if (typeof Data[Data.type] === 'string')
                             Data[Data.type] = { _id: Data[Data.type], [Data.key]: undefined }
@@ -580,16 +580,16 @@ async function getData(form) {
                         } else if (typeof Data[Data.type] === 'object')
                             Data[Data.type][Data.key] = undefined
                     } else {
-                        Data.method = 'delete.' + Data.type
+                        Data.method = Data.type + '.delete'
                     }
                 } else if (Data.type !== 'object' && Data[Data.type] === '') {
                     // if (!Data.key)
-                    //     Data.method = 'read.' + Data.type
+                    //     Data.method = Data.type + '.read'
                     // else if (Data.key === 'name')
-                    //     Data.method = 'create.' + Data.type
+                    //     Data.method = Data.type + '.create'
                 } else if (Data.type !== 'object' && Data[Data.type]) {
                     // if (Data.key)
-                    //     Data.method = 'update.' + Data.type
+                    //     Data.method = Data.type + '.update'
                 }
 
             }
@@ -672,34 +672,34 @@ async function save(element) {
         if (data[i].type === 'object' && !data[i].method) {
             if (typeof data[i].object === 'string') {
                 if (!data[i]._id)
-                    data[i].method = 'create.object'
+                    data[i].method = 'object.create'
                 else {
-                    data[i].method = 'update.object'
+                    data[i].method = 'object.update'
                     if (upsert)
                         data[i].upsert = true
                 }
             } else if (Array.isArray(data[i].object)) {
                 if (!data[i].object[0]._id)
-                    data[i].method = 'create.object'
+                    data[i].method = 'object.create'
                 else {
-                    data[i].method = 'update.object'
+                    data[i].method = 'object.update'
                     if (upsert)
                         data[i].upsert = true
                 }
             } else if (typeof data[i].object === 'object') {
                 if (!data[i].object._id)
-                    data[i].method = 'create.object'
+                    data[i].method = 'object.create'
                 else {
-                    data[i].method = 'update.object'
+                    data[i].method = 'object.update'
                     if (upsert)
                         data[i].upsert = true
                 }
             }
         }
 
-        if (data[i].method && data[i].method.startsWith('create.')) {
+        if (data[i].method && data[i].method.endsWith('.create')) {
             element.setAttribute(data[i].type, 'pending');
-        } else if (data[i].method && data[i].method.startsWith('update.') && data[i].type == 'object' && typeof value == 'string' && window.CoCreate.crdt && !'crdt') {
+        } else if (data[i].method && data[i].method.endsWith('.update') && data[i].type == 'object' && typeof value == 'string' && window.CoCreate.crdt && !'crdt') {
             return window.CoCreate.crdt.replaceText({
                 array: data[i].array,
                 key: data[i].key,
@@ -713,7 +713,7 @@ async function save(element) {
 
         Data.push(data[i])
 
-        if (data[i] && (data[i].method.startsWith('create.') || data[i].type !== 'object' && data[i].method.startsWith('update.'))) {
+        if (data[i] && (data[i].method.endsWith('.create') || data[i].type !== 'object' && data[i].method.endsWith('.update'))) {
             setTypeValue(element, data[i])
         } else if (data[i])
             document.dispatchEvent(new CustomEvent('saved', {
@@ -1067,7 +1067,7 @@ Actions.init([
             for (let i = 0; i < elements.length; i++) {
                 const data = getObject(elements[i]);
                 if (!data) return
-                data.method = 'delete.' + data.type
+                data.method = data.type + '.delete'
 
                 if (elements[i].renderValue) {
                     let selected = elements[i].querySelectorAll('.selected')
