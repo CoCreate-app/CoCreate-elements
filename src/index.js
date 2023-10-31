@@ -21,7 +21,6 @@
  * you must obtain a commercial license from CoCreate LLC.
  * For details, visit <https://cocreate.app/licenses/> or contact us at sales@cocreate.app.
  */
-/** */
 
 import Observer from '@cocreate/observer';
 import Actions from '@cocreate/actions';
@@ -36,9 +35,10 @@ import { reset } from './form'
 const selector = "[storage], [database], [array], [render-json]";
 const elements = new Map();
 const keys = new Map();
-const forms = new Map(); // form, [elements]
+const forms = new Map();
 const debounce = new Map();
 
+/** */
 async function init(element) {
     if (element && !(element instanceof HTMLCollection) && !Array.isArray(element))
         element = [element]
@@ -61,8 +61,8 @@ async function init(element) {
 
     if (dataObjects && dataObjects.size > 0) {
         for (let key of dataObjects.keys()) {
-            let { elements, data } = keys.get(key)
-            read(Array.from(elements.keys()), data, { string: key });
+            let { data } = keys.get(key)
+            read(Array.from(element), data, { string: key });
         }
     }
 }
@@ -224,10 +224,26 @@ async function read(element, data, dataKey) {
     if (!data)
         data = { ...keys.get(dataKey).dataKey.object }
 
-    let delayTimer = debounce.get(dataKey.string)
-    clearTimeout(delayTimer);
-    delayTimer = setTimeout(function () {
-        debounce.delete(dataKey.string)
+    if (!(element instanceof HTMLCollection) && !Array.isArray(element))
+        element = [element]
+
+    let delay = debounce.get(dataKey.string)
+    if (!delay)
+        debounce.set(dataKey.string, delay = {})
+
+    if (!delay.elements)
+        delay.elements = element
+    else
+        delay.elements.push(...element)
+
+    // if (data && data.status) {
+    //     let type = data.method.split('.')[0]
+    //     if (data[type] && data[type].length)
+    //         return setData(element, data);
+    // }
+
+    clearTimeout(delay.timer);
+    delay.timer = setTimeout(function () {
         // TODO: should server support string and string array for type object, methods create, read, delete
         if (!data.$filter && data.type === 'object') {
             if (!data.object)
@@ -244,10 +260,15 @@ async function read(element, data, dataKey) {
         data.method = data.type + '.read'
 
         CRUD.send(data).then((data) => {
-            setData(element, data);
+            debounce.delete(dataKey.string)
+            let els = Array.from(delay.elements)
+            clearTimeout(delay.timer);
+            delete delay.elements
+            delete delay.timer
+
+            setData(els, data);
         })
     }, 500);
-    debounce.set(dataKey.string, delayTimer)
 }
 
 async function setData(element, data) {
@@ -255,7 +276,6 @@ async function setData(element, data) {
         element = getDataElements(data)
         if (!element.length) return
     }
-
     if (!(element instanceof HTMLCollection) && !Array.isArray(element))
         element = [element]
 
@@ -294,7 +314,7 @@ async function setData(element, data) {
 
 async function filterData(element, data, type, key) {
     if (key) {
-        if (!data.type) return
+        if (!data || !type) return
         if (Array.isArray(data[type])) {
             let Data = []
             for (let doc of data[type]) {
@@ -305,7 +325,10 @@ async function filterData(element, data, type, key) {
                         Data.push(doc[key])
                 }
             }
-            let data = Data
+            if (Data.length === 1) {
+                data = { [key]: Data[0] }
+            } else
+                data = Data
         } else {
             data = { [key]: data[type][key] }
         }
