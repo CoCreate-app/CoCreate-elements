@@ -232,15 +232,10 @@ async function read(element, data, dataKey) {
         debounce.set(dataKey.string, delay = {})
 
     if (!delay.elements)
-        delay.elements = element
-    else
-        delay.elements.push(...element)
+        delay.elements = new Map()
 
-    // if (data && data.status) {
-    //     let type = data.method.split('.')[0]
-    //     if (data[type] && data[type].length)
-    //         return setData(element, data);
-    // }
+    for (let el of element)
+        delay.elements.set(el, true)
 
     clearTimeout(delay.timer);
     delay.timer = setTimeout(function () {
@@ -261,7 +256,7 @@ async function read(element, data, dataKey) {
 
         CRUD.send(data).then((data) => {
             debounce.delete(dataKey.string)
-            let els = Array.from(delay.elements)
+            let els = Array.from(delay.elements.keys())
             clearTimeout(delay.timer);
             delete delay.elements
             delete delay.timer
