@@ -1,3 +1,19 @@
+# [1.26.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.25.2...v1.26.0) (2023-11-03)
+
+
+### Bug Fixes
+
+* favicon.ico path ([16da6e6](https://github.com/CoCreate-app/CoCreate-elements/commit/16da6e69bc2ee467694631f09e7efd2696e28aec))
+* init new elements only ([1228c4c](https://github.com/CoCreate-app/CoCreate-elements/commit/1228c4cfd3a2c4a0a4274191efd6be36a267951e))
+* map elements to prevent duplicate reads ([81c3101](https://github.com/CoCreate-app/CoCreate-elements/commit/81c31018a62555ccfa02e973b667ed8ee59fa584))
+* update dependencies to the lates versions ([82c04cf](https://github.com/CoCreate-app/CoCreate-elements/commit/82c04cf2996090be0caee092de95d1080953c4b1))
+* update method to use object.update etc ([575d800](https://github.com/CoCreate-app/CoCreate-elements/commit/575d80021bd6e0e169e7da7a3e9f4139b1277333))
+
+
+### Features
+
+* get attribute path and replace {{path}} ([c48878b](https://github.com/CoCreate-app/CoCreate-elements/commit/c48878b7c8467ba70314846d3d22cb90c9195f34))
+
 ## [1.25.2](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.25.1...v1.25.2) (2023-10-25)
 
 
