@@ -301,7 +301,7 @@ async function setData(element, data) {
                 if (isRead == "false" || isCrdt == "true") continue;
                 if (isListen == "false" && !data.method.endsWith('.read')) continue;
             }
-            // TODO: update.object data returned from server will not include $operator
+            // TODO: object.update data returned from server will not include $operator
             el.setValue(value);
         }
     }
