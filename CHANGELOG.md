@@ -1,3 +1,11 @@
+## [1.26.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.26.0...v1.26.1) (2023-11-09)
+
+
+### Bug Fixes
+
+* meta name typo ([8e53dbe](https://github.com/CoCreate-app/CoCreate-elements/commit/8e53dbedf631f30ebb143837ff3c8ee9919cad8d))
+* update crud methods ([09d988a](https://github.com/CoCreate-app/CoCreate-elements/commit/09d988aa0497622f131102966b94e9817fa7a495))
+
 # [1.26.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.25.2...v1.26.0) (2023-11-03)
 
 
