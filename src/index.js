@@ -876,12 +876,12 @@ async function remove(element) {
 }
 
 function initSocket() {
-    const array = ['create', 'update', 'delete'];
-    const attributes = ["storage", "database", "array", "index", "object", 'filter'];
+    const type = ["storage", "database", "array", "index", "object", 'filter'];
+    const method = ['create', 'update', 'delete'];
 
-    for (let i = 0; i < array.length; i++) {
-        for (let j = 0; j < attributes.length; j++) {
-            const action = array[i] + '.' + attributes[j];
+    for (let i = 0; i < type.length; i++) {
+        for (let j = 0; j < method.length; j++) {
+            const action = type[i] + '.' + method[j];
 
             CRUD.listen(action, function (data) {
                 setData(null, data);
