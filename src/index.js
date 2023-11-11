@@ -38,7 +38,6 @@ const keys = new Map();
 const forms = new Map();
 const debounce = new Map();
 
-/** */
 async function init(element) {
     if (element && !(element instanceof HTMLCollection) && !Array.isArray(element))
         element = [element]
@@ -49,7 +48,7 @@ async function init(element) {
 
     let dataObjects = new Map();
     for (let i = 0; i < element.length; i++) {
-        if (elements.has(element[i]) || element.tagName === 'FORM')
+        if (elements.has(element[i]) || element[i].tagName === 'FORM')
             continue
 
         let data = await initElement(element[i]);
@@ -161,7 +160,7 @@ function getObject(element) {
         }
     }
 
-    if (data.object || data.object === '') {
+    if (data.object || data.object === '' || data.key || data.key === '') {
         if (!data.array || data.array && !data.array.length) return
         data.type = 'object'
     } else if (data.index || data.index === '') {
@@ -223,6 +222,9 @@ async function read(element, data, dataKey) {
         dataKey = elements.get(element)
     if (!data)
         data = { ...keys.get(dataKey).dataKey.object }
+
+    if (!data.$filter && (!data[data.type] || !data[data.type].length))
+        return
 
     if (!(element instanceof HTMLCollection) && !Array.isArray(element))
         element = [element]
