@@ -335,7 +335,6 @@ async function filterData(element, data, type, key) {
         await checkFilters(element, data, type)
     else if (element.renderValue)
         await element.renderValue(data);
-    // render({ element, data, key: type });
     else if (data)
         element.setValue(data)
 
