@@ -339,6 +339,8 @@ async function filterData(element, data, type, key) {
     else if (data)
         element.setValue(data)
 
+    filter.filters.get(element).index = data.$filter.index
+
     const evt = new CustomEvent('fetchedData', { bubbles: true });
     element.dispatchEvent(evt);
 }
