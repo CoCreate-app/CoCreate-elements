@@ -1,3 +1,16 @@
+## [1.26.2](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.26.1...v1.26.2) (2023-11-12)
+
+
+### Bug Fixes
+
+* await renderValue ([b08c609](https://github.com/CoCreate-app/CoCreate-elements/commit/b08c6093c9f6451ea7d54d20811aff81fd276cec))
+* bump dependencies for latest features ([fdbaa9a](https://github.com/CoCreate-app/CoCreate-elements/commit/fdbaa9adb52b50b9e5db149e0c76472e0ea51d88))
+* crud listeners ([68c014e](https://github.com/CoCreate-app/CoCreate-elements/commit/68c014eaa99eaf5fc2de45c8ebdce58bc36fba97))
+* improve removeNodes ([f34e0cf](https://github.com/CoCreate-app/CoCreate-elements/commit/f34e0cfb43367ddcd2dd2b80422e9ade7d69a7f1))
+* removed dead code ([22cb1fb](https://github.com/CoCreate-app/CoCreate-elements/commit/22cb1fb810a8ff5b4b61d4746cfe23b9cf6adefd))
+* set $filter.index ([c51ffa8](https://github.com/CoCreate-app/CoCreate-elements/commit/c51ffa8aca3182fa4b9b85a76c226852614470b4))
+* typo in handeling form ([71361e2](https://github.com/CoCreate-app/CoCreate-elements/commit/71361e2423231767138dd35cf62e7c443a823130))
+
 ## [1.26.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.26.0...v1.26.1) (2023-11-09)
 
 
