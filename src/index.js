@@ -333,9 +333,9 @@ async function filterData(element, data, type, key) {
 
     if (element.getFilter && data.method && !data.method.endsWith('.read'))
         await checkFilters(element, data, type)
-    else if (element.renderValue)
+    else if (element.renderValue) {
         await element.renderValue(data);
-    else if (data)
+    } else if (data)
         element.setValue(data)
 
     filter.filters.get(element).index = data.$filter.index
@@ -858,6 +858,8 @@ async function remove(element) {
             let key = elements.get(element[i])
             if (key) {
                 keys.get(key).elements.delete(element[i])
+                if (!keys.get(key).elements.size)
+                    keys.delete(key)
             }
             elements.delete(element[i])
             forms.delete(element[i])
@@ -865,13 +867,20 @@ async function remove(element) {
 
             let key = elements.get(element[i])
             if (key) {
+                if (element[i].getFilter)
+                    filter.filters.delete(element[i])
                 keys.get(key).elements.delete(element[i])
                 elements.delete(element[i])
+                if (!keys.get(key).elements.size)
+                    keys.delete(key)
+
                 // debounce.delete(key)
                 let form = element[i].closest('form')
                 form = forms.get(form)
                 if (form) {
                     form.elements.delete(element[i])
+                    if (!form.elements.size)
+                        forms.delete(form)
                 }
             }
         }
@@ -1052,7 +1061,8 @@ Observer.init({
         //     }, 3000);
         //     debounce.set(mutation.target, delayTimer)
         // } else
-        if (mutation.target.hasAttribute('render-clone')) return
+        if (mutation.target.hasAttribute('render-clone'))
+            return
         remove(mutation.target)
     }
 });
