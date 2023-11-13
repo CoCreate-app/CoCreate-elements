@@ -60,8 +60,8 @@ async function init(element) {
 
     if (dataObjects && dataObjects.size > 0) {
         for (let key of dataObjects.keys()) {
-            let { data } = keys.get(key)
-            read(Array.from(element), data, { string: key });
+            let { data, elements } = keys.get(key)
+            read(Array.from(elements.keys()), data, { string: key });
         }
     }
 }
@@ -125,14 +125,10 @@ async function initElement(el) {
 
         el.setFilter = (filter) => {
             data.$filter = filter
-            let dataKey = initDataKey(el, data)
-            read(el, data, dataKey)
+            // let dataKey = initDataKey(el, data)
+            read(el, data)
         }
     }
-
-    const isRead = el.getAttribute('read');
-    if (isRead === 'false')
-        return;
 
     return data;
 }
@@ -223,6 +219,8 @@ async function read(element, data, dataKey) {
     if (!data)
         data = { ...keys.get(dataKey).dataKey.object }
 
+    if (!data.type)
+        return
     if (!data.$filter && (!data[data.type] || !data[data.type].length))
         return
 
@@ -236,8 +234,14 @@ async function read(element, data, dataKey) {
     if (!delay.elements)
         delay.elements = new Map()
 
-    for (let el of element)
-        delay.elements.set(el, true)
+    for (let el of element) {
+        const isRead = el.getAttribute('read');
+        if (isRead !== 'false')
+            delay.elements.set(el, true)
+    }
+
+    if (!delay.elements.size)
+        return
 
     clearTimeout(delay.timer);
     delay.timer = setTimeout(function () {
@@ -256,14 +260,14 @@ async function read(element, data, dataKey) {
 
         data.method = data.type + '.read'
 
-        CRUD.send(data).then((data) => {
+        CRUD.send(data).then((Data) => {
             debounce.delete(dataKey.string)
             let els = Array.from(delay.elements.keys())
             clearTimeout(delay.timer);
             delete delay.elements
             delete delay.timer
 
-            setData(els, data);
+            setData(els, Data);
         })
     }, 500);
 }
@@ -322,10 +326,10 @@ async function filterData(element, data, type, key) {
                         Data.push(doc[key])
                 }
             }
-            if (Data.length === 1) {
-                data = { [key]: Data[0] }
-            } else
-                data = Data
+            // if (Data.length === 1) {
+            //     data = { [key]: Data[0] }
+            // } else
+            data = Data
         } else {
             data = { [key]: data[type][key] }
         }
@@ -338,7 +342,8 @@ async function filterData(element, data, type, key) {
     } else if (data)
         element.setValue(data)
 
-    filter.filters.get(element).index = data.$filter.index
+    if (data.$filter)
+        filter.filters.get(element).index = data.$filter.index
 
     const evt = new CustomEvent('fetchedData', { bubbles: true });
     element.dispatchEvent(evt);
@@ -690,7 +695,7 @@ async function save(element) {
 
     let Data = []
     for (let i = 0; i < data.length; i++) {
-        if (data[i].type === 'object' && !data[i].method) {
+        if (data[i].type === 'object') {
             if (typeof data[i].object === 'string') {
                 if (!data[i]._id)
                     data[i].method = 'object.create'
@@ -882,7 +887,9 @@ async function remove(element) {
                     if (!form.elements.size)
                         forms.delete(form)
                 }
-            }
+            } else
+                elements.delete(element[i])
+
         }
     }
 }
@@ -1073,8 +1080,11 @@ Observer.init({
     attributeName: ['storage', 'database', 'array', 'index', 'object', 'key'],
     // target: selector, // blocks mutations when applied
     callback: function (mutation) {
-        remove(mutation.target)
-        init([mutation.target]);
+        let currentValue = mutation.target.getAttribute(mutation.attributeName)
+        if (currentValue !== mutation.oldValue) {
+            remove(mutation.target)
+            init([mutation.target])
+        }
     }
 });
 
