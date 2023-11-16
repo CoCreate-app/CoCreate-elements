@@ -1,3 +1,10 @@
+## [1.26.3](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.26.2...v1.26.3) (2023-11-16)
+
+
+### Bug Fixes
+
+* element grouping ([0507b00](https://github.com/CoCreate-app/CoCreate-elements/commit/0507b00fa53a2c1ec774885d6da515c48fcc4f85))
+
 ## [1.26.2](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.26.1...v1.26.2) (2023-11-12)
 
 
