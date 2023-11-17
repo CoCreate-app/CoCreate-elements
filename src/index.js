@@ -215,7 +215,7 @@ function initDataKey(element, data) {
 
 async function read(element, data, dataKey) {
     if (!dataKey)
-        dataKey = elements.get(element)
+        dataKey = { string: elements.get(element) }
     if (!data)
         data = { ...keys.get(dataKey).dataKey.object }
 
@@ -534,8 +534,9 @@ async function getData(form) {
     let formObject = forms.get(form)
     for (let type of formObject.types.values()) {
         for (let [element, data] of type.entries()) {
-            if (!element.hasAttribute('key'))
+            if (!element.hasAttribute('key') || element.getAttribute('save') === 'false')
                 continue
+
             if (element.hasAttribute('actions')) {
                 let attribute = element.getAttribute('actions')
                 if (attribute.includes('save', 'delete'))
