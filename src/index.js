@@ -219,7 +219,7 @@ async function read(element, data, dataKey) {
     if (!data)
         data = { ...keys.get(dataKey).dataKey.object }
 
-    if (!data.type)
+    if (!dataKey || !data.type)
         return
     if (!data.$filter && (!data[data.type] || !data[data.type].length))
         return
@@ -783,6 +783,8 @@ function setTypeValue(element, data) {
                 el.setAttribute(data.type, data[data.type].name)
             }
         }
+        setData(Array.from(elements.keys()), data)
+
 
         //     const pass_ids = new Map();
 
