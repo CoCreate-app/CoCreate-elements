@@ -1096,8 +1096,8 @@ Actions.init([
         name: "save",
         endEvent: "saved",
         callback: (action) => {
-            const form = action.element.closest("form");
-            save(form);
+            if (action.form)
+                save(action.form);
         }
     },
     {

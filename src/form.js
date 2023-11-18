@@ -81,8 +81,7 @@ function disableAutoFill(element) {
 /**
 * @param btn
 */
-function reset(btn) {
-    const form = btn.closest("form");
+function reset(form) {
     let formElements = new Map();
     for (let element of form) {
         formElements.set(element, '')
@@ -132,7 +131,8 @@ Action.init({
     name: "reset",
     endEvent: "reset",
     callback: (action) => {
-        reset(action.element);
+        if (action.form)
+            send(action.form);
     }
 });
 
