@@ -1,3 +1,11 @@
+## [1.26.4](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.26.3...v1.26.4) (2023-11-18)
+
+
+### Bug Fixes
+
+* dataKey.string ([57cc534](https://github.com/CoCreate-app/CoCreate-elements/commit/57cc5344e7ba3d66e949c9f6999aaf90d066d2d3))
+* return if no dataKey ([ace669b](https://github.com/CoCreate-app/CoCreate-elements/commit/ace669b19c59f37d1a0a2e62043171fd0b0999d2))
+
 ## [1.26.3](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.26.2...v1.26.3) (2023-11-16)
 
 
