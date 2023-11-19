@@ -1,3 +1,15 @@
+# [1.27.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.26.4...v1.27.0) (2023-11-19)
+
+
+### Bug Fixes
+
+* use action.form ([e1dbf09](https://github.com/CoCreate-app/CoCreate-elements/commit/e1dbf0972d52733225ba9caccd2a72f045e25dec))
+
+
+### Features
+
+* update dependecies for th latest features and bug fixes ([69f772b](https://github.com/CoCreate-app/CoCreate-elements/commit/69f772bec35ea1a2803e98eb983cb5261eff8673))
+
 ## [1.26.4](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.26.3...v1.26.4) (2023-11-18)
 
 
