@@ -505,24 +505,32 @@ function getDataKeys(data) {
                 }
                 if (Array.isArray(sortedKey.data[key]) && Array.isArray(data[key])) {
                     // if key is object check _id
-                    const matches = sortedKey.data[key].some(value => {
-                        if (key === 'object') {
-                            return data[key].some(obj => {
-                                if (data.array.includes('users'))
-                                    console.log('users')
-                                if (data.array.includes('questions'))
-                                    console.log('questions')
+                    if (key === 'object' && sortedKey.data.$filter)
+                        hasMatch = true
+                    else {
+                        const matches = sortedKey.data[key].some(value => {
+                            if (key === 'object') {
+                                return data[key].some(obj => {
+                                    if (data.array.includes('users'))
+                                        console.log('users')
+                                    if (data.array.includes('questions'))
+                                        console.log('questions')
 
-                                return obj._id === value._id
-                            });
-                        } else {
-                            return data[key].includes(value)
+                                    return obj._id === value._id
+                                });
+                            } else {
+                                return data[key].includes(value)
+                            }
+                        });
+
+                        if (!matches) {
+                            hasMatch = false;
+                            break;
                         }
-                    });
-                    if (!matches) {
-                        hasMatch = false;
-                        break;
+
                     }
+
+
                 } else if (sortedKey.data[key] !== data[key]) {
                     hasMatch = false;
                     break;
