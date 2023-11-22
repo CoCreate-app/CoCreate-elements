@@ -324,7 +324,8 @@ async function filterData(element, data, type, key) {
                         Data.push(...doc[key])
                     else
                         Data.push(doc[key])
-                }
+                } else
+                    return
             }
             // if (Data.length === 1) {
             //     data = { [key]: Data[0] }
@@ -486,6 +487,7 @@ function getDataElements(data) {
     return element
 }
 
+// TODO: Correctly check for matches 
 function getDataKeys(data) {
     const matchingKeyStrings = [];
     const targetKeys = ["type", "storage", "database", "array", "index", "object", '$filter'];
@@ -494,7 +496,7 @@ function getDataKeys(data) {
         let hasMatch = true;
 
         for (const key of targetKeys) {
-            if (!data.$filter && (data.type === key || key === '$filter'))
+            if (!data.$filter && key === '$filter' && sortedKey.data.hasOwnProperty(key))
                 hasMatch = true
             else if (data.hasOwnProperty(key)) {
                 if (!sortedKey.data.hasOwnProperty(key)) {
@@ -505,7 +507,14 @@ function getDataKeys(data) {
                     // if key is object check _id
                     const matches = sortedKey.data[key].some(value => {
                         if (key === 'object') {
-                            return data[key].some(obj => obj._id === value._id);
+                            return data[key].some(obj => {
+                                if (data.array.includes('users'))
+                                    console.log('users')
+                                if (data.array.includes('questions'))
+                                    console.log('questions')
+
+                                return obj._id === value._id
+                            });
                         } else {
                             return data[key].includes(value)
                         }
