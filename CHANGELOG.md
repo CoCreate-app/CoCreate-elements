@@ -1,3 +1,10 @@
+## [1.27.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.27.0...v1.27.1) (2023-11-22)
+
+
+### Bug Fixes
+
+* condistions for matching elements and updating ([d7e7a39](https://github.com/CoCreate-app/CoCreate-elements/commit/d7e7a3920f9ccb1693b17f177a2734e3926a7e35))
+
 # [1.27.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.26.4...v1.27.0) (2023-11-19)
 
 
