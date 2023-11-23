@@ -38,6 +38,20 @@ const keys = new Map();
 const forms = new Map();
 const debounce = new Map();
 
+/**
+ * Initializes elements with specific CRUD attributes. If no parameter is provided, it queries and initializes all elements 
+ * that have certain CRUD-related attributes. It can also initialize a single element or an array of elements.
+ * 
+ * Attributes used for initialization are:
+ * - storage: Specifies the storage mechanism.
+ * - database: Indicates the database to interact with.
+ * - array: Defines the array to be used.
+ * - render-json: Determines how JSON data is rendered.
+ * 
+ * @param {(Element|Element[])} [elements] - Optional. A single element or an array of elements to initialize. 
+ *                                           If omitted, the function queries and initializes all elements containing 
+ *                                           any of these CRUD attributes: "storage", "database", "array", "render-json".
+ */
 async function init(element) {
     if (element && !(element instanceof HTMLCollection) && !Array.isArray(element))
         element = [element]

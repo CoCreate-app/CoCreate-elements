@@ -3,14 +3,19 @@ import { getAttributeNames, ObjectId } from '@cocreate/utils';
 import Action from '@cocreate/actions';
 import '@cocreate/element-prototype';
 
+
 /**
-* @param elements
-*/
+ * Initializes form elements. If no parameter is provided, or null is passed, it queries and initializes all form elements. 
+ * It can also initialize a single form element or an array of form elements.
+ * 
+ * @param {(Element|Element[]|null)} [elements] - Optional. A single form element, an array of form elements, or null.
+ *     - If null or omitted, the function queries and initializes all form elements.
+ *     - If a single form element is provided, it initializes that element.
+ *     - If an array of form elements is provided, each element in the array is initialized.
+ */
 function init(elements) {
-    // Returns an array of elements.
     if (!elements)
         elements = document.querySelectorAll('form');
-    // If elements is an array of elements returns an array of elements.
     else if (!Array.isArray(elements))
         elements = [elements]
     for (let element of elements) {
@@ -79,7 +84,7 @@ function disableAutoFill(element) {
 }
 
 /**
-* @param btn
+* @param form
 */
 function reset(form) {
     let formElements = new Map();
