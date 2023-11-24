@@ -818,51 +818,51 @@ function setTypeValue(element, data) {
         setData(Array.from(elements.keys()), data)
 
 
-        //     const pass_ids = new Map();
+        //     const state_ids = new Map();
 
-        //     let pass_id = form.getAttribute('pass_id');
-        //     if (pass_id) {
-        //         // Set pass_ids to pass_ids if array is not set
+        //     let state_id = form.getAttribute('state_id');
+        //     if (state_id) {
+        //         // Set state_ids to state_ids if array is not set
         //         if (form.getAttribute('array') == array)
-        //             pass_ids.set(pass_id, '');
+        //             state_ids.set(state_id, '');
         //     }
 
         //     let objectId = el.getAttribute('object');
         //     let key = el.getAttribute('key')
-        //     // set object and pass_id attributes to the object id if the object id is pending
+        //     // set object and state_id attributes to the object id if the object id is pending
         //     if (key && (objectId == '' || objectId == 'pending')) {
         //         el.setAttribute('object', id);
         //         // Set the id attribute of the element
         //         if (key == '_id')
         //             el.setValue(id)
-        //         let pass_id = el.getAttribute('pass_id');
-        //         // Set the pass id to the pass_ids.
-        //         if (pass_id) {
-        //             pass_ids.set(pass_id, '');
+        //         let state_id = el.getAttribute('state_id');
+        //         // Set the state id to the state_ids.
+        //         if (state_id) {
+        //             state_ids.set(state_id, '');
         //         }
 
-        //         if (el.hasAttribute('pass-object')) {
-        //             let passObjectId = el.getAttribute('pass-object');
-        //             // Set the pass object id if not set.
-        //             if (passObjectId == '') {
-        //                 el.setAttribute('pass-object', id);
-        //                 let pass_id = el.getAttribute('pass_id');
-        //                 // Set the pass id to the pass_ids.
-        //                 if (pass_id) {
-        //                     pass_ids.set(pass_id, '');
+        //         if (el.hasAttribute('state-object')) {
+        //             let stateObjectId = el.getAttribute('state-object');
+        //             // Set the state object id if not set.
+        //             if (stateObjectId == '') {
+        //                 el.setAttribute('state-object', id);
+        //                 let state_id = el.getAttribute('state_id');
+        //                 // Set the state id to the state_ids.
+        //                 if (state_id) {
+        //                     state_ids.set(state_id, '');
         //                 }
         //             }
         //         }
 
-        //         // Set the object attribute of all pass_ids to the object attribute of all pass_ids
-        //         if (pass_ids.size > 0) {
-        //             for (let key of pass_ids.keys()) {
-        //                 let passEls = document.querySelectorAll(`[pass_id="${key}"]`)
-        //                 for (let passEl of passEls) {
-        //                     // if (passEl.getAttribute('array') == array){
-        //                     // Set the object id attribute to the passEl s object if it is not set.
-        //                     if (passEl.getAttribute('object') == '') {
-        //                         passEl.setAttribute('object', id);
+        //         // Set the object attribute of all state_ids to the object attribute of all state_ids
+        //         if (state_ids.size > 0) {
+        //             for (let key of state_ids.keys()) {
+        //                 let stateEls = document.querySelectorAll(`[state_id="${key}"]`)
+        //                 for (let stateEl of stateEls) {
+        //                     // if (stateEl.getAttribute('array') == array){
+        //                     // Set the object id attribute to the stateEl s object if it is not set.
+        //                     if (stateEl.getAttribute('object') == '') {
+        //                         stateEl.setAttribute('object', id);
         //                     }
         //                     // }
         //                 }
