@@ -1,3 +1,17 @@
+# [1.28.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.27.1...v1.28.0) (2023-11-25)
+
+
+### Bug Fixes
+
+* conditions to update elements from broadcasted incoming data ([756b798](https://github.com/CoCreate-app/CoCreate-elements/commit/756b7984b6e46a6d03214a88fca130e4df02aaef))
+* pass attributes renamed to state ([83c741e](https://github.com/CoCreate-app/CoCreate-elements/commit/83c741e6cdd88635957ff3d16193a4e95f8999d5))
+* update nav, edit button and css path ([ac50546](https://github.com/CoCreate-app/CoCreate-elements/commit/ac50546b7deccd3adbb2a6b224b02a3b35cec671))
+
+
+### Features
+
+* upgrade dependencies for latest features and fixes ([baebd69](https://github.com/CoCreate-app/CoCreate-elements/commit/baebd69e9db0831a1060d8e03d96bb3f123d8c3e))
+
 ## [1.27.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.27.0...v1.27.1) (2023-11-22)
 
 
