@@ -1,3 +1,15 @@
+# [1.29.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.28.0...v1.29.0) (2023-11-25)
+
+
+### Bug Fixes
+
+* update licensing details ([9f9b839](https://github.com/CoCreate-app/CoCreate-elements/commit/9f9b8390e751604de9f7e361e15e47e2a72093a6))
+
+
+### Features
+
+* upgrade dependencies for latest features and fixes ([83cbf98](https://github.com/CoCreate-app/CoCreate-elements/commit/83cbf9831f526b9c4c436d9502d432836b44d922))
+
 # [1.28.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.27.1...v1.28.0) (2023-11-25)
 
 
