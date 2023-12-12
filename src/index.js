@@ -333,6 +333,12 @@ async function filterData(element, data, type, key) {
         if (Array.isArray(data[type])) {
             let Data = []
             for (let doc of data[type]) {
+                // TODO: should have been handled by getDataElements()
+                if (type === 'object') {
+                    let _id = element.getAttribute('object')
+                    if (_id && doc._id !== _id)
+                        return
+                }
                 if (doc[key]) {
                     if (Array.isArray(doc[key]))
                         Data.push(...doc[key])
@@ -602,13 +608,20 @@ async function getData(form) {
                     }
                 }
 
-
                 if (Data.type = 'object') {
                     if (typeof Data[Data.type] === 'string')
                         if (Data.key == '{}')
                             Data[Data.type] = { _id: Data[Data.type], ...value }
                         else
                             Data[Data.type] = { _id: Data[Data.type], [Data.key]: value }
+                    else if (Array.isArray(Data[Data.type]))
+                        if (Data.key == '{}')
+                            Data[Data.type][0] = { ...Data[Data.type][0], ...value }
+                        else {
+                            Data[Data.type][0][Data.key] = value
+                            if (!Data[Data.type][0]._id)
+                                Data.method = Data.type + '.create'
+                        }
                     else if (typeof Data[Data.type] === 'object')
                         if (Data.key == '{}')
                             Data[Data.type] = { ...Data[Data.type], ...value }
