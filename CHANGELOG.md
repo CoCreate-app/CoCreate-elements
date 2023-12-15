@@ -1,3 +1,10 @@
+## [1.29.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.29.0...v1.29.1) (2023-12-15)
+
+
+### Bug Fixes
+
+* handle arrays ([7ea1e12](https://github.com/CoCreate-app/CoCreate-elements/commit/7ea1e12d89d95aae1dca23b38d80b899fa4cddd6))
+
 # [1.29.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.28.0...v1.29.0) (2023-11-25)
 
 
