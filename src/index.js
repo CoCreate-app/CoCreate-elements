@@ -27,7 +27,7 @@ import Actions from '@cocreate/actions';
 import CRUD from '@cocreate/crud-client';
 import { dotNotationToObject, queryElements, queryData, sortData, getAttributes, getAttributeNames, checkValue } from '@cocreate/utils';
 import filter from '@cocreate/filter';
-import render from '@cocreate/render';
+import { render, renderValue, renderedNodes } from '@cocreate/render';
 import '@cocreate/element-prototype';
 import './fetchSrc';
 import { reset } from './form'
@@ -86,13 +86,13 @@ async function initElement(el) {
         // if found add the node as an element, if the element has crud attributes also add as the element
         for (let attribute of el.attributes) {
             if (attribute.match(/{{(.*?)}}/)) {
-                let value = render.renderValue(attribute, undefined, attribute.value)
+                let value = renderValue(attribute, undefined, attribute.value)
                 if (value)
                     attribute.value = value
             }
         }
         if (el.innerHTML.match(/{{(.*?)}}/)) {
-            let value = render.renderValue(el, undefined, el.innerHTML)
+            let value = renderValue(el, undefined, el.innerHTML)
             if (value)
                 attribute.value = value
         }
@@ -964,7 +964,7 @@ Observer.init({
         clearTimeout(delayTimer);
         debounce.delete(mutation.target)
 
-        let renderedNode = render.renderedNodes.get(mutation.target)
+        let renderedNode = renderedNodes.get(mutation.target)
         if (!renderedNode) return
 
         if (!mutation.movedFrom) return
@@ -1071,7 +1071,7 @@ function dndNewData(element, data) {
 
     let keyPath, clonesMap, clones, index
 
-    let renderedNode = render.renderedNodes.get(element)
+    let renderedNode = renderedNodes.get(element)
     if (renderedNode) {
         keyPath = renderedNode.keyPath
         clonesMap = renderedNode.template.clones
