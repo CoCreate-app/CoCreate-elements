@@ -441,6 +441,8 @@ function checkIndex(element, data, Data, newData, type, filter) {
                 data.$filter.create = true
                 if (filter && filter.sort)
                     newData.isNewData = true
+                else
+                    index = Data.length
                 Data.push(newData)
             }
         } else {
@@ -531,11 +533,6 @@ function getDataKeys(data) {
                         const matches = sortedKey.data[key].some(value => {
                             if (key === 'object') {
                                 return data[key].some(obj => {
-                                    if (data.array.includes('users'))
-                                        console.log('users')
-                                    if (data.array.includes('questions'))
-                                        console.log('questions')
-
                                     return obj._id === value._id
                                 });
                             } else {
@@ -950,6 +947,8 @@ function initSocket() {
             const action = type[i] + '.' + method[j];
 
             CRUD.listen(action, function (data) {
+                if (data.resolved && data.status === 'received' && CRUD.socket.clientId === data.clientId)
+                    return
                 setData(null, data);
             });
         }
