@@ -22,6 +22,11 @@ function init(elements) {
         runObjectId(element);
         setAttribute(element);
         disableAutoFill(element);
+        element.addEventListener('submit', function (event) {
+            if (!element.hasAttribute('action')) {
+                event.preventDefault();
+            }
+        });
     }
 }
 
