@@ -1,3 +1,15 @@
+# [1.30.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.29.1...v1.30.0) (2023-12-18)
+
+
+### Bug Fixes
+
+* spread render import ([19e7abd](https://github.com/CoCreate-app/CoCreate-elements/commit/19e7abdb4ebcccfd05a79d17ad4c8681546b4ce5))
+
+
+### Features
+
+* handle resolved property and set index for create ([5e0d92d](https://github.com/CoCreate-app/CoCreate-elements/commit/5e0d92d37f26e2916f5c2b748d8c571f9814198a))
+
 ## [1.29.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.29.0...v1.29.1) (2023-12-15)
 
 
