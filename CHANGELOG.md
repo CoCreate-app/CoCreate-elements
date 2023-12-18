@@ -1,3 +1,11 @@
+## [1.31.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.31.0...v1.31.1) (2023-12-18)
+
+
+### Bug Fixes
+
+* if no elements retiurned do not fire fetchedData event ([44386d3](https://github.com/CoCreate-app/CoCreate-elements/commit/44386d34a1029f27e0af3caa7ec10813c5085062))
+* improved data.$filter handling ([3ffaa6b](https://github.com/CoCreate-app/CoCreate-elements/commit/3ffaa6b9cc9a5e36b0fe5a9adcf58d99d7184920))
+
 # [1.31.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.30.0...v1.31.0) (2023-12-18)
 
 
