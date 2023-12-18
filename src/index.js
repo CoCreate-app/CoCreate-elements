@@ -368,6 +368,9 @@ async function filterData(element, data, type, key) {
         if (filterElement)
             filterElement.index = data.$filter.index
     }
+
+    if (!data[type] || !Array.isArray(data[type]) || !data[type].length)
+        return
     const evt = new CustomEvent('fetchedData', { bubbles: true });
     element.dispatchEvent(evt);
 }
