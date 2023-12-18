@@ -363,9 +363,11 @@ async function filterData(element, data, type, key) {
     } else if (data)
         element.setValue(data)
 
-    if (data.$filter)
-        filter.filters.get(element).index = data.$filter.index
-
+    if (data.$filter) {
+        let filterElement = filter.filters.get(element)
+        if (filterElement)
+            filterElement.index = data.$filter.index
+    }
     const evt = new CustomEvent('fetchedData', { bubbles: true });
     element.dispatchEvent(evt);
 }
