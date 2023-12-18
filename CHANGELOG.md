@@ -1,3 +1,10 @@
+# [1.31.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.30.0...v1.31.0) (2023-12-18)
+
+
+### Features
+
+* preventSubmit if action is not defined ([e10e43b](https://github.com/CoCreate-app/CoCreate-elements/commit/e10e43b5bd7fc4292c036d0890425dc07126b97d))
+
 # [1.30.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.29.1...v1.30.0) (2023-12-18)
 
 
