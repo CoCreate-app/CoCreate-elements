@@ -300,6 +300,23 @@ async function setData(element, data) {
     } else if (type == 'key')
         type = 'object'
 
+    if (data.$filter && data.$filter.query) {
+        let mergedValues = [];
+
+        data.$filter.query.forEach(obj => {
+            if (obj.operator === '$in') {
+                mergedValues = [...mergedValues, ...obj.value];
+            }
+        });
+
+        if (mergedValues.length) {
+            const sortedType = mergedValues
+                .map(name => data[type].find(career => career.name === name))
+                .filter(career => career !== undefined);
+            data[type] = sortedType
+        }
+    }
+
     for (let el of element) {
         // if rendered in server side skip 
         if (el.hasAttribute('rendered'))
