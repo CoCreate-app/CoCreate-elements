@@ -1,3 +1,10 @@
+# [1.32.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.31.1...v1.32.0) (2023-12-20)
+
+
+### Features
+
+* sort data by filter operator $in ([7fdb3e0](https://github.com/CoCreate-app/CoCreate-elements/commit/7fdb3e0b0e78077fa0a3e4d69c09aa73e9733f41))
+
 ## [1.31.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.31.0...v1.31.1) (2023-12-18)
 
 
