@@ -1,3 +1,10 @@
+# [1.33.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.32.0...v1.33.0) (2024-01-08)
+
+
+### Features
+
+* bumped CoCreate dependencies to their latest versions ([e8679cb](https://github.com/CoCreate-app/CoCreate-elements/commit/e8679cb986723650f65b427b0e465874fefb785b))
+
 # [1.32.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.31.1...v1.32.0) (2023-12-20)
 
 
