@@ -81,34 +81,6 @@ async function init(element) {
 }
 
 async function initElement(el) {
-    if (el.hasAttribute('render-json')) {
-        // TODO find the json template in the text or attributes
-        // if found add the node as an element, if the element has crud attributes also add as the element
-        for (let attribute of el.attributes) {
-            if (attribute.match(/{{(.*?)}}/)) {
-                let value = renderValue(attribute, undefined, attribute.value)
-                if (value)
-                    attribute.value = value
-            }
-        }
-        if (el.innerHTML.match(/{{(.*?)}}/)) {
-            let value = renderValue(el, undefined, el.innerHTML)
-            if (value)
-                attribute.value = value
-        }
-
-        // if (el.textContent.match(/{{(.*?)}}/)) {
-        //     let value = renderValue(el, undefined, el.textContent)
-        //     if (value)
-        //         attribute.value = value
-        // }
-
-        // let Data = JSON.parse(match[1]);
-        // Data.method = object.read
-        // CRUD.send(Data)
-
-    }
-
     // if (el.closest('.template')) return;
 
     let data = getObject(el);
@@ -321,6 +293,34 @@ async function setData(element, data) {
         // if rendered in server side skip 
         if (el.hasAttribute('rendered'))
             return el.removeAttribute('rendered');
+        if (el.hasAttribute('render-json')) {
+            // TODO find the json template in the text or attributes
+            // if found add the node as an element, if the element has crud attributes also add as the element
+            // for (let attribute of el.attributes) {
+            //     if (attribute.value.match(/{{(.*?)}}/)) {
+            //         let value = await renderValue(attribute, data[type][0], attribute.value)
+            //         if (value)
+            //             attribute.value = value
+            //     }
+            // }
+            // if (el.innerHTML.match(/{{(.*?)}}/)) {
+            //     let value = renderValue(el, data[type], el.innerHTML)
+            //     if (value)
+            //         el.innerHTML = value
+            // }
+
+            // if (el.textContent.match(/{{(.*?)}}/)) {
+            //     let value = renderValue(el, undefined, el.textContent)
+            //     if (value)
+            //         attribute.value = value
+            // }
+
+            // let Data = JSON.parse(match[1]);
+            // Data.method = object.read
+            // CRUD.send(Data)
+            console.log('render-json', '')
+
+        }
 
         if (!data[type])
             continue;
