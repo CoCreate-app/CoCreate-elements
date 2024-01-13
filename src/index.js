@@ -258,6 +258,31 @@ async function read(element, data, dataKey) {
     }, 500);
 }
 
+function get$in(query, mergedValues = []) {
+    for (let key of Object.keys(query)) {
+        if (key === '$and' || key === '$or' || key === '$nor') {
+            for (let i = 0; i < query[key].length; i++) {
+                sort$in(query[key][i], mergedValues)
+            }
+        } else if (typeof query[key] === 'object' && !Array.isArray(query[key])) {
+            if (query[key].$in)
+                mergedValues = [...mergedValues, ...query[key].$in];
+        }
+    }
+    return mergedValues
+}
+
+function sort$in(data, query) {
+    let mergedValues = get$in(query);
+
+    if (mergedValues.length) {
+        const sorted = mergedValues
+            .map(name => data.find(career => career.name === name))
+            .filter(career => career !== undefined);
+        return sorted
+    }
+}
+
 async function setData(element, data) {
     if (!element) {
         element = getDataElements(data)
@@ -273,20 +298,9 @@ async function setData(element, data) {
         type = 'object'
 
     if (data.$filter && data.$filter.query) {
-        let mergedValues = [];
-
-        data.$filter.query.forEach(obj => {
-            if (obj.operator === '$in') {
-                mergedValues = [...mergedValues, ...obj.value];
-            }
-        });
-
-        if (mergedValues.length) {
-            const sortedType = mergedValues
-                .map(name => data[type].find(career => career.name === name))
-                .filter(career => career !== undefined);
-            data[type] = sortedType
-        }
+        let sortedData = sort$in(data[type], data.$filter.query)
+        if (sortedData)
+            data[type] = sortedData
     }
 
     for (let el of element) {
@@ -1068,14 +1082,8 @@ async function dndCrudData(element, parent, operator) {
 
 function dndNewData(element, data) {
     let Data = {}
-    let query = data.$filter.query
-    if (query && query.length) {
-        for (let i = 0; i < query.length; i++) {
-            if (query.operator === "$eq")
-                Data[query.key] = query.value
-            if (query.operator === "$ne")
-                Data[query.key] = query.value
-        }
+    if (data.$filter.query) {
+        dndNewDataUpdate(Data, data.$filter.query)
     }
 
     let sortName, sortDirection
@@ -1103,6 +1111,23 @@ function dndNewData(element, data) {
 
     return { Data, sortName, sortDirection, keyPath, clones, index }
 
+}
+
+function dndNewDataUpdate(Data, query) {
+    for (let key of Object.keys(query)) {
+        if (key === '$and' || key === '$or' || key === '$nor') {
+            for (let i = 0; i < query[key].length; i++) {
+                dndNewDataUpdate(Data, query[key][i])
+            }
+        } else if (typeof query[key] === 'object' && !Array.isArray(query[key])) {
+            if (query[key].$eq)
+                Data[key] = query[key].$eq
+            if (query[key].$ne)
+                Data[key] = query[key].$ne
+        } else {
+            Data[key] = query[key]
+        }
+    }
 }
 
 function dndCrudSend(data, crudType) {
