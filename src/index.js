@@ -107,7 +107,7 @@ async function initElement(el) {
     // if (el.getFilter || attributes.some(attr => el.hasAttribute(attr))) {
     await filter.init()
     if (el.getFilter) {
-        data.$filter = el.getFilter();
+        data.$filter = await el.getFilter();
 
         el.setFilter = (filter) => {
             data.$filter = filter
@@ -359,8 +359,17 @@ async function setData(element, data) {
 }
 
 async function filterData(element, data, type, key) {
-    if (key) {
+    let operator = '', value
+
+    if (key && key !== '$length') {
         if (!data || !type) return
+
+        if (key.startsWith('$')) {
+            operator = key.split('.')[0] || ''
+        }
+
+        let property = key.replace(operator + '.', '')
+
         if (Array.isArray(data[type])) {
             let Data = []
             for (let doc of data[type]) {
@@ -370,27 +379,37 @@ async function filterData(element, data, type, key) {
                     if (_id && doc._id !== _id)
                         return
                 }
-                if (doc[key]) {
-                    if (Array.isArray(doc[key]))
-                        Data.push(...doc[key])
+                if (doc[property]) {
+                    if (Array.isArray(doc[property]))
+                        Data.push(...doc[property])
                     else
-                        Data.push(doc[key])
+                        Data.push(doc[property])
                 } else
                     return
             }
             // if (Data.length === 1) {
-            //     data = { [key]: Data[0] }
+            //     data = { [property]: Data[0] }
             // } else
-            data = Data
+            if (!operator)
+                data = Data
+            else if (operator === '$sum') {
+                value = Data.reduce((accumulator, currentValue) => {
+                    return accumulator + currentValue;
+                }, 0);
+            }
         } else {
-            data = { [key]: data[type][key] }
+            data = { [property]: data[type][property] }
         }
     }
 
-    if (element.getFilter && data.method && !data.method.endsWith('.read'))
+    if (operator) {
+        element.setValue(value);
+    } else if (element.getFilter && data.method && !data.method.endsWith('.read'))
         await checkFilters(element, data, type)
     else if (element.renderValue) {
         await element.renderValue(data);
+    } else if (key === '$length') {
+        element.setValue(data[type].length);
     } else if (data)
         element.setValue(data)
 
@@ -402,6 +421,7 @@ async function filterData(element, data, type, key) {
 
     if (!data[type] || !Array.isArray(data[type]) || !data[type].length)
         return
+
     const evt = new CustomEvent('fetchedData', { bubbles: true });
     element.dispatchEvent(evt);
 }
@@ -417,7 +437,7 @@ async function checkFilters(element, data, type) {
     } else
         newData = data
 
-    let filter = element.getFilter()
+    let filter = await element.getFilter()
     if (filter && filter.query) {
         for (let i = 0; i < newData.length; i++) {
             let isMatch = queryData(newData[i], filter.query)
