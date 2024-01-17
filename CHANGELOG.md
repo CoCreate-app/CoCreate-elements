@@ -1,3 +1,12 @@
+## [1.33.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.33.0...v1.33.1) (2024-01-17)
+
+
+### Bug Fixes
+
+* improved filter handling ([a207811](https://github.com/CoCreate-app/CoCreate-elements/commit/a207811f82d0ce08d0026e64e4fff8dbaa358327))
+* relocated render-json to setData ([55b65cf](https://github.com/CoCreate-app/CoCreate-elements/commit/55b65cfd3173672a8f2d67c8d6baf681e0ff6c72))
+* update to support new query system ([e005926](https://github.com/CoCreate-app/CoCreate-elements/commit/e005926fd2a9da6f50cb8951dff38cdf35e715a4))
+
 # [1.33.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.32.0...v1.33.0) (2024-01-08)
 
 
