@@ -642,6 +642,8 @@ async function getData(form) {
                 if (Data.type === 'object') {
                     if (typeof Data.object === 'string')
                         Data.object = { _id: Data.object }
+                    else if (!Data.object)
+                        Data.object = {}
 
                     if (Data.key)
                         Data.object[Data.key] = value
