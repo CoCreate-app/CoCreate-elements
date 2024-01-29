@@ -299,7 +299,7 @@ async function setData(element, data) {
 
     if (data.$filter && data.$filter.query) {
         let sortedData = sort$in(data[type], data.$filter.query)
-        if (sortedData)
+        if (sortedData && sortedData.length)
             data[type] = sortedData
     }
 
@@ -336,7 +336,7 @@ async function setData(element, data) {
 
         }
 
-        if (!data[type])
+        if (!data[type] || !data[type].length)
             continue;
 
         let action = el.getAttribute('actions')
