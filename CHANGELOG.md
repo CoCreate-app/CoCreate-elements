@@ -1,3 +1,11 @@
+## [1.33.2](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.33.1...v1.33.2) (2024-01-30)
+
+
+### Bug Fixes
+
+* !Data.object ([a793613](https://github.com/CoCreate-app/CoCreate-elements/commit/a7936131297f734e39f8a213c09133014f976a5e))
+* data[type]replaced by sortedData if length > 0 ([ff399cb](https://github.com/CoCreate-app/CoCreate-elements/commit/ff399cb6e8ebb77a0a986ed7bc7fe67fc01c2a98))
+
 ## [1.33.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.33.0...v1.33.1) (2024-01-17)
 
 
