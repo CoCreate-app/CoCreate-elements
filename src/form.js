@@ -66,7 +66,7 @@ function setAttribute(form) {
             for (let el of elements) {
                 // Set the value of the attribute.
                 if (!el.getAttribute(attribute.name)) {
-                    el.setAttribute(attribute.name, attribute.value);
+                    el.setAttribute(attribute.name, form.getAttribute(attribute.name));
                 }
             }
         }
