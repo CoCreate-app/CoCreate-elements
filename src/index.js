@@ -62,7 +62,7 @@ async function init(element) {
 
     let dataObjects = new Map();
     for (let i = 0; i < element.length; i++) {
-        if (elements.has(element[i]) || element[i].tagName === 'FORM')
+        if (elements.has(element[i]) || element[i].tagName === 'FORM' || element[i].getAttribute('crud') === 'false')
             continue
 
         let data = await initElement(element[i]);
