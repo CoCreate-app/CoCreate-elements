@@ -346,14 +346,25 @@ async function setData(element, data) {
         if (el.getFilter || el.renderValue)
             await filterData(el, data, type, key)
         else {
-            let value = CRUD.getValueFromObject(data[type][0], key);
             if (key) {
+                let value
+                if (key.includes('$length')) {
+                    value = CRUD.getValueFromObject(data[type][0], key.replace(/\.\$length$/, ''))
+                    if (value)
+                        value = value.length
+                    else
+                        value = 0
+                } else {
+                    value = CRUD.getValueFromObject(data[type][0], key)
+                }
+
                 if (!data[type].length) continue;
                 if (isRead == "false" || isCrdt == "true") continue;
                 if (isListen == "false" && !data.method.endsWith('.read')) continue;
+                // TODO: object.update data returned from server will not include $operator
+                el.setValue(value);
+
             }
-            // TODO: object.update data returned from server will not include $operator
-            el.setValue(value);
         }
     }
 }
@@ -361,7 +372,8 @@ async function setData(element, data) {
 async function filterData(element, data, type, key) {
     let operator = '', value
 
-    if (key && key !== '$length') {
+    // if (key && key !== '$length') {
+    if (key && !key.includes('$length')) {
         if (!data || !type) return
 
         if (key.startsWith('$')) {
@@ -410,6 +422,9 @@ async function filterData(element, data, type, key) {
         await element.renderValue(data);
     } else if (key === '$length') {
         element.setValue(data[type].length);
+    } else if (key.includes('$length')) {
+        let value = CRUD.getValueFromObject(data[type][0], key.replace(/\.\$length$/, ''))
+        element.setValue(value.length);
     } else if (data)
         element.setValue(data)
 
