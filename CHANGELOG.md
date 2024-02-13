@@ -1,3 +1,18 @@
+# [1.34.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.33.2...v1.34.0) (2024-02-13)
+
+
+### Bug Fixes
+
+* add audio to src ignore ([80ce64c](https://github.com/CoCreate-app/CoCreate-elements/commit/80ce64cae35a0e6d0932beccebbecc69babb143a))
+* crud="false" ([6c92490](https://github.com/CoCreate-app/CoCreate-elements/commit/6c92490ab389a1813e10cfd1207b2061b8ef0ce1))
+* getValue using getAttribute() in order to handle operators ([798227d](https://github.com/CoCreate-app/CoCreate-elements/commit/798227d28efc1613b2ce4b90012131e990c8ab60))
+
+
+### Features
+
+* $length operator for for key ([777cf3b](https://github.com/CoCreate-app/CoCreate-elements/commit/777cf3bd4ee2ac8031d890d1df21879df1aa22e6))
+* stream="" attribute dynimaclly handles streaming ([67d0bbb](https://github.com/CoCreate-app/CoCreate-elements/commit/67d0bbba0c119b86ee095a78dc093c047758b91a))
+
 ## [1.33.2](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.33.1...v1.33.2) (2024-01-30)
 
 
