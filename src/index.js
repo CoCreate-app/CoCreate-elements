@@ -94,7 +94,7 @@ async function initElement(el) {
             || el.contenteditable) {
             el.addEventListener('input', function (e) {
                 const { object, key, isRealtime, isCrdt } = getAttributes(el);
-                if (isRealtime == "false" || key == "_id") return;
+                if (!isRealtime || isRealtime === "false" || key === "_id") return;
                 if (isCrdt == "true" && object && object !== 'pending') return
                 if (e.detail && e.detail.skip == true) return;
                 if (data.type !== 'object' && data[data.type] === 'pending') return
@@ -422,7 +422,7 @@ async function filterData(element, data, type, key) {
         await element.renderValue(data);
     } else if (key === '$length') {
         element.setValue(data[type].length);
-    } else if (key.includes('$length')) {
+    } else if (key && key.includes('$length')) {
         let value = CRUD.getValueFromObject(data[type][0], key.replace(/\.\$length$/, ''))
         element.setValue(value.length);
     } else if (data)
