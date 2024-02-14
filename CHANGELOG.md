@@ -1,3 +1,10 @@
+## [1.34.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.34.0...v1.34.1) (2024-02-14)
+
+
+### Bug Fixes
+
+* realtime defaults to false ([83d2787](https://github.com/CoCreate-app/CoCreate-elements/commit/83d2787da3e2d3386f379c692852d10f8b15f16e))
+
 # [1.34.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.33.2...v1.34.0) (2024-02-13)
 
 
