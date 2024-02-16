@@ -756,7 +756,7 @@ async function save(element) {
     if (!element) return;
     let data, value
     let upsert = element.getAttribute('upsert')
-    if (upsert !== undefined || upsert !== null)
+    if (upsert && upsert !== 'false')
         upsert = true
     if (element.tagName === "FORM") {
         data = await element.getData()
