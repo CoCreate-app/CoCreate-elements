@@ -1,3 +1,10 @@
+## [1.34.2](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.34.1...v1.34.2) (2024-02-17)
+
+
+### Bug Fixes
+
+* handling of upset as it is now defaulting to false ([5c1099e](https://github.com/CoCreate-app/CoCreate-elements/commit/5c1099e1b9a21734006b7f61b93865385d701e49))
+
 ## [1.34.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.34.0...v1.34.1) (2024-02-14)
 
 
