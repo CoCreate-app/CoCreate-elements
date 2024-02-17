@@ -85,6 +85,8 @@ async function initElement(el) {
 
     let data = getObject(el);
     if (!data || !data.type) return
+    if (data.object !== '' && data.object !== 'pending' && !(/^[0-9a-fA-F]{24}$/.test(data.object)))
+        return
 
     if (!elements.has(el)) {
         elements.set(el, '')
@@ -202,8 +204,11 @@ function initDataKey(element, data) {
 async function read(element, data, dataKey) {
     if (!dataKey)
         dataKey = { string: elements.get(element) }
-    if (!data)
-        data = { ...keys.get(dataKey).dataKey.object }
+    if (!data) {
+        let existingData = keys.get(dataKey.string)
+        if (existingData && existingData.dataKey && existingData.dataKey.object)
+            data = { ...existingData.dataKey.object }
+    }
 
     if (!dataKey || !data.type)
         return
