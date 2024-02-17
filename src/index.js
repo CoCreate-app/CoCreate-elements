@@ -442,7 +442,15 @@ async function filterData(element, data, type, key) {
 }
 
 async function checkFilters(element, data, type) {
-    let Data = await element.getData()
+    let Data
+    if (!element.getData) {
+        // TODO: fix: getObject as this is related to render or form, but filter could exist on an input which does not have getObject
+        // TODO: generate an object of current element key: value to use with filter. because filter is used object is not defined 
+        Data = getObject(element)
+        Data = Data[type][0]
+    } else
+        Data = await element.getData()
+
     if (!Data) return
 
     let newData
