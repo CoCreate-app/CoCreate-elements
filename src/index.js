@@ -85,7 +85,7 @@ async function initElement(el) {
 
     let data = getObject(el);
     if (!data || !data.type) return
-    if (data.object !== '' && data.object !== 'pending' && !(/^[0-9a-fA-F]{24}$/.test(data.object)))
+    if (data.object && data.object !== 'pending' && !(/^[0-9a-fA-F]{24}$/.test(data.object)))
         return
 
     if (!elements.has(el)) {
