@@ -360,6 +360,11 @@ async function setData(element, data) {
                     else
                         value = 0
                 } else {
+                    let $update = data[type][0].$update
+                    if ($update) {
+                        delete data[type][0].$update
+                        data[type][0] = { ...data[type][0], ...$update }
+                    }
                     value = CRUD.getValueFromObject(data[type][0], key)
                 }
 
@@ -395,6 +400,12 @@ async function filterData(element, data, type, key) {
                     let _id = element.getAttribute('object')
                     if (_id && doc._id !== _id)
                         return
+                    let $update = doc.$update
+                    if ($update) {
+                        delete doc.$update
+                        doc = { ...doc, ...$update }
+                    }
+
                 }
                 if (doc[property]) {
                     if (Array.isArray(doc[property]))
@@ -472,6 +483,7 @@ async function checkFilters(element, data, type) {
             if (!isMatch)
                 newData.slice(i, 1)
         }
+
     }
 
     if (!newData || !newData.length)
