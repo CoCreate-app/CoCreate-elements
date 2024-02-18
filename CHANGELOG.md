@@ -1,3 +1,10 @@
+## [1.34.3](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.34.2...v1.34.3) (2024-02-18)
+
+
+### Bug Fixes
+
+* getObject error ([ca732bb](https://github.com/CoCreate-app/CoCreate-elements/commit/ca732bb7824a6fc2dcdad6532f316fa9a2221915))
+
 ## [1.34.2](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.34.1...v1.34.2) (2024-02-17)
 
 
