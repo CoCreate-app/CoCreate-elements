@@ -1,3 +1,11 @@
+## [1.34.5](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.34.4...v1.34.5) (2024-02-20)
+
+
+### Bug Fixes
+
+* data.object conditions ([d7f1431](https://github.com/CoCreate-app/CoCreate-elements/commit/d7f1431a70e48cf70dac8d219ab9f1c26df91a42))
+* processing object.$update ([157f094](https://github.com/CoCreate-app/CoCreate-elements/commit/157f094d50bed51b94af9be272fdfc733b9f1cc6))
+
 ## [1.34.4](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.34.3...v1.34.4) (2024-02-19)
 
 
