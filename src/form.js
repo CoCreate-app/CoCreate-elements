@@ -18,7 +18,18 @@ function init(elements) {
         elements = document.querySelectorAll('form');
     else if (!Array.isArray(elements))
         elements = [elements]
+
     for (let element of elements) {
+        Observer.init({
+            name: 'CoCreateFormElements',
+            observe: ['addedNodes'],
+            target: '[storage], [database], [array], [index], [object], [key]',
+            callback: function (mutation) {
+                if (element == mutation.target.form)
+                    setAttribute(element, [mutation.target])
+            }
+        });
+
         runObjectId(element);
         setAttribute(element);
         disableAutoFill(element);
@@ -43,7 +54,6 @@ function runObjectId(form) {
         // Add a array to the array list.
         if (array && !arrays.includes(array))
             arrays.push(array)
-
     }
     // Sets the object id for each array in the array.
     for (let i = 0; i < arrays.length; i++) {
@@ -55,8 +65,9 @@ function runObjectId(form) {
 /**
 * @param form
 */
-function setAttribute(form) {
-    let elements = form.querySelectorAll('[storage], [database], [array], [index], [object], [key]');
+function setAttribute(form, elements) {
+    if (!elements)
+        elements = form.querySelectorAll('[storage], [database], [array], [index], [object], [key]');
 
     for (let attribute of form.attributes) {
         let variable = window.CoCreateConfig.attributes[attribute.name]
