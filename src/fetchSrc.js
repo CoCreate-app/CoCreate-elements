@@ -178,32 +178,6 @@ function base64ToArrayBuffer(base64) {
     return bytes.buffer; // Return ArrayBuffer
 }
 
-const videoStreamConfig = {
-    title: "Video Title",
-    totalDuration: 3600, // Total duration of the video in seconds
-    'content-type': "video/mp4",
-    segments: [
-        {
-            _id: 1,
-            src: "http://example.com/video/chunk1.mp4", // src stored using file path
-            storage: '', // src stored using crud path
-            array: '', // src stored using crud path
-            object: '', // src stored using crud path
-            key: '', // src stored using crud path
-            start: 0, // Start time of this chunk in seconds
-            end: 10, // End time of this chunk in seconds
-            duration: 10,
-            codec: "h.264",
-            resolution: {
-                width: 1920,
-                height: 1080
-            },
-            bitrate: "5000kbps",
-        },
-        // Repeat for each chunk
-    ]
-}
-
 observer.init({
     name: 'CoCreateSrc',
     observe: ['addedNodes'],
