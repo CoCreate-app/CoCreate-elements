@@ -1,3 +1,10 @@
+# [1.35.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.34.5...v1.35.0) (2024-03-18)
+
+
+### Features
+
+* observe form for new inputs and setAttribute ([527d1bd](https://github.com/CoCreate-app/CoCreate-elements/commit/527d1bd490ae28655006918fe8d8a99fb210cbde))
+
 ## [1.34.5](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.34.4...v1.34.5) (2024-02-20)
 
 
