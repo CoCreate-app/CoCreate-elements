@@ -33,27 +33,44 @@ async function initElements(elements) {
                             let sourceBuffer;
 
                             const mediaSource = new MediaSource();
-                            video.src = URL.createObjectURL(mediaSource);
+                            element.src = URL.createObjectURL(mediaSource);
                             mediaSource.addEventListener('sourceopen', async () => {
-                                const contentType = response.headers.get("Content-Type");
-                                sourceBuffer = mediaSource.addSourceBuffer(contentType);
+                                sourceBuffer = mediaSource.addSourceBuffer(`${mediaConfig['content-type']}; codecs="${mediaConfig.codecs}"`);
 
                                 sourceBuffer.addEventListener('updateend', () => {
+                                    console.log('Update ended, buffered ranges:', sourceBuffer.buffered)
                                     if (!sourceBuffer.updating && mediaSource.readyState === 'open') {
                                         mediaSource.endOfStream();
 
-                                        video.addEventListener('ended', () => {
-                                            URL.revokeObjectURL(video.src);
+                                        element.addEventListener('ended', () => {
+                                            URL.revokeObjectURL(element.src);
                                         });
                                     }
                                 });
+                                sourceBuffer.addEventListener('error', (e) => {
+                                    console.error('SourceBuffer error event:', e);
+                                    console.log('MediaSource readyState:', mediaSource.readyState);
+                                    console.log('SourceBuffer updating:', sourceBuffer.updating);
+                                    console.log('SourceBuffer buffered ranges:', sourceBuffer.buffered);
+                                    // Any other state information you can log
+                                });
+
+
+                                getSegment(sourceBuffer, mediaConfig.segments[0])
+                            });
+
+                            mediaSource.addEventListener('sourceended', () => {
+                                console.log('MediaSource ended event fired');
+                            });
+
+                            mediaSource.addEventListener('sourceclose', () => {
+                                console.log('MediaSource close event fired');
                             });
 
                             // Event listener for seeking
                             element.addEventListener('seeking', () => {
                                 let currentTime = element.currentTime;
                                 let chunkIndex = Math.floor(currentTime / chunkDuration);
-
                             });
 
                             // Event listener for seeked
@@ -74,8 +91,8 @@ async function initElements(elements) {
                             });
 
                             element.addEventListener('timeupdate', function () {
-                                const bufferEnd = video.buffered.end(0);
-                                const currentTime = video.currentTime;
+                                const bufferEnd = element.buffered.end(0);
+                                const currentTime = element.currentTime;
                                 const threshold = 10; // seconds before buffer end to fetch the next segment
 
                                 if (bufferEnd - currentTime < threshold) {
@@ -83,8 +100,9 @@ async function initElements(elements) {
                                     getSegment(sourceBuffer, mediaConfig)
                                 }
                             });
+
                         } catch (error) {
-                            video.src = src
+                            element.src = src
                             // let blob = await response.json();
                             // URL.createObjectURL(blob);
                         }
@@ -106,14 +124,14 @@ async function initElements(elements) {
     }
 };
 
-async function getSegment(sourceBuffer, segmentConfig) {
+async function getSegment(sourceBuffer, segment) {
     // TODO: use socket/crud/file with room using the url to get one or more segments and append
     let segments = []
-
-    if (segmentConfig.array && segmentConfig.object) {
-        let data = { method: 'object.read', ...segmentConfig }
+    let data
+    if (segment.array && segment.object) {
+        data = { method: 'object.read', ...segment }
         data = await crud.send(data)
-        if (segmentConfig.key) {
+        if (segment.key) {
             // TODO: utils.getValuefromObject
             if (Array.isArray(data.object[0][key]))
                 segments.push(...data.object[0][key])
@@ -121,9 +139,15 @@ async function getSegment(sourceBuffer, segmentConfig) {
                 segments.push(data.object[0][key])
         } else
             segments.push(...data.object)
-    } else if (segmentConfig.src) {
-        data = await fetch(src);
+        segment.src = segments[0]
+        segment.src = await segment.src.text();
+        // TODO: handle segment array as
+    } else if (segment.src) {
+        // TODO: handle 404, or whether src was fetched or not
+        segment.src = await fetch(segment.src);
+        segment.src = await segment.src.text();
     }
+
     appendSegment(sourceBuffer, segment)
 }
 
@@ -140,13 +164,16 @@ async function appendSegment(sourceBuffer, segment) {
     } else if (segment.src instanceof Blob) {
         arrayBuffer = await segment.src.arrayBuffer();
     } else {
-        console.error("Unhandled segment data type");
+        arrayBuffer = base64ToArrayBuffer(segment.src);
+
+        // arrayBuffer = await segment.src.arrayBuffer();
     }
 
     // Wait for the source buffer to be ready for updates
     if (sourceBuffer.updating) await new Promise(resolve => sourceBuffer.addEventListener('updateend', resolve, { once: true }));
 
     sourceBuffer.appendBuffer(arrayBuffer);
+    console.log(sourceBuffer)
 }
 
 function isBuffered(element, currentTime) {
