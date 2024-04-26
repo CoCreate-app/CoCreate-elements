@@ -1,3 +1,11 @@
+## [1.35.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.35.0...v1.35.1) (2024-04-26)
+
+
+### Bug Fixes
+
+* convert base64 segments to to arrayBuffer ([710c55e](https://github.com/CoCreate-app/CoCreate-elements/commit/710c55e6402fffc65cf1a633c67c7499766964e8))
+* export setValueType ([bcc717c](https://github.com/CoCreate-app/CoCreate-elements/commit/bcc717caa541f406f1cb74fa97be6d651898f808))
+
 # [1.35.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.34.5...v1.35.0) (2024-03-18)
 
 
