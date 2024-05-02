@@ -134,7 +134,7 @@ function getObject(element) {
             data[crudType[i]] = []
 
             for (let j = 0; j < array.length; j++) {
-                array[i].trim()
+                array[j].trim()
                 if (crudType[i] === 'object') {
                     data[crudType[i]].push({ _id: array[j] })
                 } else {
