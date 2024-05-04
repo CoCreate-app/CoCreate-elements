@@ -863,6 +863,11 @@ async function save(element) {
             }
         }
 
+        if (data[i].isUpsert) {
+            data[i].upsert = true
+            delete data[i].isUpsert
+        }
+
         if (data[i].method && data[i].method.endsWith('.create')) {
             element.setAttribute(data[i].type, 'pending');
         } else if (data[i].method && data[i].method.endsWith('.update') && data[i].type == 'object' && typeof value == 'string' && window.CoCreate.crdt && !'crdt') {
