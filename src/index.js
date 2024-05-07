@@ -78,13 +78,19 @@ async function init(element) {
             read(Array.from(elements.keys()), data, { string: key });
         }
     }
+
+    // const evt = new CustomEvent('elementsInitialized', { bubbles: true });
+    // document.dispatchEvent(evt);
+
 }
 
 async function initElement(el) {
     // if (el.closest('.template')) return;
 
     let data = getObject(el);
-    if (!data || !data.type) return
+    if (!data || !data.type)
+        return
+
     if (data.object && data.object !== 'pending' && !(/^[0-9a-fA-F]{24}$/.test(data.object)))
         return
 
@@ -247,7 +253,17 @@ async function read(element, data, dataKey) {
                     data.object = { _id: data.object[0]._id }
             } else if (!data.object._id.match(/^[0-9a-fA-F]{24}$/))
                 return
+            // if (data.object._id.startsWith('$'))
+            //     return
         }
+
+        // if (data.object && !Array.isArray(data.object) && data.object._id.startsWith('$'))
+        //     return
+
+        // if (data.$filter && data.$filter.query) {
+        //     if (!Object.keys(data.$filter.query).length)
+        //         return
+        // }
 
         data.method = data.type + '.read'
 
@@ -915,6 +931,9 @@ function setTypeValue(element, data) {
         }
     } else {
         let formObject = forms.get(form)
+        if (form.getAttribute('object') === 'pending')
+            form.setAttribute('object', data.object[0]._id)
+
         let elements = formObject.types.get(data.type)
 
         for (let [el, Data] of elements.entries()) {
