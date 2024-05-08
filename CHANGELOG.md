@@ -1,3 +1,12 @@
+## [1.35.3](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.35.2...v1.35.3) (2024-05-08)
+
+
+### Bug Fixes
+
+* handling of data upsert ([9884f90](https://github.com/CoCreate-app/CoCreate-elements/commit/9884f90b3b9e0016b266a36e6e5b377dc93fc6b7))
+* replace form object attribute with id if pending ([33838fb](https://github.com/CoCreate-app/CoCreate-elements/commit/33838fbe3e12f6a6b4e8fbcaa76822315b61ccdd))
+* typo with for loop index j ([8872c9f](https://github.com/CoCreate-app/CoCreate-elements/commit/8872c9f7b009638018ac48ffec41898a618b0cdd))
+
 ## [1.35.2](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.35.1...v1.35.2) (2024-04-29)
 
 
