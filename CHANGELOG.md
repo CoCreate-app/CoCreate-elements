@@ -1,3 +1,10 @@
+## [1.35.4](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.35.3...v1.35.4) (2024-05-19)
+
+
+### Bug Fixes
+
+* handle if item is already read ([2407f9b](https://github.com/CoCreate-app/CoCreate-elements/commit/2407f9b3789173fddb8f8ed6b4bb90f7f8d17864))
+
 ## [1.35.3](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.35.2...v1.35.3) (2024-05-08)
 
 
