@@ -119,6 +119,7 @@ async function initElement(el) {
 
         el.setFilter = (filter) => {
             data.$filter = filter
+            el.hasRead = false
             // let dataKey = initDataKey(el, data)
             read(el, data)
         }
@@ -233,8 +234,12 @@ async function read(element, data, dataKey) {
 
     for (let el of element) {
         const isRead = el.getAttribute('read');
-        if (isRead !== 'false')
+        if (isRead !== 'false' && !el.hasRead) {
+            el.hasRead = true
             delay.elements.set(el, true)
+        } else {
+            console.log('read skipped', el)
+        }
     }
 
     if (!delay.elements.size)
@@ -409,7 +414,7 @@ async function filterData(element, data, type, key) {
         let property = key.replace(operator + '.', '')
 
         if (Array.isArray(data[type])) {
-            let Data = []
+            let Data = [], isObject
             for (let doc of data[type]) {
                 // TODO: should have been handled by getDataElements()
                 if (type === 'object') {
@@ -426,14 +431,17 @@ async function filterData(element, data, type, key) {
                 if (doc[property]) {
                     if (Array.isArray(doc[property]))
                         Data.push(...doc[property])
-                    else
+                    else {
+                        isObject = true
                         Data.push(doc[property])
+                    }
                 } else
                     return
             }
-            // if (Data.length === 1) {
+
+            // if (isObject && Data.length === 1) {
             //     data = { [property]: Data[0] }
-            // } else
+            // } else 
             if (!operator)
                 data = Data
             else if (operator === '$sum') {
