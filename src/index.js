@@ -238,7 +238,7 @@ async function read(element, data, dataKey) {
             el.hasRead = true
             delay.elements.set(el, true)
         } else {
-            console.log('read skipped', el)
+            // console.log('read skipped', el)
         }
     }
 
