@@ -103,6 +103,8 @@ function disableAutoFill(element) {
 * @param form
 */
 function reset(form) {
+    if (form.hasAttribute('object'))
+        form.setAttribute('object', '');
     let formElements = new Map();
     for (let element of form) {
         formElements.set(element, '')
@@ -153,7 +155,7 @@ Action.init({
     endEvent: "reset",
     callback: (action) => {
         if (action.form)
-            send(action.form);
+            reset(action.form);
     }
 });
 
