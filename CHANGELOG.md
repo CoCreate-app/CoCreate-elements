@@ -1,3 +1,13 @@
+## [1.35.5](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.35.4...v1.35.5) (2024-06-12)
+
+
+### Bug Fixes
+
+* bump cocreate dependencies ([2a366c3](https://github.com/CoCreate-app/CoCreate-elements/commit/2a366c3c21f6daf6bbb74608500612c8fca588ac))
+* comment logs ([f79fd4e](https://github.com/CoCreate-app/CoCreate-elements/commit/f79fd4ebc84e1f8b5ace052ea7fb6e86d91c1e0e))
+* reset removes object from form element ([637d7d9](https://github.com/CoCreate-app/CoCreate-elements/commit/637d7d9a05899dcb69fb63f2f39ad7126b661dcb))
+* svg icon class ([84d9ba3](https://github.com/CoCreate-app/CoCreate-elements/commit/84d9ba345ffaa1a3da0750c127ca1f8b739658a7))
+
 ## [1.35.4](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.35.3...v1.35.4) (2024-05-19)
 
 
