@@ -234,7 +234,7 @@ async function read(element, data, dataKey) {
 
     for (let el of element) {
         const isRead = el.getAttribute('read');
-        if (isRead !== 'false' && !el.hasRead) {
+        if (isRead !== 'false' && !el.hasRead && (!data.$filter || data.$filter && data.$filter.isFilter !== false)) {
             el.hasRead = true
             delay.elements.set(el, true)
         } else {
@@ -362,9 +362,6 @@ async function setData(element, data) {
 
         }
 
-        if (!data[type] || !data[type].length)
-            continue;
-
         let action = el.getAttribute('actions')
         if (action && ['database', 'array', 'object', 'key'].includes(action)) continue;
 
@@ -372,6 +369,9 @@ async function setData(element, data) {
         if (el.getFilter || el.renderValue)
             await filterData(el, data, type, key)
         else {
+            if (!data[type] || !data[type].length)
+                continue;
+
             if (key) {
                 let value
                 if (key.includes('$length')) {
@@ -454,11 +454,17 @@ async function filterData(element, data, type, key) {
         }
     }
 
+    let isRendered = element.querySelector('[render-clone]');
+
     if (operator) {
         element.setValue(value);
-    } else if (element.getFilter && data.method && !data.method.endsWith('.read'))
+    } else if (element.renderValue && data.method && data.method.endsWith('.read') && data.$filter && (data.$filter.overwrite || !isRendered)) {
+        await element.renderValue(data);
+    } else if (data.$filter && data.$filter.loadmore || data.method && data.method.endsWith('.read') && isRendered) {
+        await loadMore(element, data, type)
+    } else if (element.getFilter && data.method && !data.method.endsWith('.read')) {
         await checkFilters(element, data, type)
-    else if (element.renderValue) {
+    } else if (element.renderValue) {
         await element.renderValue(data);
     } else if (key === '$length') {
         element.setValue(data[type].length);
@@ -479,6 +485,30 @@ async function filterData(element, data, type, key) {
 
     const evt = new CustomEvent('fetchedData', { bubbles: true });
     element.dispatchEvent(evt);
+}
+
+async function loadMore(element, data, type, sort) {
+    let Data = { ...data };
+    let renderedData = await element.getData();
+    if (!renderedData || !renderedData[type]) {
+        return;
+    }
+    for (let i = 0; i < Data[type].length; i++) {
+        let index;
+        if (type === 'object') {
+            index = renderedData[type].findIndex(obj => obj._id === Data[type][i]._id);
+        } else {
+            index = renderedData[type].findIndex(obj => obj.name === Data[type][i].name);
+        }
+
+        if (index >= 0) {
+            Data[type].splice(i, 1);
+            i--; // Adjust the index to account for the removed item
+        }
+    }
+    if (Data[type].length > 0) {
+        await element.renderValue(Data);
+    }
 }
 
 async function checkFilters(element, data, type) {
@@ -1090,6 +1120,8 @@ Observer.init({
     observe: ['addedNodes'],
     target: '[render-clone]',
     callback: function (mutation) {
+        if (!mutation.parentElement.hasAttribute('dnd'))
+            return
         let delayTimer = debounce.get(mutation)
         clearTimeout(delayTimer);
         debounce.delete(mutation.target)
