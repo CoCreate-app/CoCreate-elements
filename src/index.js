@@ -732,16 +732,28 @@ async function getData(form) {
 
             // console.log(type, value, data)
             if (!Data[Data.type] && Data.key) {
+                if (!value)
+                    continue
+                else if (Array.isArray(value) && !value.length)
+                    continue
+
                 Data.method = Data.type + '.create'
                 if (Data.type === 'object') {
-                    if (typeof Data.object === 'string')
-                        Data.object = { _id: Data.object }
-                    else if (!Data.object)
+                    if (!Data.object)
                         Data.object = {}
+                    else if (typeof Data.object === 'string')
+                        Data.object = { _id: Data.object }
 
-                    if (Data.key)
-                        Data.object[Data.key] = value
 
+                    if (Data.key) {
+                        if (Data.key == '{}') {
+                            if (Array.isArray(value)) {
+                                Data.object = value
+                            } else
+                                Data.object = { ...Data.object, ...value }
+                        } else
+                            Data.object[Data.key] = value
+                    }
                 } else
                     Data[Data.type] = value
 
