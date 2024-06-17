@@ -754,6 +754,9 @@ async function getData(form) {
                         } else
                             Data.object[Data.key] = value
                     }
+                    if (Data.isUpsert && Data.$filter)
+                        Data.method = 'object.update'
+
                 } else
                     Data[Data.type] = value
 
