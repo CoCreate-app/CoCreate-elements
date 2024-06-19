@@ -76,7 +76,7 @@ function setAttribute(form, elements) {
         if (variable) {
             for (let el of elements) {
                 // Set the value of the attribute.
-                if (!el.getAttribute(attribute.name)) {
+                if (!el.getAttribute(attribute.name) && !el.hasAttribute('skip-attribute')) {
                     el.setAttribute(attribute.name, form.getAttribute(attribute.name));
                 }
             }
