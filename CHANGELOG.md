@@ -1,3 +1,12 @@
+## [1.35.6](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.35.5...v1.35.6) (2024-06-19)
+
+
+### Bug Fixes
+
+* add method update.object if upsert and filter ([3730438](https://github.com/CoCreate-app/CoCreate-elements/commit/37304389f0447cd24009c8deb406c48b85974bd7))
+* handle isFIlter false in read function and improved handling of filter and render data ([85b6d00](https://github.com/CoCreate-app/CoCreate-elements/commit/85b6d00c128f27f378e7f5687f5fddf0a01268fe))
+* skip-attribute to prevent form attributes from applying to an element ([72f18b3](https://github.com/CoCreate-app/CoCreate-elements/commit/72f18b3aa7dc929e300ddd225e3d961cc0007400))
+
 ## [1.35.5](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.35.4...v1.35.5) (2024-06-12)
 
 
