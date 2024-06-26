@@ -1,7 +1,7 @@
 import Observer from '@cocreate/observer';
 import { getAttributeNames, ObjectId } from '@cocreate/utils';
 import Action from '@cocreate/actions';
-import '@cocreate/element-prototype';
+import elementPrototype from '@cocreate/element-prototype';
 
 
 /**
@@ -33,6 +33,7 @@ function init(elements) {
         runObjectId(element);
         setAttribute(element);
         disableAutoFill(element);
+        setValue(element)
         element.addEventListener('submit', function (event) {
             if (!element.hasAttribute('action')) {
                 event.preventDefault();
@@ -132,6 +133,23 @@ function reset(form) {
     document.dispatchEvent(new CustomEvent('reset', {
         detail: {}
     }));
+}
+
+function setValue(form) {
+    form.setValue = (value) => {
+        if (typeof value !== "object")
+            elementPrototype.setValue(form, value);
+        else {
+            const inputs = form.querySelectorAll('[name], [key]');
+            inputs.forEach(element => {
+                const key = element.getAttribute('key') || element.getAttribute('name');
+                if (value[key]) {
+                    element.setValue(value[key]);
+                }
+            });
+
+        }
+    }
 }
 
 Observer.init({
