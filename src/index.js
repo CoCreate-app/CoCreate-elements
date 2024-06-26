@@ -53,7 +53,7 @@ const debounce = new Map();
  *                                           any of these CRUD attributes: "storage", "database", "array", "render-json".
  */
 async function init(element) {
-    if (element && !(element instanceof HTMLCollection) && !Array.isArray(element))
+    if (element && !(element instanceof HTMLCollection) && !(element instanceof NodeList) && !Array.isArray(element))
         element = [element]
     else if (!element) {
         element = document.querySelectorAll(selector)
@@ -716,6 +716,12 @@ function getDataKeys(data) {
 async function getData(form) {
     let dataKeys = new Map()
     let formObject = forms.get(form)
+    if (!formObject) {
+        let elements = form.querySelectorAll(selector)
+        await init(elements)
+        return await getData(form)
+    }
+
     for (let type of formObject.types.values()) {
         for (let [element, data] of type.entries()) {
             if (!element.hasAttribute('key') || element.getAttribute('save') === 'false')
@@ -1317,6 +1323,8 @@ Observer.init({
         let currentValue = mutation.target.getAttribute(mutation.attributeName)
         if (currentValue !== mutation.oldValue) {
             remove(mutation.target)
+            if (mutation.target.tagName === 'FORM')
+                return
             init([mutation.target])
         }
     }
