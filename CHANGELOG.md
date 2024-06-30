@@ -1,3 +1,15 @@
+# [1.36.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.35.8...v1.36.0) (2024-06-30)
+
+
+### Bug Fixes
+
+* re init form elements ([7b28c19](https://github.com/CoCreate-app/CoCreate-elements/commit/7b28c19fe31bed297b930d113c98cfd9f913b0fe))
+
+
+### Features
+
+* form.setValue() will set value in elements if value is object else it if string will fallback elementPrototype setVlaue() ([e76df88](https://github.com/CoCreate-app/CoCreate-elements/commit/e76df88fb1755aeffa8f15587d304e2df6497801))
+
 ## [1.35.8](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.35.7...v1.35.8) (2024-06-23)
 
 
