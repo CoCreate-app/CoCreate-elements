@@ -46,20 +46,17 @@ function init(elements) {
 * @param form
 */
 function runObjectId(form) {
-    let elements = form.querySelectorAll("[object='ObjectId()']")
-    let arrays = []
-    // Add a array to the array list
-    for (let i = 0; i < elements.length; i++) {
-        elements[i].setAttribute('object', '')
-        let array = elements[i].getAttribute('array')
-        // Add a array to the array list.
-        if (array && !arrays.includes(array))
-            arrays.push(array)
+    let elements = Array.from(form.querySelectorAll("[object='ObjectId()']"));
+
+    if (form.getAttribute('object') === "ObjectId()") {
+        elements.push(form);
     }
-    // Sets the object id for each array in the array.
-    for (let i = 0; i < arrays.length; i++) {
-        // TODO: needs access to setTypeValue
-        setTypeValue(form, { array: arrays[i], object: [{ _id: ObjectId().toString() }] });
+    for (let i = 0; i < elements.length; i++) {
+        let array = elements[i].getAttribute('array')
+        if (!array)
+            continue
+        elements[i].setAttribute('object', ObjectId().toString())
+
     }
 }
 
