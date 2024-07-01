@@ -779,10 +779,21 @@ async function getData(form) {
                 }
 
                 if (Data.type = 'object') {
+                    if (Data.key == '{}') {
+                        if (!value)
+                            continue
+                        else if (Array.isArray(value) && !value.length)
+                            continue
+                    }
+
                     if (typeof Data[Data.type] === 'string')
-                        if (Data.key == '{}')
-                            Data[Data.type] = { _id: Data[Data.type], ...value }
-                        else
+                        if (Data.key == '{}') {
+                            // TODO: handle if array length more than 1
+                            if (Array.isArray(value))
+                                Data[Data.type] = { _id: Data[Data.type], ...value[0] }
+                            else
+                                Data[Data.type] = { _id: Data[Data.type], ...value }
+                        } else
                             Data[Data.type] = { _id: Data[Data.type], [Data.key]: value }
                     else if (Array.isArray(Data[Data.type]))
                         if (Data.key == '{}')
@@ -992,6 +1003,8 @@ function setTypeValue(element, data) {
         let formObject = forms.get(form)
         if (form.getAttribute('object') === 'pending')
             form.setAttribute('object', data.object[0]._id)
+
+        console.log('object', data.object[0]._id)
 
         let elements = formObject.types.get(data.type)
 
