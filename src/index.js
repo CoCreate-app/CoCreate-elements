@@ -1004,8 +1004,6 @@ function setTypeValue(element, data) {
         if (form.getAttribute('object') === 'pending')
             form.setAttribute('object', data.object[0]._id)
 
-        console.log('object', data.object[0]._id)
-
         let elements = formObject.types.get(data.type)
 
         for (let [el, Data] of elements.entries()) {
