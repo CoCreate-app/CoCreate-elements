@@ -1141,6 +1141,11 @@ function initSocket() {
             CRUD.listen(action, function (data) {
                 if (data.resolved && data.status === 'received' && CRUD.socket.clientId === data.clientId)
                     return
+                if (data.rendered)
+                    return
+
+                data.rendered = true
+
                 setData(null, data);
             });
         }
