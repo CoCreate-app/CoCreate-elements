@@ -416,11 +416,13 @@ async function filterData(element, data, type, key) {
         if (Array.isArray(data[type])) {
             let Data = [], isObject
             for (let doc of data[type]) {
+                if (!doc.$storage)
+                    continue
                 // TODO: should have been handled by getDataElements()
                 if (type === 'object') {
                     let _id = element.getAttribute('object')
                     if (_id && doc._id !== _id)
-                        return
+                        continue
                     let $update = doc.$update
                     if ($update) {
                         delete doc.$update
@@ -436,7 +438,7 @@ async function filterData(element, data, type, key) {
                         Data.push(doc[property])
                     }
                 } else
-                    return
+                    continue
             }
 
             // if (isObject && Data.length === 1) {
