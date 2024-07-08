@@ -19,7 +19,7 @@ async function initElements(elements) {
         let src = element.getAttribute('src') || element.getAttribute('source') || element.getAttribute('stream');
 
         if (!src || /{{\s*([\w\W]+)\s*}}/g.test(src))
-            return;
+            continue;
 
         let initialize = initializing.get(element)
         if (!initialize || initialize.src != src) {
