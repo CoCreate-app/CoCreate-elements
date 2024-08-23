@@ -97,18 +97,26 @@ async function initElement(el) {
     if (!elements.has(el)) {
         elements.set(el, '')
 
-        if (['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName)
-            || (el.hasAttribute('contenteditable') && el.getAttribute('contenteditable') !== 'false')
-            || el.contenteditable) {
-            el.addEventListener('input', function (e) {
-                const { object, key, isRealtime, isCrdt } = getAttributes(el);
-                if (!isRealtime || isRealtime === "false" || key === "_id") return;
-                if (isCrdt == "true" && object && object !== 'pending') return
-                if (e.detail && e.detail.skip == true) return;
-                if (data.type !== 'object' && data[data.type] === 'pending') return
+        if (el.tagName === "EDITOR")
+            console.log('editor event added')
+        if (!el.elementsInputEvent) {
+            el.elementsInputEvent = true;
 
-                save(el);
-            });
+            if (['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName)
+                || (el.hasAttribute('contenteditable') && el.getAttribute('contenteditable') !== 'false')
+                || el.contenteditable) {
+                el.addEventListener('input', function (e) {
+                    if (el.pendingObject) return
+
+                    const { object, key, isRealtime, isCrdt } = getAttributes(el);
+                    if (!isRealtime || isRealtime === "false" || key === "_id") return;
+                    if (isCrdt == "true" && object && object !== 'pending') return
+                    if (e.detail && e.detail.skip == true) return;
+                    if (data.type !== 'object' && data[data.type] === 'pending') return
+
+                    save(el);
+                });
+            }
         }
     }
     // let attributes = ['filter-key', 'filter-search', 'filter-sort-key', 'filter-on', 'filter-limit']
