@@ -1,3 +1,14 @@
+## [1.36.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.36.0...v1.36.1) (2024-07-09)
+
+
+### Bug Fixes
+
+* handleing of key="{}" where value is an array ([c86ffd9](https://github.com/CoCreate-app/CoCreate-elements/commit/c86ffd9697839611e8fb10a3f76e0a9bff9892cb))
+* objectId() habndleing to add _id to element ([b2bb7b4](https://github.com/CoCreate-app/CoCreate-elements/commit/b2bb7b423ea2316be0087506fa094a3a8e8cce09))
+* removed testing log ([1b4f38e](https://github.com/CoCreate-app/CoCreate-elements/commit/1b4f38e0cfc1b764dd695dc3288e74f6cb15b676))
+* set flag rendered to prevent loop caused by fireListeners and sync ([3dd1267](https://github.com/CoCreate-app/CoCreate-elements/commit/3dd1267784617c1a666b032fc427671f0cf07375))
+* use continue in for loop and continue if !data$storage ([32020f1](https://github.com/CoCreate-app/CoCreate-elements/commit/32020f17fecc6a578ff58b9fd1dec50a6f611b11))
+
 # [1.36.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.35.8...v1.36.0) (2024-06-30)
 
 
