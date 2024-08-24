@@ -1,3 +1,11 @@
+## [1.36.2](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.36.1...v1.36.2) (2024-08-24)
+
+
+### Bug Fixes
+
+* prevent duplicate input event listeners ([e7d5bfd](https://github.com/CoCreate-app/CoCreate-elements/commit/e7d5bfd7c254b9e4a76bd5eb55106b86357904c9))
+* use continue in for loop ([e0febbc](https://github.com/CoCreate-app/CoCreate-elements/commit/e0febbcbf16486d54e312cd646f2d2a255e71848))
+
 ## [1.36.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.36.0...v1.36.1) (2024-07-09)
 
 
