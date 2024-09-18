@@ -373,7 +373,7 @@ async function setData(element, data) {
         let action = el.getAttribute('actions')
         if (action && ['database', 'array', 'object', 'key'].includes(action)) continue;
 
-        const { key, isRead, isListen, isCrdt } = getAttributes(el);
+        const { key, isRead, isUpdate, isListen, isCrdt } = getAttributes(el);
         if (el.getFilter || el.renderValue)
             await filterData(el, data, type, key)
         else {
@@ -398,8 +398,8 @@ async function setData(element, data) {
                 }
 
                 if (!data[type].length) continue;
-                if (isRead == "false" || isCrdt == "true") continue;
-                if (isListen == "false" && !data.method.endsWith('.read')) continue;
+                if (isRead === "false" || isCrdt === "true") continue;
+                if (isUpdate === "false" || isListen === "false" && !data.method.endsWith('.read')) continue;
                 // TODO: object.update data returned from server will not include $operator
                 el.setValue(value);
 
@@ -527,7 +527,8 @@ async function checkFilters(element, data, type) {
         // TODO: fix: getObject as this is related to render or form, but filter could exist on an input which does not have getObject
         // TODO: generate an object of current element key: value to use with filter. because filter is used object is not defined 
         Data = getObject(element)
-        Data = Data[type][0]
+        if (Array.isArray(Data[type]))
+            Data = Data[type][0]
     } else
         Data = await element.getData()
 
@@ -569,9 +570,20 @@ async function checkFilters(element, data, type) {
             primaryKey = 'name';
         }
 
-        if (Data[primaryKey] === newData[primaryKey]) {
+        if (Array.isArray(newData)) {
+            for (let i = 0; i < newData.length; i++) {
+                if (typeof Data === 'string' && Data === newData[i][primaryKey]) {
+                    Data = newData[i]
+                } else if (Data[primaryKey] === newData[i][primaryKey]) {
+                    Data = dotNotationToObject(newData[i], Data)
+                }
+            }
+        } else if (typeof Data === 'string' && Data === newData[primaryKey]) {
+            Data = newData
+        } else if (Data[primaryKey] === newData[primaryKey]) {
             Data = dotNotationToObject(newData, Data)
         }
+
         if (element.renderValue)
             element.renderValue(data);
         // render({ element, data, key: type });
