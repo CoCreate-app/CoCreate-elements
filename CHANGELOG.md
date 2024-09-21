@@ -1,3 +1,10 @@
+# [1.37.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.36.2...v1.37.0) (2024-09-21)
+
+
+### Features
+
+* update="" attribute support. improved data type handling ([fa478b0](https://github.com/CoCreate-app/CoCreate-elements/commit/fa478b008c85a78014f16f4800270af933767615))
+
 ## [1.36.2](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.36.1...v1.36.2) (2024-08-24)
 
 
