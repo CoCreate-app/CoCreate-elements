@@ -105,6 +105,14 @@ async function initElement(el) {
             if (['INPUT', 'TEXTAREA', 'SELECT'].includes(el.tagName)
                 || (el.hasAttribute('contenteditable') && el.getAttribute('contenteditable') !== 'false')
                 || el.contenteditable) {
+
+                if (el.tagName == 'IFRAME') {
+                    // ToDo: saving on contenteditable elements when an objectId does not exist in order to crud or crdt
+                    el = el.contentDocument.documentElement
+                    el.setAttribute('contenteditable', 'true')
+
+                }
+
                 el.addEventListener('input', function (e) {
                     if (el.pendingObject) return
 
