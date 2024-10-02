@@ -97,8 +97,6 @@ async function initElement(el) {
     if (!elements.has(el)) {
         elements.set(el, '')
 
-        if (el.tagName === "EDITOR")
-            console.log('editor event added')
         if (!el.elementsInputEvent) {
             el.elementsInputEvent = true;
 
