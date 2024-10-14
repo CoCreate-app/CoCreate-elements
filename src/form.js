@@ -74,8 +74,9 @@ function setAttribute(form, elements) {
         if (variable) {
             for (let el of elements) {
                 // Set the value of the attribute.
+                // TODO: skip-attribute naming convention, perhaps skip by defualt if storage, database, array not the same and use attribute to apply for cases where one _id will be used across 2 arrays
                 if (!el.getAttribute(attribute.name) && !el.hasAttribute('skip-attribute')) {
-                    el.setAttribute(attribute.name, form.getAttribute(attribute.name));
+                    el.setAttribute(attribute.name, attribute.value);
                 }
             }
         }
@@ -101,32 +102,41 @@ function disableAutoFill(element) {
 * @param form
 */
 function reset(form) {
-    if (form.hasAttribute('object'))
-        form.setAttribute('object', '');
-    let formElements = new Map();
-    for (let element of form) {
-        formElements.set(element, '')
-        // Set object attribute to object if it exists
-        if (element.hasAttribute('object'))
+    // Convert the form elements collection to an array
+    const formElementsArray = Array.from(form.elements);
+
+    // Query for additional elements with [object] or [key] attributes that are not already part of form controls
+    const customElements = Array.from(form.querySelectorAll('[object], [key]:not(input):not(select):not(textarea):not(button)'));
+
+    // Merge form elements and custom elements using the spread operator
+    const allElements = [...formElementsArray, ...customElements];
+
+    // Store the elements and their values in a map for restoration
+    const elementStates = new Map();
+
+    // Iterate over all elements and store their current state based on the 'reset' attribute
+    for (const element of allElements) {
+        if (['BUTTON', 'FIELDSET'].includes(element.tagName))
+            continue
+        // Get the reset attribute value, if any
+        const resetType = element.getAttribute('reset');
+        if (element.hasAttribute('object') && (!resetType || resetType === 'object'))
             element.setAttribute('object', '');
-        // If the element is a button and has a button with the same key, set the value to the value of the button.
-        if (!['BUTTON'].includes(element.tagName))
+        if (resetType === 'false' || resetType === 'object')
+            elementStates.set(element, element.value || element.getAttribute('value'));
+        if (!resetType || resetType !== 'object')
             element.setValue('')
     }
 
-    let elements = form.querySelectorAll('[object], [key]');
-    for (let element of elements) {
-        // Set the object id attribute of the element to the object id if it has not yet been set.
-        if (!formElements.has(element)) {
-            // Set object attribute to object if it exists
-            if (element.hasAttribute('object'))
-                element.setAttribute('object', '');
-            element.setValue('')
-        }
-    }
-
+    // Perform the default form reset
     form.reset();
-    // dispatch input event to rest filter??
+
+    // Restore values based on the 'reset' attribute
+    elementStates.forEach((value, element) => {
+        element.setValue(value)
+    });
+
+    // Dispatch a custom reset event
     document.dispatchEvent(new CustomEvent('reset', {
         detail: {}
     }));
