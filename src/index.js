@@ -125,8 +125,6 @@ async function initElement(el) {
     }
     // let attributes = ['filter-key', 'filter-search', 'filter-sort-key', 'filter-on', 'filter-limit']
     // if (el.getFilter || attributes.some(attr => el.hasAttribute(attr))) {
-    if (el.id === 'careers')
-        console.log('test', 'elements')
 
     await filter.init()
     if (el.getFilter) {
@@ -417,9 +415,6 @@ async function setData(element, data) {
 
 async function filterData(element, data, type, key) {
     let operator = '', value
-    if (element.id === 'messagetest')
-        console.log('test')
-
 
     if (key && !key.includes('$length') && key !== '{}') {
         if (!data || !type) return
@@ -474,8 +469,6 @@ async function filterData(element, data, type, key) {
     }
 
     let isRendered = element.querySelector('[render-clone]');
-    if (element.id === 'messagetest')
-        console.log('test')
     if (operator) {
         element.setValue(value);
     } else if (element.renderValue && data.method && data.method.endsWith('.read') && data.$filter && (data.$filter.overwrite || !isRendered)) {
