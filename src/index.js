@@ -385,7 +385,7 @@ async function setData(element, data) {
             if (!data[type] || !data[type].length)
                 continue;
 
-            if (key) {
+            if (key && checkValue(key)) {
                 let value
                 if (key.includes('$length')) {
                     value = CRUD.getValueFromObject(data[type][0], key.replace(/\.\$length$/, ''))
@@ -407,7 +407,6 @@ async function setData(element, data) {
                 if (isUpdate === "false" || isListen === "false" && !data.method.endsWith('.read')) continue;
                 // TODO: object.update data returned from server will not include $operator
                 el.setValue(value);
-
             }
         }
     }
