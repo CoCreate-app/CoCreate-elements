@@ -123,10 +123,11 @@ function reset(form) {
         if (element.hasAttribute('object') && (!resetType || resetType === 'object'))
             element.setAttribute('object', '');
         if (resetType === 'false' || resetType === 'object')
-            elementStates.set(element, element.value || element.getAttribute('value'));
+            elementStates.set(element, element.getValue() || element.value || element.getAttribute('value'));
         if (!resetType || resetType !== 'object')
             element.setValue('')
     }
+
 
     // Perform the default form reset
     form.reset();
