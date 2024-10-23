@@ -128,6 +128,8 @@ function reset(form) {
             element.setValue('')
     }
 
+    if (form.hasAttribute('object'))
+        form.setAttribute('object', '');
 
     // Perform the default form reset
     form.reset();
