@@ -220,7 +220,8 @@ observer.init({
     attributeName: ['src'],
     target: selector,
     callback: function (mutation) {
-        init(mutation.target);
+        if (mutation.oldValue !== mutation.target.getAttribute(mutation.attributeName))
+            init(mutation.target);
     }
 });
 
