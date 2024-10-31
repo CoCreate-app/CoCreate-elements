@@ -1181,7 +1181,7 @@ function initSocket() {
 Observer.init({
     name: 'render',
     observe: ['addedNodes'],
-    target: '[render-clone]',
+    selector: '[render-clone]',
     callback: function (mutation) {
         if (!mutation.parentElement.hasAttribute('dnd'))
             return
@@ -1331,7 +1331,7 @@ function dndCrudSend(data, crudType) {
 Observer.init({
     name: 'CoCreateElementsChildList',
     observe: ['childList'],
-    target: selector,
+    selector: selector,
     callback: function (mutation) {
         init(mutation.addedNodes);
     }
@@ -1340,7 +1340,7 @@ Observer.init({
 Observer.init({
     name: 'CoCreateElementsRemovedNodes',
     observe: ['removedNodes'],
-    target: selector,
+    selector: selector,
     callback: function (mutation) {
         // if (mutation.target.parentElement) return
         // if (mutation.target.parentElement) {

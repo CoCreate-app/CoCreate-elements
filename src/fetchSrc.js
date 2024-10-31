@@ -208,7 +208,7 @@ function base64ToArrayBuffer(base64) {
 observer.init({
     name: 'CoCreateSrc',
     observe: ['addedNodes'],
-    target: selector,
+    selector: selector,
     callback: function (mutation) {
         init(mutation.target);
     }
@@ -218,7 +218,7 @@ observer.init({
     name: 'CoCreateSrcAttributes',
     observe: ['attributes'],
     attributeName: ['src'],
-    target: selector,
+    selector: selector,
     callback: function (mutation) {
         if (mutation.oldValue !== mutation.target.getAttribute(mutation.attributeName))
             init(mutation.target);

@@ -23,7 +23,7 @@ function init(elements) {
         Observer.init({
             name: 'CoCreateFormElements',
             observe: ['addedNodes'],
-            target: '[storage], [database], [array], [index], [object], [key]',
+            selector: '[storage], [database], [array], [index], [object], [key]',
             callback: function (mutation) {
                 if (element == mutation.target.form)
                     setAttribute(element, [mutation.target])
@@ -165,7 +165,7 @@ function setValue(form) {
 Observer.init({
     name: 'CoCreateForm',
     observe: ['addedNodes'],
-    target: 'form',
+    selector: 'form',
     callback: mutation => init(mutation.target)
 });
 
@@ -173,7 +173,7 @@ Observer.init({
     name: 'CoCreateForm',
     observe: ['attributes'],
     attributeName: getAttributeNames(['storage', 'database', 'array', 'object', 'index']),
-    target: 'form',
+    selector: 'form',
     callback: mutation => mutation.target.tagName === "FORM" &&
         setAttribute(mutation.target)
 });
