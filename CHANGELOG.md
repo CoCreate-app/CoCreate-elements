@@ -1,3 +1,19 @@
+## [1.37.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.37.0...v1.37.1) (2024-11-02)
+
+
+### Bug Fixes
+
+* checkValue(key) prior to excutuing element.setValue() ([8234c96](https://github.com/CoCreate-app/CoCreate-elements/commit/8234c96ff445b7a9bbc4d7171c07ae1b189fb9ee))
+* element.getValue() ([7009f70](https://github.com/CoCreate-app/CoCreate-elements/commit/7009f70d7a18d0e79100da8c25788db1a1c4c2e2))
+* handling contenteditable iframes ([11b6819](https://github.com/CoCreate-app/CoCreate-elements/commit/11b6819089e2b3ab2bbbcb47aa4f6134a036ad92))
+* if form has attribute object set as empty on reset ([29c1b6d](https://github.com/CoCreate-app/CoCreate-elements/commit/29c1b6d469afbaecd8e760288961726a2d9cd49b))
+* init if observer ol attribute value not the same as new ([456913c](https://github.com/CoCreate-app/CoCreate-elements/commit/456913c6d4a13279aad08a40732efd91e272add0))
+* observer taget has been renamed to selector ([239974c](https://github.com/CoCreate-app/CoCreate-elements/commit/239974ca9316607f28ce9fa1440b18b4e60735a0))
+* removed comsole.log ([d0b6fe3](https://github.com/CoCreate-app/CoCreate-elements/commit/d0b6fe314ab9532df479e955d243d3ef242bbc89))
+* removed dead code ([3929b76](https://github.com/CoCreate-app/CoCreate-elements/commit/3929b76d6a7d5bd71b5973f3ff4b2a8061954d7a))
+* removed test console.log ([4fea18d](https://github.com/CoCreate-app/CoCreate-elements/commit/4fea18d4f32c604b2666d92a384dce6bfe53dfc7))
+* resetType support ([2ce141e](https://github.com/CoCreate-app/CoCreate-elements/commit/2ce141e832f97c8df7a68a7bdfc5206d98cf66da))
+
 # [1.37.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.36.2...v1.37.0) (2024-09-21)
 
 
