@@ -822,11 +822,12 @@ async function getData(form) {
 			let Data = { ...data };
 			let dataKey = elements.get(element);
 			let value = await element.getValue();
+			if (!value && value !== "") continue;
 
 			// console.log(type, value, data)
 			if (!Data[Data.type] && Data.key) {
-				if (!value) continue;
-				else if (Array.isArray(value) && !value.length) continue;
+				// if (!value && value !== "") continue;
+				// else if (Array.isArray(value) && !value.length) continue;
 
 				Data.method = Data.type + ".create";
 				if (Data.type === "object") {
@@ -870,11 +871,11 @@ async function getData(form) {
 				}
 
 				if ((Data.type = "object")) {
-					if (Data.key == "{}") {
-						if (!value) continue;
-						else if (Array.isArray(value) && !value.length)
-							continue;
-					}
+					// if (Data.key == "{}") {
+					// 	if (!value && value !== "") continue;
+					// 	else if (Array.isArray(value) && !value.length)
+					// 		continue;
+					// }
 
 					if (typeof Data[Data.type] === "string")
 						if (Data.key == "{}") {
