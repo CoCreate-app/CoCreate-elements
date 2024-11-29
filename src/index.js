@@ -819,10 +819,21 @@ async function getData(form) {
 				let attribute = element.getAttribute("actions");
 				if (attribute.includes("save", "delete")) continue;
 			}
-			let Data = { ...data };
-			let dataKey = elements.get(element);
+
+			if (
+				element.matches(
+					"[render-selector], [render-closest], [render-parent], [render-next], [render-previous]"
+				)
+			) {
+				let type = element.getAttribute("type");
+				if (type !== "file") continue;
+			}
+
 			let value = await element.getValue();
 			if (!value && value !== "") continue;
+
+			let Data = { ...data };
+			let dataKey = elements.get(element);
 
 			// console.log(type, value, data)
 			if (!Data[Data.type] && Data.key) {
@@ -1463,6 +1474,8 @@ Actions.init([
 		name: "delete",
 		endEvent: "deleted",
 		callback: async (action) => {
+			// TODO: use selector to target elements for deletion if element is apart of render get render get rendering element for more crud detils
+			// this way any selector can be used to target crud deletions not just .selected
 			let elements = queryElements({
 				element: action.element,
 				prefix: "delete"
