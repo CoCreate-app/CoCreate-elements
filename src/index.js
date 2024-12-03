@@ -272,7 +272,7 @@ async function read(element, data, dataKey) {
 			el.hasRead = true;
 			delay.elements.set(el, true);
 		} else {
-			// console.log('read skipped', el)
+			// console.log("read skipped", el);
 		}
 	}
 
@@ -1206,6 +1206,7 @@ async function remove(element) {
 	)
 		element = [element];
 	for (let i = 0; i < element.length; i++) {
+		delete element[i].hasRead;
 		if (element[i].tagName === "FORM") {
 			let form = forms.get(element[i]);
 			if (!form) return;
