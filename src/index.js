@@ -1456,7 +1456,16 @@ Observer.init({
 Observer.init({
 	name: "CoCreateElementsAttributes",
 	observe: ["attributes"],
-	attributeName: ["storage", "database", "array", "index", "object", "key"],
+	attributeName: [
+		"organization_id",
+		"host",
+		"storage",
+		"database",
+		"array",
+		"index",
+		"object",
+		"key"
+	],
 	// target: selector, // blocks mutations when applied
 	callback: function (mutation) {
 		let currentValue = mutation.target.getAttribute(mutation.attributeName);
