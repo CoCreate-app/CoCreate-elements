@@ -32,7 +32,8 @@ import {
 	sortData,
 	getAttributes,
 	getAttributeNames,
-	checkValue
+	checkValue,
+	getValueFromObject
 } from "@cocreate/utils";
 import filter from "@cocreate/filter";
 import { render, renderValue, renderedNodes } from "@cocreate/render";
@@ -445,8 +446,8 @@ async function filterData(element, data, type, key) {
 			operator = key.split(".")[0] || "";
 		}
 
-		let property = key.replace(operator + ".", "");
-
+		let property = key;
+		if (operator) property = property.replace(operator + ".", "");
 		if (Array.isArray(data[type])) {
 			let Data = [],
 				isObject;
@@ -462,14 +463,18 @@ async function filterData(element, data, type, key) {
 						doc = { ...doc, ...$update };
 					}
 				}
-				if (doc[property]) {
-					if (Array.isArray(doc[property]))
-						Data.push(...doc[property]);
+				let docValue = getValueFromObject(doc, property);
+				if (docValue) {
+					if (Array.isArray(docValue)) Data.push(...docValue);
 					else {
 						isObject = true;
-						Data.push(doc[property]);
+						Data.push(docValue);
 					}
 				} else continue;
+			}
+
+			if (isObject && Data.length === 1) {
+				Data = Data[0];
 			}
 
 			// if (isObject && Data.length === 1) {
