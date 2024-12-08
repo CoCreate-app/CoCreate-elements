@@ -401,7 +401,10 @@ async function setData(element, data) {
 		if (el.getFilter || el.renderValue)
 			await filterData(el, data, type, key);
 		else {
-			if (!data[type] || !data[type].length) continue;
+			if (!data[type] || !data[type].length) {
+				if (el.hasAttribute("value-dispatch")) el.setValue("");
+				continue;
+			}
 
 			if (key && checkValue(key)) {
 				let value;
