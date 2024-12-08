@@ -17,17 +17,6 @@ function init(elements) {
 	else if (!Array.isArray(elements)) elements = [elements];
 
 	for (let element of elements) {
-		Observer.init({
-			name: "CoCreateFormElements",
-			observe: ["addedNodes"],
-			selector:
-				"[storage], [database], [array], [index], [object], [key]",
-			callback: function (mutation) {
-				if (element == mutation.target.form)
-					setAttribute(element, [mutation.target]);
-			}
-		});
-
 		runObjectId(element);
 		setAttribute(element);
 		disableAutoFill(element);
@@ -43,6 +32,8 @@ function init(elements) {
 /**
  * @param form
  */
+// TODO: runObjectId could potentially be removed and handled by element-prototype getAttribute $object_id
+// Somthing to consider is that $object_id is not replaced by an _id causing getAttribute to return a new _id on each get
 function runObjectId(form) {
 	let elements = Array.from(form.querySelectorAll("[object='ObjectId()']"));
 
@@ -62,7 +53,7 @@ function runObjectId(form) {
 function setAttribute(form, elements) {
 	if (!elements)
 		elements = form.querySelectorAll(
-			"[storage], [database], [array], [index], [object], [key]"
+			"[organization_id], [host], [storage], [database], [array], [index], [object], [key]"
 		);
 
 	for (let attribute of form.attributes) {
@@ -184,6 +175,8 @@ Observer.init({
 	name: "CoCreateForm",
 	observe: ["attributes"],
 	attributeName: getAttributeNames([
+		"organization_id",
+		"host",
 		"storage",
 		"database",
 		"array",
@@ -193,6 +186,17 @@ Observer.init({
 	selector: "form",
 	callback: (mutation) =>
 		mutation.target.tagName === "FORM" && setAttribute(mutation.target)
+});
+
+Observer.init({
+	name: "CoCreateFormElements",
+	observe: ["addedNodes"],
+	selector:
+		"[organization_id], [host], [storage], [database], [array], [index], [object], [key]",
+	callback: function (mutation) {
+		if (mutation.target.form)
+			setAttribute(mutation.target.form, [mutation.target]);
+	}
 });
 
 Action.init({
