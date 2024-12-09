@@ -1,3 +1,11 @@
+## [1.38.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.38.0...v1.38.1) (2024-12-09)
+
+
+### Bug Fixes
+
+* formating ([b00cd97](https://github.com/CoCreate-app/CoCreate-elements/commit/b00cd97d4b930a6e2d31f0bb0fa99b4f3e9a507e))
+* handling reset type value ([4e10403](https://github.com/CoCreate-app/CoCreate-elements/commit/4e104034219333cbd0f49fd8f46cd9e24bd2dd94))
+
 # [1.38.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.37.1...v1.38.0) (2024-11-04)
 
 
