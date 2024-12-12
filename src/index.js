@@ -393,6 +393,7 @@ async function setData(element, data) {
 			console.log("render-json", "");
 		}
 
+		let reference = el.getAttribute("reference");
 		let action = el.getAttribute("actions");
 		if (action && ["database", "array", "object", "key"].includes(action))
 			continue;
@@ -420,8 +421,16 @@ async function setData(element, data) {
 					if ($update) {
 						delete data[type][0].$update;
 						data[type][0] = { ...data[type][0], ...$update };
+					} else if (key === "{}") {
+						value = data[type][0];
+						if (reference === "false") {
+							delete data[type][0].$storage;
+							delete data[type][0].$database;
+							delete data[type][0].$array;
+						}
+					} else {
+						value = CRUD.getValueFromObject(data[type][0], key);
 					}
-					value = CRUD.getValueFromObject(data[type][0], key);
 				}
 
 				if (!data[type].length) continue;
@@ -431,6 +440,7 @@ async function setData(element, data) {
 					(isListen === "false" && !data.method.endsWith(".read"))
 				)
 					continue;
+
 				// TODO: object.update data returned from server will not include $operator
 				el.setValue(value);
 			}
