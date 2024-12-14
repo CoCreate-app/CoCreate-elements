@@ -151,7 +151,8 @@ async function initElement(el) {
 	// let attributes = ['filter-key', 'filter-search', 'filter-sort-key', 'filter-on', 'filter-limit']
 	// if (el.getFilter || attributes.some(attr => el.hasAttribute(attr))) {
 
-	await filter.init();
+	await filter.init(el);
+
 	if (el.getFilter) {
 		data.$filter = await el.getFilter();
 
@@ -931,7 +932,9 @@ async function getData(form) {
 								...value
 							};
 						else {
-							Data[Data.type][0][Data.key] = value;
+							if (Data[Data.type][0]) {
+								Data[Data.type][0][Data.key] = value;
+							}
 							if (!Data[Data.type][0]._id)
 								Data.method = Data.type + ".create";
 						}
