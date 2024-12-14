@@ -1,3 +1,21 @@
+# [1.40.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.39.0...v1.40.0) (2024-12-14)
+
+
+### Bug Fixes
+
+* allow empty strings and array values ([948a5ec](https://github.com/CoCreate-app/CoCreate-elements/commit/948a5ec60de14dc05df4650cfdf5ff3eae8f4bcd))
+* delete element[i].hasRead in remove function ([6cee7e9](https://github.com/CoCreate-app/CoCreate-elements/commit/6cee7e9ad2ed817c59fb7fe31fbeccd2746d8caf))
+* filter.init('el') ([804c9ad](https://github.com/CoCreate-app/CoCreate-elements/commit/804c9ad2d8c3cb4ad2ceeaf8c11c363268a139ce))
+* getValueFromObject inorder to get values using dotNotation ([b66e466](https://github.com/CoCreate-app/CoCreate-elements/commit/b66e466b3b03ffabc0f65b840c495fc174967075))
+* handling crud updates when render element used ([0216396](https://github.com/CoCreate-app/CoCreate-elements/commit/0216396988d394005282fc85e881054d45d93cfc))
+* moved observer out of loop as only needs to be declared once. ([4941c83](https://github.com/CoCreate-app/CoCreate-elements/commit/4941c837bcbb642f4266932e2e2e99bc4848a27c))
+
+
+### Features
+
+* attribute observer organization_id and host ([ba4eae9](https://github.com/CoCreate-app/CoCreate-elements/commit/ba4eae9d41cba3bf906c00b484a163ab36d373f7))
+* Attribute refrence to define whether the crud refrence data will be excluded ([b0d3243](https://github.com/CoCreate-app/CoCreate-elements/commit/b0d3243514a910292677e588c0654888b45070eb))
+
 # [1.39.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.38.1...v1.39.0) (2024-12-14)
 
 
