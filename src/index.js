@@ -218,7 +218,7 @@ function initDataKey(element, data) {
 	elements.set(element, dataKey.string);
 
 	if (element.parentElement) {
-		let form = element.parentElement.closest("form");
+		let form = element.closest("form");
 		if (form) {
 			if (!form.save) form.save = () => save(form);
 
@@ -400,7 +400,8 @@ async function setData(element, data) {
 			continue;
 
 		const { key, isRead, isUpdate, isListen, isCrdt } = getAttributes(el);
-		if (el.getFilter || el.renderValue)
+		let elementType = el.getAttribute("type");
+		if (elementType !== "file" && (el.getFilter || el.renderValue))
 			await filterData(el, data, type, key);
 		else {
 			if (!data[type] || !data[type].length) {
