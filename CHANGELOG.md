@@ -1,3 +1,10 @@
+## [1.40.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.40.0...v1.40.1) (2024-12-22)
+
+
+### Bug Fixes
+
+* imved logic if element type = file ([34213f5](https://github.com/CoCreate-app/CoCreate-elements/commit/34213f50aae505b7caafff47125569418a09a4b3))
+
 # [1.40.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.39.0...v1.40.0) (2024-12-14)
 
 
