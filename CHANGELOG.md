@@ -1,3 +1,10 @@
+# [1.41.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.40.1...v1.41.0) (2025-01-02)
+
+
+### Features
+
+* remove attribute rendered on src elements as it is allready rendered by server ([8b9e891](https://github.com/CoCreate-app/CoCreate-elements/commit/8b9e8919a5aca514513af6c833671a1368d5cb9d))
+
 ## [1.40.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.40.0...v1.40.1) (2024-12-22)
 
 
