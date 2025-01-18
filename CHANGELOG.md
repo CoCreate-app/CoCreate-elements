@@ -1,3 +1,11 @@
+## [1.41.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.41.0...v1.41.1) (2025-01-18)
+
+
+### Bug Fixes
+
+* path handling ([1276f2d](https://github.com/CoCreate-app/CoCreate-elements/commit/1276f2d3988ec556ce95d3166596526d9d5851c3))
+* sum handling ([86f1e74](https://github.com/CoCreate-app/CoCreate-elements/commit/86f1e74af2e14b51b925e36fd22b2935796073fa))
+
 # [1.41.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.40.1...v1.41.0) (2025-01-02)
 
 
