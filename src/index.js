@@ -480,8 +480,12 @@ async function filterData(element, data, type, key) {
 				}
 				let docValue = getValueFromObject(doc, property);
 				if (docValue) {
-					if (Array.isArray(docValue)) Data.push(...docValue);
-					else {
+					if (operator === "$sum" && typeof docValue === "number") {
+						if (typeof value !== "number") value = 0;
+						value += docValue;
+					} else if (Array.isArray(docValue)) {
+						Data.push(...docValue);
+					} else {
 						isObject = true;
 						Data.push(docValue);
 					}
@@ -496,11 +500,11 @@ async function filterData(element, data, type, key) {
 			//     data = { [property]: Data[0] }
 			// } else
 			if (!operator) data = Data;
-			else if (operator === "$sum") {
-				value = Data.reduce((accumulator, currentValue) => {
-					return accumulator + currentValue;
-				}, 0);
-			}
+			// else if (operator === "$sum") {
+			// 	value = data[type].reduce((accumulator, currentValue) => {
+			// 		return accumulator + currentValue;
+			// 	}, 0);
+			// }
 		} else {
 			data = { [property]: data[type][property] };
 		}
