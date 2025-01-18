@@ -149,16 +149,20 @@ async function initElements(elements) {
 							// let blob = await response.json();
 							// URL.createObjectURL(blob);
 						}
-					} else if (element.hasAttribute("rendered")) {
+					}
+					// else if (element.hasAttribute("rendered")) {
+					// 	element.removeAttribute("rendered");
+					// 	// let path = element.getAttribute("path");
+					// 	// if (path) {
+					// 	// 	let elements = element.querySelectorAll("[src]");
+					// 	// 	for (let i = 0; i < elements.length; i++) {
+					// 	// 		text = text.replaceAll("{{path}}", path);
+					// 	// 	}
+					// 	// }
+					// }
+					else {
 						element.removeAttribute("rendered");
-						// let path = element.getAttribute("path");
-						// if (path) {
-						// 	let elements = element.querySelectorAll("[src]");
-						// 	for (let i = 0; i < elements.length; i++) {
-						// 		text = text.replaceAll("{{path}}", path);
-						// 	}
-						// }
-					} else {
+
 						let text = await response.text();
 						if (text) {
 							let path = element.getAttribute("path");
