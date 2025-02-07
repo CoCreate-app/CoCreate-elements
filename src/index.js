@@ -1010,7 +1010,7 @@ async function getData(form) {
 	return dataArray;
 }
 
-async function save(element) {
+async function save(element, action) {
 	if (!element) return;
 	let data, value;
 	let upsert = element.getAttribute("upsert");
@@ -1116,19 +1116,28 @@ async function save(element) {
 				(data[i].type !== "object" &&
 					data[i].method.endsWith(".update")))
 		) {
-			setTypeValue(element, data[i]);
-		} else if (data[i])
-			document.dispatchEvent(
-				new CustomEvent("saved", {
-					detail: data[i]
-				})
-			);
+			setTypeValue(element, data[i], action);
+		} else if (data[i]) {
+			if (action) {
+				action.element.dispatchEvent(
+					new CustomEvent("saved", {
+						detail: data
+					})
+				);
+			} else {
+				document.dispatchEvent(
+					new CustomEvent("saved", {
+						detail: data
+					})
+				);
+			}
+		}
 	}
 
 	return Data;
 }
 
-function setTypeValue(element, data) {
+function setTypeValue(element, data, action) {
 	// TODO: if an array name is updated, the attibute array="" needs to be updated.
 
 	if (!data) return;
@@ -1164,7 +1173,7 @@ function setTypeValue(element, data) {
 		}
 		setData(Array.from(elements.keys()), data);
 
-		//     const state_ids = new Map();
+		//     const state_ids = new Map()
 
 		//     let state_id = form.getAttribute('state_id');
 		//     if (state_id) {
@@ -1217,11 +1226,19 @@ function setTypeValue(element, data) {
 		//     }
 	}
 
-	document.dispatchEvent(
-		new CustomEvent("saved", {
-			detail: data
-		})
-	);
+	if (action) {
+		action.element.dispatchEvent(
+			new CustomEvent("saved", {
+				detail: data
+			})
+		);
+	} else {
+		document.dispatchEvent(
+			new CustomEvent("saved", {
+				detail: data
+			})
+		);
+	}
 }
 
 async function remove(element) {
@@ -1503,7 +1520,7 @@ Actions.init([
 		name: "save",
 		endEvent: "saved",
 		callback: (action) => {
-			if (action.form) save(action.form);
+			if ((action.form, action)) save(action.form, action);
 		}
 	},
 	{
@@ -1546,7 +1563,7 @@ Actions.init([
 					data[data.type] = { _id: data[data.type] };
 
 				let response = await CRUD.send(data);
-				document.dispatchEvent(
+				action.element.dispatchEvent(
 					new CustomEvent("deleted", {
 						detail: response
 					})

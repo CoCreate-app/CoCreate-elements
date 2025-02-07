@@ -93,7 +93,9 @@ function disableAutoFill(element) {
 /**
  * @param form
  */
-function reset(form) {
+function reset(action) {
+	let form = action.form;
+
 	// Convert the form elements collection to an array
 	const formElementsArray = Array.from(form.elements);
 
@@ -141,7 +143,7 @@ function reset(form) {
 	});
 
 	// Dispatch a custom reset event
-	document.dispatchEvent(
+	action.element.dispatchEvent(
 		new CustomEvent("reset", {
 			detail: {}
 		})
@@ -203,7 +205,7 @@ Action.init({
 	name: "reset",
 	endEvent: "reset",
 	callback: (action) => {
-		if (action.form) reset(action.form);
+		if (action.form) reset(action);
 	}
 });
 
