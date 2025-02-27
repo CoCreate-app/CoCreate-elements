@@ -22,160 +22,134 @@ async function initElements(elements) {
 		if (!src || /{{\s*([\w\W]+)\s*}}/g.test(src)) continue;
 
 		let initialize = initializing.get(element);
-		if (!initialize || initialize.src != src) {
-			initializing.set(element, { src });
-			if (src) {
-				try {
-					let response = await fetch(src);
-					if (
-						element.tagName === "AUDIO" ||
-						element.tagName === "VIDEO"
-					) {
-						try {
-							let mediaConfig = await response.json();
-							let sourceBuffer;
+		if (initialize && initialize.src === src) continue;
 
-							const mediaSource = new MediaSource();
-							element.src = URL.createObjectURL(mediaSource);
-							mediaSource.addEventListener(
-								"sourceopen",
-								async () => {
-									sourceBuffer = mediaSource.addSourceBuffer(
-										`${mediaConfig["content-type"]}; codecs="${mediaConfig.codecs}"`
-									);
+		initializing.set(element, { src });
+		try {
+			let state = localStorage.getItem("state"); // Assume this is your state object
+			let response = await fetch(src, {
+				headers: {
+					"X-State": state // Custom header to send state
+				}
+			});
 
-									sourceBuffer.addEventListener(
-										"updateend",
-										() => {
-											console.log(
-												"Update ended, buffered ranges:",
-												sourceBuffer.buffered
-											);
-											if (
-												!sourceBuffer.updating &&
-												mediaSource.readyState ===
-													"open"
-											) {
-												mediaSource.endOfStream();
+			if (element.tagName === "AUDIO" || element.tagName === "VIDEO") {
+				initMediaSource(element, src);
+			} else {
+				element.removeAttribute("rendered");
 
-												element.addEventListener(
-													"ended",
-													() => {
-														URL.revokeObjectURL(
-															element.src
-														);
-													}
-												);
-											}
-										}
-									);
-									sourceBuffer.addEventListener(
-										"error",
-										(e) => {
-											console.error(
-												"SourceBuffer error event:",
-												e
-											);
-											console.log(
-												"MediaSource readyState:",
-												mediaSource.readyState
-											);
-											console.log(
-												"SourceBuffer updating:",
-												sourceBuffer.updating
-											);
-											console.log(
-												"SourceBuffer buffered ranges:",
-												sourceBuffer.buffered
-											);
-											// Any other state information you can log
-										}
-									);
-
-									getSegment(
-										sourceBuffer,
-										mediaConfig.segments[0]
-									);
-								}
-							);
-
-							mediaSource.addEventListener("sourceended", () => {
-								console.log("MediaSource ended event fired");
-							});
-
-							mediaSource.addEventListener("sourceclose", () => {
-								console.log("MediaSource close event fired");
-							});
-
-							// Event listener for seeking
-							element.addEventListener("seeking", () => {
-								let currentTime = element.currentTime;
-								let chunkIndex = Math.floor(
-									currentTime / chunkDuration
-								);
-							});
-
-							// Event listener for seeked
-							element.addEventListener("seeked", () => {
-								let currentTime = element.currentTime;
-								if (isBuffered(element, currentTime)) return;
-
-								let query = {
-									start: { $lte: currentTime },
-									end: { $gte: currentTime }
-								};
-
-								let segments = queryData(
-									mediaConfig.segments,
-									query
-								);
-								for (let segment of segments) {
-									getSegment(sourceBuffer, segment);
-								}
-							});
-
-							element.addEventListener("timeupdate", function () {
-								const bufferEnd = element.buffered.end(0);
-								const currentTime = element.currentTime;
-								const threshold = 10; // seconds before buffer end to fetch the next segment
-
-								if (bufferEnd - currentTime < threshold) {
-									// Time to fetch the next segment
-									getSegment(sourceBuffer, mediaConfig);
-								}
-							});
-						} catch (error) {
-							element.src = src;
-							// let blob = await response.json();
-							// URL.createObjectURL(blob);
-						}
+				let text = await response.text();
+				if (text) {
+					let pathElement = element.closest("[path]");
+					if (pathElement) {
+						let path =
+							pathElement.getAttribute("path") || getPath();
+						if (path) text = text.replaceAll("$relativePath", path);
 					}
-					// else if (element.hasAttribute("rendered")) {
-					// 	element.removeAttribute("rendered");
-					// 	// let path = element.getAttribute("path");
-					// 	// if (path) {
-					// 	// 	let elements = element.querySelectorAll("[src]");
-					// 	// 	for (let i = 0; i < elements.length; i++) {
-					// 	// 		text = text.replaceAll("{{path}}", path);
-					// 	// 	}
-					// 	// }
-					// }
-					else {
-						element.removeAttribute("rendered");
-
-						let text = await response.text();
-						if (text) {
-							let path = element.getAttribute("path");
-							if (path) text = text.replaceAll("{{path}}", path);
-							element.setValue(text);
-							initializing.delete(element);
-						}
-					}
-				} catch (err) {
-					console.log("FetchSrc error:" + err);
+					element.setValue(text);
+					initializing.delete(element);
 				}
 			}
+		} catch (err) {
+			console.log("FetchSrc error:" + err);
 		}
+	}
+}
+
+function getPath() {
+	let currentPath = window.location.pathname.replace(/\/[^\/]*$/, ""); // Remove file from path
+	let depth = currentPath.split("/").filter(Boolean).length; // Count depth levels
+
+	return depth > 0 ? "../".repeat(depth) : "./"; // Return the correct relative path
+}
+
+async function initMediaSource(element, src) {
+	try {
+		let mediaConfig = await response.json();
+		let sourceBuffer;
+
+		const mediaSource = new MediaSource();
+		element.src = URL.createObjectURL(mediaSource);
+		mediaSource.addEventListener("sourceopen", async () => {
+			sourceBuffer = mediaSource.addSourceBuffer(
+				`${mediaConfig["content-type"]}; codecs="${mediaConfig.codecs}"`
+			);
+
+			sourceBuffer.addEventListener("updateend", () => {
+				console.log(
+					"Update ended, buffered ranges:",
+					sourceBuffer.buffered
+				);
+				if (
+					!sourceBuffer.updating &&
+					mediaSource.readyState === "open"
+				) {
+					mediaSource.endOfStream();
+
+					element.addEventListener("ended", () => {
+						URL.revokeObjectURL(element.src);
+					});
+				}
+			});
+
+			sourceBuffer.addEventListener("error", (e) => {
+				console.error("SourceBuffer error event:", e);
+				console.log("MediaSource readyState:", mediaSource.readyState);
+				console.log("SourceBuffer updating:", sourceBuffer.updating);
+				console.log(
+					"SourceBuffer buffered ranges:",
+					sourceBuffer.buffered
+				);
+				// Any other state information you can log
+			});
+
+			getSegment(sourceBuffer, mediaConfig.segments[0]);
+		});
+
+		mediaSource.addEventListener("sourceended", () => {
+			console.log("MediaSource ended event fired");
+		});
+
+		mediaSource.addEventListener("sourceclose", () => {
+			console.log("MediaSource close event fired");
+		});
+
+		// Event listener for seeking
+		element.addEventListener("seeking", () => {
+			let currentTime = element.currentTime;
+			let chunkIndex = Math.floor(currentTime / chunkDuration);
+		});
+
+		// Event listener for seeked
+		element.addEventListener("seeked", () => {
+			let currentTime = element.currentTime;
+			if (isBuffered(element, currentTime)) return;
+
+			let query = {
+				start: { $lte: currentTime },
+				end: { $gte: currentTime }
+			};
+
+			let segments = queryData(mediaConfig.segments, query);
+			for (let segment of segments) {
+				getSegment(sourceBuffer, segment);
+			}
+		});
+
+		element.addEventListener("timeupdate", function () {
+			const bufferEnd = element.buffered.end(0);
+			const currentTime = element.currentTime;
+			const threshold = 10; // seconds before buffer end to fetch the next segment
+
+			if (bufferEnd - currentTime < threshold) {
+				// Time to fetch the next segment
+				getSegment(sourceBuffer, mediaConfig);
+			}
+		});
+	} catch (error) {
+		element.src = src;
+		// let blob = await response.json();
+		// URL.createObjectURL(blob);
 	}
 }
 
@@ -270,6 +244,19 @@ observer.init({
 	selector: selector,
 	callback: function (mutation) {
 		init(mutation.target);
+	}
+});
+
+observer.init({
+	name: "CoCreateSrcOperator",
+	observe: ["addedNodes"],
+	selector: "img",
+	// selector: "img, video, audio, script, input, iframe, frame, link, source",
+	callback: function (mutation) {
+		let src = mutation.target.getAttribute("src");
+		if (src) {
+			mutation.target.setAttribute("src", src);
+		}
 	}
 });
 
