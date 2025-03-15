@@ -21,10 +21,17 @@ function init(elements) {
 		setAttribute(element);
 		disableAutoFill(element);
 		setValue(element);
+
 		element.addEventListener("submit", function (event) {
 			if (!element.hasAttribute("action")) {
 				event.preventDefault();
 			}
+		});
+
+		// Handle form reset event
+		element.addEventListener("reset", function (event) {
+			event.preventDefault(); // Prevent default reset
+			reset({ form: event.target }); // Call custom reset logic
 		});
 	}
 }
@@ -129,7 +136,13 @@ function reset(action) {
 					element.value ||
 					element.getAttribute("value")
 			);
-		if (!resetType || resetType === "value") element.setValue("");
+		if (!resetType || resetType === "value") {
+			if (element.contentEditable === "true") {
+				element.innerHTML = "";
+			} else {
+				element.setValue("");
+			}
+		}
 	}
 
 	if (form.hasAttribute("object")) form.setAttribute("object", "");
@@ -143,11 +156,13 @@ function reset(action) {
 	});
 
 	// Dispatch a custom reset event
-	action.element.dispatchEvent(
-		new CustomEvent("reset", {
-			detail: {}
-		})
-	);
+	if (action.element) {
+		action.element.dispatchEvent(
+			new CustomEvent("reset", {
+				detail: {}
+			})
+		);
+	}
 }
 
 function setValue(form) {
