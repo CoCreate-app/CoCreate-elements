@@ -40,6 +40,7 @@ import { render, renderValue, renderedNodes } from "@cocreate/render";
 import "@cocreate/element-prototype";
 import "./fetchSrc";
 import { reset } from "./form";
+import "./value.js";
 
 const selector = "[storage], [database], [array], [render-json]";
 const elements = new Map();
@@ -462,7 +463,12 @@ async function filterData(element, data, type, key) {
 		}
 
 		let property = key;
-		if (operator) property = property.replace(operator + ".", "");
+		if (operator) {
+			property = property.replace(operator + ".", "");
+			if (operator === "$sum") {
+				value = 0;
+			}
+		}
 		if (Array.isArray(data[type])) {
 			let Data = [],
 				isObject;
@@ -482,7 +488,7 @@ async function filterData(element, data, type, key) {
 				if (docValue) {
 					if (operator === "$sum" && typeof docValue === "number") {
 						if (typeof value !== "number") value = 0;
-						value += docValue;
+						value += docValue || 0;
 					} else if (Array.isArray(docValue)) {
 						Data.push(...docValue);
 					} else {
