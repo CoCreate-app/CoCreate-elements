@@ -86,7 +86,7 @@ init();
 
 Observer.init({
 	name: "CoCreateElementsValueAdded",
-	observe: ["addedNodes"],
+	types: ["addedNodes"],
 	selector: selector,
 	callback: function (mutation) {
 		init(mutation.target);
@@ -95,8 +95,8 @@ Observer.init({
 
 Observer.init({
 	name: "CoCreateElementsAttributes",
-	observe: ["attributes"],
-	attributeName: [
+	types: ["attributes"],
+	attributeFilter: [
 		"value-selector",
 		"value-closest",
 		"value-parent",

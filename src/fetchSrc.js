@@ -240,7 +240,7 @@ function base64ToArrayBuffer(base64) {
 
 observer.init({
 	name: "CoCreateSrc",
-	observe: ["addedNodes"],
+	types: ["addedNodes"],
 	selector: selector,
 	callback: function (mutation) {
 		init(mutation.target);
@@ -249,7 +249,7 @@ observer.init({
 
 observer.init({
 	name: "CoCreateSrcOperator",
-	observe: ["addedNodes"],
+	types: ["addedNodes"],
 	selector: "img",
 	// selector: "img, video, audio, script, input, iframe, frame, link, source",
 	callback: function (mutation) {
@@ -262,8 +262,8 @@ observer.init({
 
 observer.init({
 	name: "CoCreateSrcAttributes",
-	observe: ["attributes"],
-	attributeName: ["src"],
+	types: ["attributes"],
+	attributeFilter: ["src"],
 	selector: selector,
 	callback: function (mutation) {
 		if (

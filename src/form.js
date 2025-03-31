@@ -183,15 +183,15 @@ function setValue(form) {
 
 Observer.init({
 	name: "CoCreateForm",
-	observe: ["addedNodes"],
+	types: ["addedNodes"],
 	selector: "form",
 	callback: (mutation) => init(mutation.target)
 });
 
 Observer.init({
 	name: "CoCreateForm",
-	observe: ["attributes"],
-	attributeName: getAttributeNames([
+	types: ["attributes"],
+	attributeFilter: getAttributeNames([
 		"organization_id",
 		"host",
 		"storage",
@@ -207,7 +207,7 @@ Observer.init({
 
 Observer.init({
 	name: "CoCreateFormElements",
-	observe: ["addedNodes"],
+	types: ["addedNodes"],
 	selector:
 		"[organization_id], [host], [storage], [database], [array], [index], [object], [key]",
 	callback: function (mutation) {
