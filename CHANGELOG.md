@@ -1,3 +1,18 @@
+# [1.42.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.41.1...v1.42.0) (2025-04-11)
+
+
+### Bug Fixes
+
+* $relativePath handeling ([e9d41df](https://github.com/CoCreate-app/CoCreate-elements/commit/e9d41df24291083acc2bd5fa928c6b8b621e8f7c))
+* handeling onRest ([ba102ce](https://github.com/CoCreate-app/CoCreate-elements/commit/ba102cedec35c41f1a974d0f62de3670ed40105e))
+* update observer obseve param to type and and attributeName to attributeFilter ([3ce1a06](https://github.com/CoCreate-app/CoCreate-elements/commit/3ce1a0615fd16eeacc24b89c722593d7a470a566))
+* update to how action is handled ([25f2654](https://github.com/CoCreate-app/CoCreate-elements/commit/25f26548618397c3cbae0469ff284ca1be5a8a7b))
+
+
+### Features
+
+* value-selectors to get value from target element ([e3ae15b](https://github.com/CoCreate-app/CoCreate-elements/commit/e3ae15b5e0d2d953399bd45dc82ea44aa7aa6cde))
+
 ## [1.41.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.41.0...v1.41.1) (2025-01-18)
 
 
