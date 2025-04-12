@@ -1,5 +1,6 @@
 import Observer from "@cocreate/observer";
 import "@cocreate/element-prototype";
+import { queryElements } from "@cocreate/utils";
 
 const selector = "[value-query]";
 
@@ -31,7 +32,7 @@ async function init(element) {
  * @param {HTMLElement} element - The element to initialize.
  */
 function initElement(element) {
-	let targets = element.queryElements({ prefix: "value" });
+	let targets = queryElements({ element, prefix: "value" });
 
 	valueHandler(element, targets, true);
 }
