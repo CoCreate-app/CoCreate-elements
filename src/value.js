@@ -1,8 +1,7 @@
 import Observer from "@cocreate/observer";
 import "@cocreate/element-prototype";
 
-const selector =
-	"[value-selector], [value-closest], [value-parent], [value-next], [value-previous], [value-document], [value-frame], [value-top]";
+const selector = "[value-query]";
 
 /**
  * Initializes elements with value-* attributes to enable dynamic value retrieval and setting.
@@ -32,7 +31,7 @@ async function init(element) {
  * @param {HTMLElement} element - The element to initialize.
  */
 function initElement(element) {
-	let targets = element.queryElements();
+	let targets = element.queryElements({ prefix: "value" });
 
 	valueHandler(element, targets, true);
 }
@@ -43,7 +42,7 @@ function initElement(element) {
  * @param {HTMLElement} element - The element to set the value on.
  * @param {object} targets - An object containing elements retrieved by queryElements().
  */
-function valueHandler(element, targets = [], initialize) {
+function valueHandler(element, targets, initialize) {
 	let values = [];
 	// TODO: consdier the potential of targets being an array of elements, should value be an array of the values?
 	for (let i = 0; i < targets.length; i++) {
@@ -96,16 +95,7 @@ Observer.init({
 Observer.init({
 	name: "CoCreateElementsAttributes",
 	types: ["attributes"],
-	attributeFilter: [
-		"value-selector",
-		"value-closest",
-		"value-parent",
-		"value-next",
-		"value-previous",
-		"value-document",
-		"value-frame",
-		"value-top"
-	],
+	attributeFilter: ["value-query"],
 	callback: function (mutation) {
 		let currentValue = mutation.target.getAttribute(mutation.attributeName);
 		if (currentValue !== mutation.oldValue) {

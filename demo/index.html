@@ -1,179 +1,179 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Elements | CoCreateJS</title>
-        <!-- CoCreate Favicon -->
-        <link
-            rel="icon"
-            type="image/png"
-            sizes="32x32"
-            href="../assets/favicon.ico" />
-        <link rel="manifest" href="/manifest.webmanifest" />
-    </head>
-    <body class="padding:20px">
-        <!-- Supports create and update of all crud types -->
-        <h2>Supports create and update of all crud types</h2>
-        <form realtime="false">
-            <input
-                placeholder="test"
-                array="test"
-                object="6465646af1e023c0aee760c2"
-                key="name" />
+	<head>
+		<title>Elements | CoCreateJS</title>
+		<!-- CoCreate Favicon -->
+		<link
+			rel="icon"
+			type="image/png"
+			sizes="32x32"
+			href="../assets/favicon.ico" />
+		<link rel="manifest" href="/manifest.webmanifest" />
+	</head>
+	<body class="padding:20px">
+		<!-- Supports create and update of all crud types -->
+		<h2>Supports create and update of all crud types</h2>
+		<form realtime="false">
+			<input
+				placeholder="test"
+				array="test"
+				object="6465646af1e023c0aee760c2"
+				key="name" />
 
-            <a actions="save">Save</a>
-        </form>
-        <form realtime="false">
-            <!-- creates a database -->
-            <input database key="name" />
-            <!-- updates a database -->
-            <input database="test" key="name" />
-            <!-- deletes a database -->
-            <input database="test" key="name" value="$delete" />
+			<a actions="save">Save</a>
+		</form>
+		<form realtime="false">
+			<!-- creates a database -->
+			<input database key="name" />
+			<!-- updates a database -->
+			<input database="test" key="name" />
+			<!-- deletes a database -->
+			<input database="test" key="name" value="$delete" />
 
-            <!-- creates an array -->
-            <input array key="name" />
-            <!-- updates an array -->
-            <input array="test" key="name" />
-            <!-- deletes an array -->
-            <input array="test" key="name" value="$delete" />
+			<!-- creates an array -->
+			<input array key="name" />
+			<!-- updates an array -->
+			<input array="test" key="name" />
+			<!-- deletes an array -->
+			<input array="test" key="name" value="$delete" />
 
-            <!-- creates an index -->
-            <input array="test" index key="name" />
-            <!-- updates an index -->
-            <input array="test" index="test" key="name" />
-            <!-- deletes an index -->
-            <input array="test" index="test" key="name" value="$delete" />
+			<!-- creates an index -->
+			<input array="test" index key="name" />
+			<!-- updates an index -->
+			<input array="test" index="test" key="name" />
+			<!-- deletes an index -->
+			<input array="test" index="test" key="name" value="$delete" />
 
-            <!-- creates an object with key name -->
-            <input array="test" object key="name" />
-            <!-- updates an object keys value -->
-            <input array="test" object="6465646af1e023c0aee760c2" key="name" />
-            <!-- deletes an object key if the object key is primary the object will be deleted -->
-            <input
-                array="test"
-                object="6465646af1e023c0aee760c2"
-                key="_id"
-                value="$delete" />
+			<!-- creates an object with key name -->
+			<input array="test" object key="name" />
+			<!-- updates an object keys value -->
+			<input array="test" object="6465646af1e023c0aee760c2" key="name" />
+			<!-- deletes an object key if the object key is primary the object will be deleted -->
+			<input
+				array="test"
+				object="6465646af1e023c0aee760c2"
+				key="_id"
+				value="$delete" />
 
-            <!-- updates a key -->
-            <input
-                array="test"
-                object="6465646af1e023c0aee760c2"
-                key="name"
-                update />
+			<!-- updates a key -->
+			<input
+				array="test"
+				object="6465646af1e023c0aee760c2"
+				key="name"
+				update />
 
-            <!-- updating the key name to a new key using value and/or value-prefix, value-suffix to generate a valid json sting {$update: value } -->
-            <input
-                array="test"
-                object="6465646af1e023c0aee760c2"
-                key="name"
-                value="{$update: firstName}" />
+			<!-- updating the key name to a new key using value and/or value-prefix, value-suffix to generate a valid json sting {$update: value } -->
+			<input
+				array="test"
+				object="6465646af1e023c0aee760c2"
+				key="name"
+				value="{$update: firstName}" />
 
-            <br />
+			<br />
 
-            <a actions="save"></a>
-        </form>
+			<a actions="save"></a>
+		</form>
 
-        <!-- Supports all data types -->
-        <h2>Supports updating arrays</h2>
-        <form>
-            <!-- inserts the value at the end of the array and returns index number. attribute "push" is optional, result is same -->
-            <input
-                array="test"
-                object="6465646af1e023c0aee760c2"
-                key="name[]"
-                push />
+		<!-- Supports all data types -->
+		<h2>Supports updating arrays</h2>
+		<form>
+			<!-- inserts the value at the end of the array and returns index number. attribute "push" is optional, result is same -->
+			<input
+				array="test"
+				object="6465646af1e023c0aee760c2"
+				key="name[]"
+				push />
 
-            <!-- inserts the value at a specified index position of an array  -->
-            <input
-                array="test"
-                object="6465646af1e023c0aee760c2"
-                key="name[3]"
-                splice />
+			<!-- inserts the value at a specified index position of an array  -->
+			<input
+				array="test"
+				object="6465646af1e023c0aee760c2"
+				key="name[3]"
+				splice />
 
-            <!-- updates the value at a specified index position of an array  -->
-            <input
-                array="test"
-                object="6465646af1e023c0aee760c2"
-                key="name[0]" />
+			<!-- updates the value at a specified index position of an array  -->
+			<input
+				array="test"
+				object="6465646af1e023c0aee760c2"
+				key="name[0]" />
 
-            <!-- delete an item from the array by setting its value to "$delete" or "$slice" -->
-            <input
-                array="test"
-                object="6465646af1e023c0aee760c2"
-                key="name[0]"
-                value="$delete" />
+			<!-- delete an item from the array by setting its value to "$delete" or "$slice" -->
+			<input
+				array="test"
+				object="6465646af1e023c0aee760c2"
+				key="name[0]"
+				value="$delete" />
 
-            <!-- delete the last item from the array by settting its value to "$delete" or "$slice" -->
-            <input
-                array="test"
-                object="6465646af1e023c0aee760c2"
-                key="name[]"
-                value="$delete" />
+			<!-- delete the last item from the array by settting its value to "$delete" or "$slice" -->
+			<input
+				array="test"
+				object="6465646af1e023c0aee760c2"
+				key="name[]"
+				value="$delete" />
 
-            <!-- updating the key name will move the item to a new position -->
-            <input
-                array="test"
-                object="6465646af1e023c0aee760c2"
-                key="name[3]"
-                update />
+			<!-- updating the key name will move the item to a new position -->
+			<input
+				array="test"
+				object="6465646af1e023c0aee760c2"
+				key="name[3]"
+				update />
 
-            <!-- updating the key name to a new key using value and/or value-prefix, value-suffix to generate a valid json sting {$update: value } -->
-            <input
-                array="test"
-                object="6465646af1e023c0aee760c2"
-                key="name[3]"
-                value="{$splice: name[1]}" />
-        </form>
+			<!-- updating the key name to a new key using value and/or value-prefix, value-suffix to generate a valid json sting {$update: value } -->
+			<input
+				array="test"
+				object="6465646af1e023c0aee760c2"
+				key="name[3]"
+				value="{$splice: name[1]}" />
+		</form>
 
-        <!-- Supports all input types -->
-        <h2>Supports all input types</h2>
-        <form array="apples" object="" realtime="false">
-            <input
-                type="text"
-                class="floating-label"
-                placeholder="Text"
-                key="name" />
-            <input
-                type="number"
-                class="floating-label"
-                placeholder="number"
-                key="number" />
-            <input
-                type="text"
-                class="floating-label"
-                placeholder="color"
-                key="color" />
-            <input
-                type="date"
-                class="floating-label"
-                placeholder="Date"
-                key="date" />
-            <input
-                type="time"
-                class="floating-label"
-                placeholder="Time"
-                key="time" />
-            <input
-                type="datetime-local"
-                class="floating-label"
-                placeholder="Date Time"
-                key="date-time" />
-            <textarea
-                class="floating-label"
-                placeholder="Text Area"
-                key="text_area"></textarea>
-            <!-- <cocreate-select
+		<!-- Supports all input types -->
+		<h2>Supports all input types</h2>
+		<form array="apples" object="" realtime="false">
+			<input
+				type="text"
+				class="floating-label"
+				placeholder="Text"
+				key="name" />
+			<input
+				type="number"
+				class="floating-label"
+				placeholder="number"
+				key="number" />
+			<input
+				type="text"
+				class="floating-label"
+				placeholder="color"
+				key="color" />
+			<input
+				type="date"
+				class="floating-label"
+				placeholder="Date"
+				key="date" />
+			<input
+				type="time"
+				class="floating-label"
+				placeholder="Time"
+				key="time" />
+			<input
+				type="datetime-local"
+				class="floating-label"
+				placeholder="Date Time"
+				key="date-time" />
+			<textarea
+				class="floating-label"
+				placeholder="Text Area"
+				key="text_area"></textarea>
+			<!-- <cocreate-select
                 class="floating-label"
                 placeholder="Primary View"
                 key="navbar-menu-primary">
                 <input
                     placeholder="Search"
-                    filter-next="[array]"
+                    filter-query="$next [array]"
                     filter-search />
                 <cc-options
                     array="files"
-                    render-selector="[template]"
+                    render-query="[template]"
                     class="overflow:auto">
                     <cc-option
                         template
@@ -186,15 +186,15 @@
                 </cc-options>
             </cocreate-select> -->
 
-            <button
-                actions="save, reset"
-                class="position:fixed bottom:15px right:15px bg-blue grow-hover round">
-                <i src="/assets/svg/save.svg"></i>
-            </button>
-        </form>
+			<button
+				actions="save, reset"
+				class="position:fixed bottom:15px right:15px bg-blue grow-hover round">
+				<i src="/assets/svg/save.svg"></i>
+			</button>
+		</form>
 
-        <!-- <script src="../dist/CoCreate-elements.js"></script> -->
-        <!-- <script src="../../../CoCreateJS/dist/CoCreate.js"></script> -->
-        <script src="https://CoCreate.app/dist/CoCreate.js"></script>
-    </body>
+		<!-- <script src="../dist/CoCreate-elements.js"></script> -->
+		<!-- <script src="../../../CoCreateJS/dist/CoCreate.js"></script> -->
+		<script src="https://CoCreate.app/dist/CoCreate.js"></script>
+	</body>
 </html>
