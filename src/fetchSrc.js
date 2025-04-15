@@ -1,4 +1,5 @@
 import observer from "@cocreate/observer";
+import { ObjectId } from "@cocreate/utils";
 
 const selector =
 	"[src]:not(img, video, audio, script, input, iframe, frame, link, source), [source], [stream]";
@@ -46,8 +47,12 @@ async function initElements(elements) {
 							pathElement.getAttribute("path") || getPath();
 						if (path) text = text.replaceAll("$relativePath", path);
 					}
+
+					text = text.replaceAll("ObjectId()", () => {
+						// Generate a NEW ObjectId inside the function
+						return ObjectId().toString(); // Return its string representation
+					});
 					element.setValue(text);
-					initializing.delete(element);
 				}
 			}
 		} catch (err) {
@@ -269,8 +274,9 @@ observer.init({
 		if (
 			mutation.oldValue !==
 			mutation.target.getAttribute(mutation.attributeName)
-		)
+		) {
 			init(mutation.target);
+		}
 	}
 });
 
