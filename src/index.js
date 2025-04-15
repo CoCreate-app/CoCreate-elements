@@ -68,9 +68,9 @@ async function init(element) {
 		!(element instanceof HTMLCollection) &&
 		!(element instanceof NodeList) &&
 		!Array.isArray(element)
-	)
+	) {
 		element = [element];
-	else if (!element) {
+	} else if (!element) {
 		element = document.querySelectorAll(selector);
 		initSocket();
 	}
@@ -993,7 +993,7 @@ async function getData(form) {
 			}
 
 			//dataKey should be used to group
-			let key = dataKey + Data.method;
+			let key = dataKey; //+ Data.method;
 			if (dataKeys.has(key)) {
 				let storedData = dataKeys.get(key)[Data.type];
 				dataKeys.get(key)[Data.type] = {
@@ -1510,8 +1510,8 @@ Observer.init({
 	callback: function (mutation) {
 		let currentValue = mutation.target.getAttribute(mutation.attributeName);
 		if (currentValue !== mutation.oldValue) {
-			remove(mutation.target);
 			if (mutation.target.tagName === "FORM") return;
+			remove(mutation.target);
 			init([mutation.target]);
 		}
 	}
