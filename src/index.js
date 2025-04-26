@@ -1310,6 +1310,9 @@ function initSocket() {
 				if (data.rendered) return;
 
 				data.rendered = true;
+				if (data && data.key === "answers") {
+					console.log("test");
+				}
 
 				setData(null, data);
 			});
