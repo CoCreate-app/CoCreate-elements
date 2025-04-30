@@ -1,3 +1,16 @@
+## [1.42.1](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.42.0...v1.42.1) (2025-04-30)
+
+
+### Bug Fixes
+
+* added css-loader ([32ce9af](https://github.com/CoCreate-app/CoCreate-elements/commit/32ce9af65fdb13ae2b65509e2b9a3ae20131ae46))
+* do not remove form ([41f6f42](https://github.com/CoCreate-app/CoCreate-elements/commit/41f6f42990d1e134d2a3146f359582842dedd831))
+* query element ([bcc2ad9](https://github.com/CoCreate-app/CoCreate-elements/commit/bcc2ad9d0b540ae0a6c7a4caef0d33aea07ef19f))
+* replace ObJectId() ([4bceae1](https://github.com/CoCreate-app/CoCreate-elements/commit/4bceae16e900b9030f888e680a36567a132a8b75))
+* update query attributes ([99aadff](https://github.com/CoCreate-app/CoCreate-elements/commit/99aadffc78847a20ca08d6fe8f48c72b19c6b276))
+* updated cocreate modules versions ([004a146](https://github.com/CoCreate-app/CoCreate-elements/commit/004a146dbca83b438a2252f1d773954f86b33624))
+* webpack.config and devdependencies ([b66aca5](https://github.com/CoCreate-app/CoCreate-elements/commit/b66aca56de77664c76162ae1163cf11005e02e9f))
+
 # [1.42.0](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.41.1...v1.42.0) (2025-04-11)
 
 
