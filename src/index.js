@@ -856,7 +856,7 @@ async function getData(form) {
 			}
 
 			let value = await element.getValue();
-			if (!value && value !== "") continue;
+			if (value === undefined) continue;
 
 			let Data = { ...data };
 			let dataKey = elements.get(element);
@@ -1014,7 +1014,7 @@ async function getData(form) {
 
 async function save(element, action) {
 	if (!element) return;
-	let data, value;
+	let data, value, form;
 	let upsert = element.getAttribute("upsert");
 	if (upsert && upsert !== "false") upsert = true;
 	if (element.tagName === "FORM") {
@@ -1022,9 +1022,12 @@ async function save(element, action) {
 	} else {
 		let isSave = element.getAttribute("save");
 		if (isSave === "false") return;
-
-		let form = element.closest("form");
-		if (form) return save(form);
+		if (action) {
+			form = element.closest("form");
+			if (form) {
+				return save(form);
+			}
+		}
 
 		let dataKey = elements.get(element);
 		data = { ...keys.get(dataKey).dataKey.object };
@@ -1064,21 +1067,25 @@ async function save(element, action) {
 	let Data = [];
 	for (let i = 0; i < data.length; i++) {
 		if (data[i].type === "object") {
-			if (typeof data[i].object === "string") {
+			if (!data[i].object) {
+				data[i].method = "object.create";
+			} else if (typeof data[i].object === "string") {
 				if (!data[i]._id) data[i].method = "object.create";
 				else {
 					data[i].method = "object.update";
 					if (upsert) data[i].upsert = true;
 				}
 			} else if (Array.isArray(data[i].object)) {
-				if (!data[i].object[0]._id) data[i].method = "object.create";
-				else {
+				if (!data[i].object[0]._id) {
+					data[i].method = "object.create";
+				} else {
 					data[i].method = "object.update";
 					if (upsert) data[i].upsert = true;
 				}
 			} else if (typeof data[i].object === "object") {
-				if (!data[i].object._id) data[i].method = "object.create";
-				else {
+				if (!data[i].object._id) {
+					data[i].method = "object.create";
+				} else {
 					data[i].method = "object.update";
 					if (upsert) data[i].upsert = true;
 				}
@@ -1151,7 +1158,9 @@ function setTypeValue(element, data, action) {
 
 	if (!form) {
 		if (data.type === "object") {
-			element.setAttribute("object", data.object[0]._id);
+			if (data.object && data.object[0] && data.object[0]._id) {
+				element.setAttribute("object", data.object[0]._id);
+			}
 		} else {
 			element.setAttribute(data.type, data[data.type].name);
 		}
@@ -1310,9 +1319,6 @@ function initSocket() {
 				if (data.rendered) return;
 
 				data.rendered = true;
-				if (data && data.key === "answers") {
-					console.log("test");
-				}
 
 				setData(null, data);
 			});
