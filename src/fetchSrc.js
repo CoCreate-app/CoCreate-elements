@@ -45,7 +45,13 @@ async function initElements(elements) {
 					if (pathElement) {
 						let path =
 							pathElement.getAttribute("path") || getPath();
-						if (path) text = text.replaceAll("$relativePath", path);
+						if (path) {
+							// Remove trailing slash if present
+							if (path.endsWith("/")) {
+								path = path.slice(0, -1);
+							}
+							text = text.replaceAll("$relativePath", path);
+						}
 					}
 
 					text = text.replaceAll("ObjectId()", () => {

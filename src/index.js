@@ -1331,7 +1331,11 @@ Observer.init({
 	types: ["addedNodes"],
 	selector: "[render-clone]",
 	callback: function (mutation) {
-		if (!mutation.parentElement.hasAttribute("dnd")) return;
+		if (
+			mutation.parentElement &&
+			!mutation.parentElement.hasAttribute("dnd")
+		)
+			return;
 		let delayTimer = debounce.get(mutation);
 		clearTimeout(delayTimer);
 		debounce.delete(mutation.target);
