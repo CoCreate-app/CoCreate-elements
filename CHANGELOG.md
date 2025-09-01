@@ -1,3 +1,11 @@
+## [1.42.3](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.42.2...v1.42.3) (2025-09-01)
+
+
+### Bug Fixes
+
+* handle trailing slashes in relative path replacement and improve mutation parent check ([b2f559a](https://github.com/CoCreate-app/CoCreate-elements/commit/b2f559a583e41a88b196f62395ba3f1759fe10f2))
+* improve value checks and handling in getData and save functions ([d8fd81d](https://github.com/CoCreate-app/CoCreate-elements/commit/d8fd81d89ecdf1feb3d7e1074fe8afe21adcfba4))
+
 ## [1.42.2](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.42.1...v1.42.2) (2025-05-01)
 
 
