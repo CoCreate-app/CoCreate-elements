@@ -46,11 +46,7 @@ async function initElements(elements) {
 						let path =
 							pathElement.getAttribute("path") || getPath();
 						if (path) {
-							// Remove trailing slash if present
-							if (path.endsWith("/")) {
-								path = path.slice(0, -1);
-							}
-							text = text.replaceAll("$relativePath", path);
+							text = text.replaceAll(/\$relativePath\/?/g, path);
 						}
 					}
 
@@ -69,6 +65,9 @@ async function initElements(elements) {
 
 function getPath() {
 	let currentPath = window.location.pathname.replace(/\/[^\/]*$/, ""); // Remove file from path
+	if (!currentPath.endsWith("/")) {
+		currentPath += "/";
+	}
 	let depth = currentPath.split("/").filter(Boolean).length; // Count depth levels
 
 	return depth > 0 ? "../".repeat(depth) : "./"; // Return the correct relative path
