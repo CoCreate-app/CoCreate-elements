@@ -400,6 +400,10 @@ async function setData(element, data) {
 		if (action && ["database", "array", "object", "key"].includes(action))
 			continue;
 
+		if (data.array.includes("aiConversations")) {
+			console.log("testing ai conversations");
+		}
+
 		const { key, isRead, isUpdate, isListen, isCrdt } = getAttributes(el);
 		let elementType = el.getAttribute("type");
 		if (elementType !== "file" && (el.getFilter || el.renderValue))
@@ -424,6 +428,14 @@ async function setData(element, data) {
 					if ($update) {
 						delete data[type][0].$update;
 						data[type][0] = { ...data[type][0], ...$update };
+					} else if (key === "$data") {
+						value = data;
+					} else if (key.startsWith("$data")) {
+						value = CRUD.getValueFromObject(data, key.slice(1));
+					} else if (key === `$${type}`) {
+						value = data[type];
+					} else if (key.startsWith(`$${type}`)) {
+						value = CRUD.getValueFromObject(data, key.slice(1));
 					} else if (key === "{}") {
 						value = data[type][0];
 						if (reference === "false") {
@@ -548,8 +560,21 @@ async function filterData(element, data, type, key) {
 			key.replace(/\.\$length$/, "")
 		);
 		element.setValue(value.length);
+	} else if (key === "$data") {
+		value = data;
+	} else if (key.startsWith("$data")) {
+		value = CRUD.getValueFromObject(data, key.slice(1));
+	} else if (key === `$${type}`) {
+		value = data[type];
+	} else if (key.startsWith(`$${type}`)) {
+		value = CRUD.getValueFromObject(data, key.slice(1));
 	} else if (key === "{}") {
-		element.setValue(data[type]);
+		value = data[type][0];
+		// if (reference === "false") {
+		// 	delete data[type][0].$storage;
+		// 	delete data[type][0].$database;
+		// 	delete data[type][0].$array;
+		// }
 	} else if (data) element.setValue(data);
 
 	if (data.$filter) {

@@ -41,15 +41,18 @@ async function initElements(elements) {
 
 				let text = await response.text();
 				if (text) {
+					let path = "";
 					let pathElement = element.closest("[path]");
 					if (pathElement) {
-						let path =
-							pathElement.getAttribute("path") || getPath();
-						if (path) {
-							text = text.replaceAll(/\$relativePath\/?/g, path);
-						}
+						path = pathElement.getAttribute("path") || getPath();
+					} else {
+						path = getPath();
 					}
-
+					// Replace $relativePath in the fetched text
+					if (path) {
+						text = text.replaceAll(/\$relativePath\/?/g, path);
+					}
+					// Replace ObjectId() with a new ObjectId
 					text = text.replaceAll("ObjectId()", () => {
 						// Generate a NEW ObjectId inside the function
 						return ObjectId().toString(); // Return its string representation
