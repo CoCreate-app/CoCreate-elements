@@ -1,3 +1,11 @@
+## [1.42.4](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.42.3...v1.42.4) (2025-09-07)
+
+
+### Bug Fixes
+
+* enhance path handling in initElements and improve data assignment logic in setData ([5c710c5](https://github.com/CoCreate-app/CoCreate-elements/commit/5c710c594d584598ced06a9bcf7954ec30d048d2))
+* streamline relative path handling by removing trailing slashes in replacement and ensuring current path ends with a slash ([03ba778](https://github.com/CoCreate-app/CoCreate-elements/commit/03ba77826700c56a7f07b86f8f6588aaece9a3a4))
+
 ## [1.42.3](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.42.2...v1.42.3) (2025-09-01)
 
 
