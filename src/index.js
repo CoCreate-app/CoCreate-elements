@@ -430,11 +430,11 @@ async function setData(element, data) {
 						data[type][0] = { ...data[type][0], ...$update };
 					} else if (key === "$data") {
 						value = data;
-					} else if (key.startsWith("$data")) {
+					} else if (key && key.startsWith("$data")) {
 						value = CRUD.getValueFromObject(data, key.slice(1));
 					} else if (key === `$${type}`) {
 						value = data[type];
-					} else if (key.startsWith(`$${type}`)) {
+					} else if (key && key.startsWith(`$${type}`)) {
 						value = CRUD.getValueFromObject(data, key.slice(1));
 					} else if (key === "{}") {
 						value = data[type][0];
@@ -562,11 +562,11 @@ async function filterData(element, data, type, key) {
 		element.setValue(value.length);
 	} else if (key === "$data") {
 		value = data;
-	} else if (key.startsWith("$data")) {
+	} else if (key && key.startsWith("$data")) {
 		value = CRUD.getValueFromObject(data, key.slice(1));
 	} else if (key === `$${type}`) {
 		value = data[type];
-	} else if (key.startsWith(`$${type}`)) {
+	} else if (key && key.startsWith(`$${type}`)) {
 		value = CRUD.getValueFromObject(data, key.slice(1));
 	} else if (key === "{}") {
 		value = data[type][0];
