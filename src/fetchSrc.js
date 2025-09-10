@@ -1,5 +1,5 @@
 import observer from "@cocreate/observer";
-import { ObjectId } from "@cocreate/utils";
+import { getRelativePath, ObjectId } from "@cocreate/utils";
 
 const selector =
 	"[src]:not(img, video, audio, script, input, iframe, frame, link, source), [source], [stream]";
@@ -44,9 +44,11 @@ async function initElements(elements) {
 					let path = "";
 					let pathElement = element.closest("[path]");
 					if (pathElement) {
-						path = pathElement.getAttribute("path") || getPath();
+						path =
+							pathElement.getAttribute("path") ||
+							getRelativePath();
 					} else {
-						path = getPath();
+						path = getRelativePath();
 					}
 					// Replace $relativePath in the fetched text
 					if (path) {
@@ -64,16 +66,6 @@ async function initElements(elements) {
 			console.log("FetchSrc error:" + err);
 		}
 	}
-}
-
-function getPath() {
-	let currentPath = window.location.pathname.replace(/\/[^\/]*$/, ""); // Remove file from path
-	if (!currentPath.endsWith("/")) {
-		currentPath += "/";
-	}
-	let depth = currentPath.split("/").filter(Boolean).length; // Count depth levels
-
-	return depth > 0 ? "../".repeat(depth) : "./"; // Return the correct relative path
 }
 
 async function initMediaSource(element, src) {
