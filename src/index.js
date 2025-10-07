@@ -123,7 +123,7 @@ async function initElement(el) {
 				["INPUT", "TEXTAREA", "SELECT"].includes(el.tagName) ||
 				(el.hasAttribute("contenteditable") &&
 					el.getAttribute("contenteditable") !== "false") ||
-				el.contenteditable
+				el.contenteditable || el.value !== undefined || el.hasAttribute("value")
 			) {
 				if (el.tagName == "IFRAME") {
 					// ToDo: saving on contenteditable elements when an objectId does not exist in order to crud or crdt
@@ -143,7 +143,7 @@ async function initElement(el) {
 					if (e.detail && e.detail.skip == true) return;
 					if (data.type !== "object" && data[data.type] === "pending")
 						return;
-
+					if (!el.value && !el.hasAttribute("value") && el.contenteditable && !el.hasAttribute("contenteditable")) return;
 					save(el);
 				});
 			}

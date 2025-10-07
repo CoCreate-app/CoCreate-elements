@@ -3,7 +3,7 @@ import { getRelativePath, ObjectId } from "@cocreate/utils";
 
 const selector =
 	"[src]:not(img, video, audio, script, input, iframe, frame, link, source), [source], [stream]";
-const initializing = new Map();
+const textExtensions = ['html','htm','xhtml','css','js','mjs','cjs','json','jsonc','json5','xml','xsd','xsl','xslt','svg','md','markdown','scss','sass','less','vue','jsx','tsx','graphql','gql','htc','webmanifest','txt','csv','tsv','yaml','yml','toml','ini','log','dat','env','c','cc','cpp','cxx','h','hh','hpp','hxx','m','mm','cs','java','jsp','properties','py','pyc','pyd','pyo','rb','erb','php','phtml','php3','php4','php5','php7','phps','go','rs','swift','kt','kts','ts','pl','pm','pod','sh','bash','zsh','ksh','csh','tcsh','ps1','psm1','psd1','bat','cmd','sql','r','Rprofile','Rmd','lua','hs','lhs','erl','hrl','scala','sbt','d','f','for','f77','f90','f95','f03','f08','adb','ads','cbl','cob','cpy','lisp','lsp','scm','ss','pro','plg','vb','vbs','dart','asm','s','conf','cfg','config','ini','env','npmrc','yarnrc','gitattributes','gitignore','gitmodules','gitkeep','editorconfig','prettierrc','eslintrc','eslintignore','browserslistrc','package.json','package-lock.json','tsconfig.json','babelrc','vite.config.js','rollup.config.js','webpack.config.js','procfile','dockerfile','dockerignore','makefile','gradle','groovy','pom','properties','service','target','rst','adoc','asciidoc','tex','latex','textile','org','wiki','nfo','rtf','gcode','patch','diff','log','reg','map','sub','srt','dic','wml','rss','atom','gpx','kml','kmz','vcf','vcard','ics','ical','ps','eps','mf','lic','license','pem','key','crt','cert','pub','tpl','liquid','mustache','hbs','twig','blade.php','ejs','coffee','litcoffee','jl','nim','zig','wgsl']; const initializing = new Map();
 
 function init(elements) {
 	if (elements && !Array.isArray(elements)) elements = [elements];
@@ -37,6 +37,7 @@ async function initElements(elements) {
 			if (element.tagName === "AUDIO" || element.tagName === "VIDEO") {
 				initMediaSource(element, src);
 			} else {
+				if (src && !textExtensions.includes(src.split('.').pop())) return
 				element.removeAttribute("rendered");
 
 				let text = await response.text();
