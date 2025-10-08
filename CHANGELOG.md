@@ -1,3 +1,11 @@
+## [1.42.5](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.42.4...v1.42.5) (2025-10-08)
+
+
+### Bug Fixes
+
+* ensure key checks in setData and filterData handle undefined values correctly ([fd04107](https://github.com/CoCreate-app/CoCreate-elements/commit/fd04107fde4d1d51ce215d3da5f241c47565aa92))
+* import getRelativePath and remove unused getPath function in fetchSrc.js ([363497c](https://github.com/CoCreate-app/CoCreate-elements/commit/363497cd9fa0b2e920e226766488593e46f6db8f))
+
 ## [1.42.4](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.42.3...v1.42.4) (2025-09-07)
 
 
