@@ -1,3 +1,10 @@
+## [1.42.6](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.42.5...v1.42.6) (2025-10-10)
+
+
+### Bug Fixes
+
+* enhance form attribute handling and improve element initialization logic ([6a3eeb3](https://github.com/CoCreate-app/CoCreate-elements/commit/6a3eeb35ccfd1656f71c7e51d0d604d8ccc28071))
+
 ## [1.42.5](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.42.4...v1.42.5) (2025-10-08)
 
 
