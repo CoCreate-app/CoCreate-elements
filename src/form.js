@@ -54,29 +54,32 @@ function runObjectId(form) {
 	}
 }
 
+const formAttributes = [
+	"organization_id",
+	"host",
+	"storage",
+	"database",
+	"array",
+	"index",
+	"object",
+	"key"
+];
+const formAttributesSelector = formAttributes.map((attr) => `[${attr}]`).join(", ");
+
 /**
  * @param form
  */
 function setAttribute(form, elements) {
-	if (!elements)
-		elements = form.querySelectorAll(
-			"[organization_id], [host], [storage], [database], [array], [index], [object], [key]"
-		);
+	if (!elements) elements = form.querySelectorAll(formAttributesSelector);
 
 	for (let attribute of form.attributes) {
-		let variable = window.CoCreateConfig.attributes[attribute.name];
+		if (!formAttributes.includes(attribute.name)) continue;
 
-		// Set the attribute of all elements in the variable
-		if (variable) {
-			for (let el of elements) {
-				// Set the value of the attribute.
-				// TODO: skip-attribute naming convention, perhaps skip by defualt if storage, database, array not the same and use attribute to apply for cases where one _id will be used across 2 arrays
-				if (
-					!el.getAttribute(attribute.name) &&
-					!el.hasAttribute("skip-attribute")
-				) {
-					el.setAttribute(attribute.name, attribute.value);
-				}
+		for (let el of elements) {
+			// Set the value of the attribute.
+			// TODO: skip-attribute naming convention, perhaps skip by defualt if storage, database, array not the same and use attribute to apply for cases where one _id will be used across 2 arrays
+			if ( !el.hasAttribute("skip-attribute") ) {
+				el.setAttribute(attribute.name, attribute.value);
 			}
 		}
 	}
@@ -208,11 +211,10 @@ Observer.init({
 Observer.init({
 	name: "CoCreateFormElements",
 	types: ["addedNodes"],
-	selector:
-		"[organization_id], [host], [storage], [database], [array], [index], [object], [key]",
+	selector: formAttributesSelector,
 	callback: function (mutation) {
-		if (mutation.target.form)
-			setAttribute(mutation.target.form, [mutation.target]);
+		let form = mutation.target.form || mutation.target.closest("form");
+		if (form) setAttribute(form, [mutation.target]);
 	}
 });
 
