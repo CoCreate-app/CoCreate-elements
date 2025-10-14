@@ -551,6 +551,8 @@ async function filterData(element, data, type, key) {
 	) {
 		await checkFilters(element, data, type);
 	} else if (element.renderValue) {
+		if (key)
+			data = {[key]: data}
 		await element.renderValue(data);
 	} else if (key === "$length") {
 		element.setValue(data[type].length);
