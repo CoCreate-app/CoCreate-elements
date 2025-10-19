@@ -71,16 +71,15 @@ const formAttributesSelector = formAttributes.map((attr) => `[${attr}]`).join(",
  */
 function setAttribute(form, elements) {
 	if (!elements) elements = form.querySelectorAll(formAttributesSelector);
-
-	for (let attribute of form.attributes) {
-		if (!formAttributes.includes(attribute.name)) continue;
-
-		for (let el of elements) {
+	for (let el of elements) {
+		if (el.getAttribute("form-attributes") === "false") continue;
+		for (let attribute of form.attributes) {
+			if (!formAttributes.includes(attribute.name)) continue;
+			// let elArray = el.getAttribute("array");
+			// if (elArray && attribute.name === "array" && elArray !== attribute.value) break;
 			// Set the value of the attribute.
-			// TODO: skip-attribute naming convention, perhaps skip by defualt if storage, database, array not the same and use attribute to apply for cases where one _id will be used across 2 arrays
-			if ( !el.hasAttribute("skip-attribute") ) {
-				el.setAttribute(attribute.name, attribute.value);
-			}
+			// TODO: form-attributes="false" naming convention, perhaps skip by defualt if storage, database, array not the same and use attribute to apply for cases where one _id will be used across 2 arrays
+			el.setAttribute(attribute.name, attribute.value);
 		}
 	}
 }
