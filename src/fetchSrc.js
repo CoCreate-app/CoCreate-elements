@@ -37,9 +37,12 @@ async function initElements(elements) {
 			if (element.tagName === "AUDIO" || element.tagName === "VIDEO") {
 				initMediaSource(element, src);
 			} else {
-				if (src && !textExtensions.includes(src.split('.').pop())) return
-				element.removeAttribute("rendered");
+				if (src && !textExtensions.includes(src.split('.').pop())) continue
 
+				if (element.hasAttribute("rendered")) {
+					element.removeAttribute("rendered");
+					// continue;
+				}
 				let text = await response.text();
 				if (text) {
 					let path = "";
