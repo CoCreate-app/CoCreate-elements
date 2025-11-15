@@ -1116,7 +1116,7 @@ async function save(element, action) {
 					data[i].method = "object.update";
 					if (upsert) data[i].upsert = true;
 				}
-			}
+			} 
 		}
 
 		if (data[i].isUpsert) {
