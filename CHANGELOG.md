@@ -1,3 +1,13 @@
+## [1.42.7](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.42.6...v1.42.7) (2025-11-16)
+
+
+### Bug Fixes
+
+* correct formatting in save function to ensure proper data handling ([19e0bdc](https://github.com/CoCreate-app/CoCreate-elements/commit/19e0bdccd02e95ffc4c0db22b7a96ad18bad663a))
+* enhance setAttribute function to respect form-attributes and streamline attribute setting ([ce6c03b](https://github.com/CoCreate-app/CoCreate-elements/commit/ce6c03bfca08ac4634320725a72820fde49f604e))
+* update filterData function to handle key-based data rendering ([2b4aecb](https://github.com/CoCreate-app/CoCreate-elements/commit/2b4aecb4f56ec0eb2666a56041b41f6191cb4e5e))
+* update initElements function to correctly handle 'rendered' attribute and improve src validation ([a371968](https://github.com/CoCreate-app/CoCreate-elements/commit/a371968596c5c50a7f53c6f822ab7e432e985bad))
+
 ## [1.42.6](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.42.5...v1.42.6) (2025-10-10)
 
 
