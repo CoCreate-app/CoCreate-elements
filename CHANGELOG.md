@@ -1,3 +1,10 @@
+## [1.42.8](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.42.7...v1.42.8) (2026-01-19)
+
+
+### Bug Fixes
+
+* update worklow ([f1e9d67](https://github.com/CoCreate-app/CoCreate-elements/commit/f1e9d6705f1bf72f0aa2baa7147480b3b5ff1b2e))
+
 ## [1.42.7](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.42.6...v1.42.7) (2025-11-16)
 
 
