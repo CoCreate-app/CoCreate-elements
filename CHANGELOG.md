@@ -1,3 +1,10 @@
+## [1.42.9](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.42.8...v1.42.9) (2026-03-01)
+
+
+### Bug Fixes
+
+* optimize performance ([487eb3f](https://github.com/CoCreate-app/CoCreate-elements/commit/487eb3fd0e76a65ee4ea52aa8cc8da075101b9e9))
+
 ## [1.42.8](https://github.com/CoCreate-app/CoCreate-elements/compare/v1.42.7...v1.42.8) (2026-01-19)
 
 
